@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>面试-尾调用优化 | компот</title>
+  <meta name="description" content="面试 futu 遇到的问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试-尾调用优化">
+<meta property="og:url" content="https://laputaz.github.io/home/2019/10/22/tail-optimization/index.html">
+<meta property="og:site_name" content="River Z">
+<meta property="og:description" content="面试 futu 遇到的问题">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-10-22T15:23:25.000Z">
+<meta property="article:modified_time" content="2021-08-21T15:15:21.739Z">
+<meta property="article:author" content="River Z">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/2019/10/22/tail-optimization/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="River Z" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="images/juice.svg" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-right theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/juice.svg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">River</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> мурманск, россия</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p> 🍒 - мой товарищ, хотите немного бабушкиного компота ? </p><p> 🍸 - нет, дайте, пожалуйста, бутылку водки. </p> <hr/>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/angular/" style="font-size: 13px;">angular</a> <a href="/tags/cookie/" style="font-size: 13px;">cookie</a> <a href="/tags/css/" style="font-size: 13px;">css</a> <a href="/tags/javascript/" style="font-size: 14px;">javascript</a> <a href="/tags/life/" style="font-size: 13px;">life</a> <a href="/tags/vue/" style="font-size: 13px;">vue</a> <a href="/tags/wechat/" style="font-size: 13px;">wechat</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">23</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-tail-optimization" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      面试-尾调用优化
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/10/22/tail-optimization/" class="article-date">
+	  <time datetime="2019-10-22T15:23:25.000Z" itemprop="datePublished">2019-10-22</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/javascript/" rel="tag">javascript</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/10/22/tail-optimization/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>面试 futu 遇到的问题</p>
+<span id="more"></span>
+
+<h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><p>今天去面试 futu, 被问到一题 -&gt; 参数为数字, 输出斐波那契数列对应结果, 实现了一下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibonacci</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span> || n == <span class="number">2</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> fibonacci(n - <span class="number">1</span>) + fibonacci(n - <span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">然后面试官问: &quot;你觉得这个有什么问题 ?&quot;</span><br><span class="line">我: &quot;(⊙o⊙)…忘记判断参数类型了.&quot;</span><br><span class="line">面试官: &quot;不是这个问题.&quot;</span><br><span class="line">我: &quot;嗯..嗯...嗯.呃...这个...&quot;</span><br><span class="line">面试官: &quot;如果数字很大会怎么样?&quot;</span><br><span class="line">我: &quot;会...性能很差&quot;</span><br><span class="line">面试官: &quot;嗯, 会爆炸, 为什么? 那怎么改?&quot;</span><br><span class="line">我: &quot;嗯..嗯...嗯.呃...不会...&quot;</span><br><span class="line">面试官: &quot;你回去查一下吧.&quot;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Game-Over"><a href="#Game-Over" class="headerlink" title="Game Over"></a><strong><code>Game Over</code></strong></h5><h4 id="回来查"><a href="#回来查" class="headerlink" title="回来查"></a>回来查</h4><p>原来 有个概念叫<strong>尾调用优化</strong>, 果然还是太菜</p>
+<h4 id="什么是尾调用"><a href="#什么是尾调用" class="headerlink" title="什么是尾调用"></a>什么是尾调用</h4><blockquote>
+<p>尾调用的概念非常简单，一句话就能说清楚，就是指某个函数的最后一步是调用另一个函数。<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/04/tail-call.html">尾调用-阮一峰</a></p>
+</blockquote>
+<blockquote>
+<p>尾调用之所以与其他调用不同，就在于它的特殊的调用位置。<br>我们知道，函数调用会在内存形成一个”调用记录”，又称”调用帧”（call frame），保存调用位置和内部变量等信息。如果在函数 A 的内部调用函数 B，那么在 A 的调用记录上方，还会形成一个 B 的调用记录。等到 B 运行结束，将结果返回到 A，B 的调用记录才会消失。如果函数 B 内部还调用函数 C，那就还有一个 C 的调用记录栈，以此类推。所有的调用记录，就形成一个”调用栈”（call stack）。</p>
+</blockquote>
+<blockquote>
+<p>递归的计算过程（recursive process）包含了两个阶段，先逐级扩展（expansion），构造起一个由被推迟的操作组成的链条（会被解释器保存在堆栈里），然后在收缩（contraction）阶段逐级回溯执行那些操作。随着递归计算步骤的增多，这种方法消耗的资源会越来越大，而且会包含越来越多的冗余操作，上面那个求斐波那契数列的例子（在 SICP 里被称作“树形递归”）在这方面问题尤其严重，因为它的计算步骤会随着参数而指数性的增长。</p>
+</blockquote>
+<blockquote>
+<p>尾调用由于是函数的最后一步操作，所以不需要保留外层函数的调用记录，因为调用位置、内部变量等信息都不会再用到了，只要直接用内层函数的调用记录，取代外层函数的调用记录就可以了。</p>
+</blockquote>
+<h5 id="优化-gt-尾调用"><a href="#优化-gt-尾调用" class="headerlink" title="优化-&gt;尾调用"></a>优化-&gt;尾调用</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">lastFibonacci</span>(<span class="params">n, acc1, acc2</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> acc1;</span><br><span class="line">  <span class="keyword">return</span> lastFibonacci(n - <span class="number">1</span>, acc2, acc1 + acc2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">lastFibonacci(<span class="number">6</span>, <span class="number">1</span>, <span class="number">1</span>); <span class="comment">//8</span></span><br><span class="line">lastFibonacci(<span class="number">7</span>, <span class="number">1</span>, <span class="number">1</span>); <span class="comment">//13</span></span><br></pre></td></tr></table></figure>
+
+<p>这样每次都要输入 1,1,可以用柯里化或 es6</p>
+<h5 id="加柯里化或-es6"><a href="#加柯里化或-es6" class="headerlink" title="加柯里化或 es6"></a>加柯里化或 es6</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 再封装一层柯里化-----------</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curringF</span>(<span class="params">acc1, acc2</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">n</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> lastFibonacci(n, acc1, acc2);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> func = curringF(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">func(<span class="number">6</span>); <span class="comment">// 8</span></span><br><span class="line">func(<span class="number">7</span>); <span class="comment">// 13</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//或 es6---------</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">lastFibonacci</span>(<span class="params">n, acc1 = <span class="number">1</span>, acc2 = <span class="number">1</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> acc1;</span><br><span class="line">  <span class="keyword">return</span> lastFibonacci(n - <span class="number">1</span>, acc2, acc1 + acc2);</span><br><span class="line">&#125;</span><br><span class="line">lastFibonacci(<span class="number">7</span>); <span class="comment">//13</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="啊啊啊啊啊啊啊啊啊啊啊"><a href="#啊啊啊啊啊啊啊啊啊啊啊" class="headerlink" title="啊啊啊啊啊啊啊啊啊啊啊"></a>啊啊啊啊啊啊啊啊啊啊啊</h4>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/2019/10/22/tail-optimization/" title="面试-尾调用优化" target="_blank" rel="external">https://laputaz.github.io/home/2019/10/22/tail-optimization/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/juice.svg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">River</span><small class="ml-1x"></small></a></h3>
+        <div>不要沉溺过去, 写新的流水账吧</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/11/01/js-maze-generator/" title="maze-generator"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/10/22/cyberpunk-wechat/" title="一个简单的微信小程序-赛博朋克2077倒计时-以及简单的云开发"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>

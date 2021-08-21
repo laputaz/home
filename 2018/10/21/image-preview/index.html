@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>图片下载/预览简单实现 , 以及FileReader转换文件的方法 | компот</title>
+  <meta name="description" content="图片下载&#x2F;预览简单实现 , 以及 FileReader 转换文件的方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图片下载&#x2F;预览简单实现 , 以及FileReader转换文件的方法">
+<meta property="og:url" content="https://laputaz.github.io/home/2018/10/21/image-preview/index.html">
+<meta property="og:site_name" content="River Z">
+<meta property="og:description" content="图片下载&#x2F;预览简单实现 , 以及 FileReader 转换文件的方法">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190726110022721.png">
+<meta property="article:published_time" content="2018-10-21T09:29:56.000Z">
+<meta property="article:modified_time" content="2021-08-21T15:15:21.738Z">
+<meta property="article:author" content="River Z">
+<meta property="article:tag" content="javascript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190726110022721.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/2018/10/21/image-preview/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="River Z" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="images/juice.svg" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-right theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/juice.svg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">River</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> мурманск, россия</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p> 🍒 - мой товарищ, хотите немного бабушкиного компота ? </p><p> 🍸 - нет, дайте, пожалуйста, бутылку водки. </p> <hr/>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/angular/" style="font-size: 13px;">angular</a> <a href="/tags/cookie/" style="font-size: 13px;">cookie</a> <a href="/tags/css/" style="font-size: 13px;">css</a> <a href="/tags/javascript/" style="font-size: 14px;">javascript</a> <a href="/tags/life/" style="font-size: 13px;">life</a> <a href="/tags/vue/" style="font-size: 13px;">vue</a> <a href="/tags/wechat/" style="font-size: 13px;">wechat</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">23</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-image-preview" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      图片下载/预览简单实现 , 以及FileReader转换文件的方法
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/10/21/image-preview/" class="article-date">
+	  <time datetime="2018-10-21T09:29:56.000Z" itemprop="datePublished">2018-10-21</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/javascript/" rel="tag">javascript</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/21/image-preview/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>图片下载/预览简单实现 , 以及 FileReader 转换文件的方法</p>
+<span id="more"></span>
+
+<h3 id="根据路径下载"><a href="#根据路径下载" class="headerlink" title="根据路径下载"></a>根据路径下载</h3><p>思路:</p>
+<ol>
+<li>通过 new Image()对象, src 赋予路径</li>
+<li>监听将 Image 对象 onload 事件, 画在 canvas 上,</li>
+<li>再使用 canvas.toDataURL 转换为 base64 格式(可设置图片类型和图片质量),</li>
+<li>构建 a 标签, 点击 a 标签下载(a 标签需要设置 download 属性)</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 新建canvas对象, 取到2d画布</span></span><br><span class="line"><span class="keyword">var</span> canvas = <span class="built_in">document</span>.getElementsByTagName(<span class="string">&quot;canvas&quot;</span>)[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">var</span> ctx = canvas.getContext(<span class="string">&quot;2d&quot;</span>);</span><br><span class="line"><span class="comment">// 新建图片</span></span><br><span class="line"><span class="keyword">var</span> Img = <span class="keyword">new</span> Image();</span><br><span class="line">Img.src = <span class="string">&quot;a.png&quot;</span>;</span><br><span class="line"><span class="comment">// 转换为 base64</span></span><br><span class="line">Img.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  canvas.width = Img.width;</span><br><span class="line">  canvas.height = Img.height;</span><br><span class="line">  ctx.drawImage(Img, <span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height);</span><br><span class="line">  <span class="keyword">var</span> base = canvas.toDataURL(<span class="string">&quot;image/png&quot;</span>);</span><br><span class="line">  <span class="keyword">var</span> $a = <span class="built_in">document</span>.createElement(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">  $a.setAttribute(<span class="string">&quot;href&quot;</span>, base);</span><br><span class="line">  $a.setAttribute(<span class="string">&quot;download&quot;</span>, <span class="string">&quot;downloadImg&quot;</span>);</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">&quot;download&quot;</span>).click();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="上传预览后下载"><a href="#上传预览后下载" class="headerlink" title="上传预览后下载"></a>上传预览后下载</h3><p>思路:</p>
+<ol>
+<li>通过 input 标签, type=file</li>
+<li>监听 change 事件, 通过事件对象拿到图片的 file 对象(e.target.files)</li>
+<li>new FileReader 读取文件</li>
+<li>调用 FileReader 的 readAsDataURL 方法</li>
+<li>在 FileReader 对象的 onload 事件拿到转换后的 base64 格式</li>
+<li>赋予图片标签 src 预览</li>
+<li>构建 a 标签, 点击 a 标签下载</li>
+</ol>
+<p>下面随便写一下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">id</span>=<span class="string">&quot;img&quot;</span> <span class="attr">src</span>=<span class="string">&quot;&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;file-select&quot;</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;请选择图片&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span>&gt;</span>下载<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;a.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> $input = <span class="built_in">document</span>.getElementById(<span class="string">&quot;file-select&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> src = <span class="string">&quot;&quot;</span>;</span><br><span class="line">$input.addEventListener(<span class="string">&quot;change&quot;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> reader = <span class="keyword">new</span> FileReader();</span><br><span class="line">  reader.readAsDataURL(e.target.files[<span class="number">0</span>]);</span><br><span class="line">  reader.onload = <span class="function"><span class="keyword">function</span>(<span class="params">ev</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> imgEle = <span class="built_in">document</span>.getElementById(<span class="string">&quot;img&quot;</span>);</span><br><span class="line">    imgEle.setAttribute(<span class="string">&quot;width&quot;</span>, <span class="string">&quot;200&quot;</span>);</span><br><span class="line">    imgEle.setAttribute(<span class="string">&quot;height&quot;</span>, <span class="string">&quot;100&quot;</span>);</span><br><span class="line">    imgEle.src = ev.target.result;</span><br><span class="line">    src = imgEle.src;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">download</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> el = <span class="built_in">document</span>.createElement(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">  el.setAttribute(<span class="string">&quot;href&quot;</span>, src);</span><br><span class="line">  el.setAttribute(<span class="string">&quot;download&quot;</span>, <span class="string">&quot;test&quot;</span>);</span><br><span class="line">  el.click();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementsByTagName(<span class="string">&quot;button&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>, download);</span><br></pre></td></tr></table></figure>
+
+<p>粗糙的效果:<br><img src="https://img-blog.csdnimg.cn/20190726110022721.png" alt="img"></p>
+<h3 id="FileReader"><a href="#FileReader" class="headerlink" title="FileReader"></a>FileReader</h3><p>FileReader 接收 File 或 Blob 对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fr.readAsDataURL(); <span class="comment">//result属性中将包含一个data:URL格式的字符串, 文本文档也可以转换为 base64</span></span><br><span class="line">fr.readAsBinaryString() <span class="comment">//result属性中将包含所读取文件的原始二进制数据</span></span><br><span class="line">fr.readAsText() <span class="comment">//result属性中将包含一个字符串以表示所读取的文件内容</span></span><br><span class="line">fr.readAsArrayBuffer() <span class="comment">//result 属性中保存的将是被读取文件的</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> dataUrl;</span><br><span class="line">  <span class="keyword">var</span> file = <span class="built_in">document</span>.querySelector(<span class="string">&quot;input.upload&quot;</span>).files[<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">var</span> fr = <span class="keyword">new</span> FileReader();</span><br><span class="line">  fr.readAsDataURL(); <span class="comment">//result属性中将包含一个data: URL格式的字符串, 文本文档也可以转换为 base64</span></span><br><span class="line">  <span class="comment">//fr.readAsBinaryString() //result属性中将包含所读取文件的原始二进制数据</span></span><br><span class="line">  <span class="comment">//fr.readAsText() //result属性中将包含一个字符串以表示所读取的文件内容</span></span><br><span class="line">  <span class="comment">//fr.readAsArrayBuffer() //result 属性中保存的将是被读取文件的</span></span><br><span class="line">  fr.onload(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//文件读取成功回调</span></span><br><span class="line">    dataUrl = fr.result; <span class="comment">//result属性为data:URL格式,与读取方式有关</span></span><br><span class="line">    <span class="built_in">document</span>.querySelector(<span class="string">&quot;img.previewImg&quot;</span>).src = dataUrl;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/2018/10/21/image-preview/" title="图片下载/预览简单实现 , 以及FileReader转换文件的方法" target="_blank" rel="external">https://laputaz.github.io/home/2018/10/21/image-preview/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/juice.svg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">River</span><small class="ml-1x"></small></a></h3>
+        <div>不要沉溺过去, 写新的流水账吧</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/10/21/%E9%98%B2%E6%AD%A2%E5%AF%B9%E8%B1%A1%E8%A2%AB%E4%BF%AE%E6%94%B9/" title="不可扩展对象、密封对象、冻结对象"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/10/17/try-catch-return/" title="try里面放return，finally还会执行吗"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>

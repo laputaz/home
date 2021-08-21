@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>cookie的查看和操作 | компот</title>
+  <meta name="description" content="之前面试的时候问到，cookie 有哪些属性， 怎么删除一个 cookie， 答的吞吞吐吐， 整理一下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cookie的查看和操作">
+<meta property="og:url" content="https://laputaz.github.io/home/2018/10/22/cookie%E7%9A%84%E6%9F%A5%E7%9C%8B%E5%92%8C%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="River Z">
+<meta property="og:description" content="之前面试的时候问到，cookie 有哪些属性， 怎么删除一个 cookie， 答的吞吞吐吐， 整理一下">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190722120833895.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pkaGFudW5pdHk=,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190722124328195.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pkaGFudW5pdHk=,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190722124908457.png">
+<meta property="article:published_time" content="2018-10-21T16:42:32.000Z">
+<meta property="article:modified_time" content="2021-08-21T15:15:21.737Z">
+<meta property="article:author" content="River Z">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="cookie">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190722120833895.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pkaGFudW5pdHk=,size_16,color_FFFFFF,t_70">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/2018/10/22/cookie%E7%9A%84%E6%9F%A5%E7%9C%8B%E5%92%8C%E6%93%8D%E4%BD%9C/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="River Z" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="images/juice.svg" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-right theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/juice.svg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">River</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> мурманск, россия</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p> 🍒 - мой товарищ, хотите немного бабушкиного компота ? </p><p> 🍸 - нет, дайте, пожалуйста, бутылку водки. </p> <hr/>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/angular/" style="font-size: 13px;">angular</a> <a href="/tags/cookie/" style="font-size: 13px;">cookie</a> <a href="/tags/css/" style="font-size: 13px;">css</a> <a href="/tags/javascript/" style="font-size: 14px;">javascript</a> <a href="/tags/life/" style="font-size: 13px;">life</a> <a href="/tags/vue/" style="font-size: 13px;">vue</a> <a href="/tags/wechat/" style="font-size: 13px;">wechat</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/javascript/">javascript</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a><span class="archive-list-count">23</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-cookie的查看和操作" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      cookie的查看和操作
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/10/22/cookie%E7%9A%84%E6%9F%A5%E7%9C%8B%E5%92%8C%E6%93%8D%E4%BD%9C/" class="article-date">
+	  <time datetime="2018-10-21T16:42:32.000Z" itemprop="datePublished">2018-10-22</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/cookie/" rel="tag">cookie</a>, <a class="article-tag-link-link" href="/tags/javascript/" rel="tag">javascript</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/10/22/cookie%E7%9A%84%E6%9F%A5%E7%9C%8B%E5%92%8C%E6%93%8D%E4%BD%9C/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <!-- ##### 问题 -->
+
+<p>之前面试的时候问到，cookie 有哪些属性， 怎么删除一个 cookie， 答的吞吞吐吐， 整理一下</p>
+<span id="more"></span>
+
+<h5 id="cookie-查看"><a href="#cookie-查看" class="headerlink" title="cookie 查看"></a>cookie 查看</h5><p>以 github 为例：<br><img src="https://img-blog.csdnimg.cn/20190722120833895.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pkaGFudW5pdHk=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h5 id="cookie-的字段"><a href="#cookie-的字段" class="headerlink" title="cookie 的字段"></a>cookie 的字段</h5><p><strong>name</strong><br>cookie 的名字，一个域名下绑定的 cookie，name 不能相同，相同的 name 的值会被覆盖掉（但是 name 相同，只要 cookie 的 domain ，path ， secure 有一项不同，就是不同的 cookie）</p>
+<p><strong>value</strong><br>表示 cookie 的值，cookie 的值要被编码， 但不是必须的。 cookie 规定是名称/值是不允许包含分号，逗号，空格的，为了不给用户到来麻烦，考虑服务器的兼容性，cookie 的数据都最好编码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例如 tz 设置为 广东;shenzhen, 有中文也有分号, 就需要编码</span></span><br><span class="line"><span class="built_in">document</span>.cookie = <span class="string">`tz=<span class="subst">$&#123;<span class="built_in">encodeURIComponent</span>(<span class="string">&quot;广东;shenzhen&quot;</span>)&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">document</span>.cookie);</span><br><span class="line"><span class="comment">// tz=%E5%B9%BF%E4%B8%9C%3Bshenzhen</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">decodeURIComponent</span>(<span class="built_in">document</span>.cookie));</span><br><span class="line"><span class="comment">// tz=广东;shenzhen</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>domain</strong><br>cookie 绑定的域名，如果没有设置，就会自动绑定到执行语句的当前域，cookie 有跨域的限制， 但不会判断端口名</p>
+<p><strong>path</strong><br>path 这个属性默认是’/‘，这个值匹配的是 web 的路由，举个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//默认路径</span><br><span class="line">www.baidu.com</span><br><span class="line">//blog路径</span><br><span class="line">www.baidu.com/blog  //当路径设置成/blog的时候，其实它会给/blog、/blogabc等等的绑定cookie</span><br></pre></td></tr></table></figure>
+
+<p><strong>expires/max-age</strong><br>默认情况下， 设置的 cookie 的<code>expires/max-age</code>为<code>session</code>， 也就是关闭浏览器后，该 cookie 会被删除<br><img src="https://img-blog.csdnimg.cn/20190722124328195.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pkaGFudW5pdHk=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>如果想要 cookie 存在一段时间，那么你可以通过设置 expires 属性为未来的一个时间节点(GMT 时间)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.cookie = <span class="string">`mycookie=gg;expires=<span class="subst">$&#123;<span class="keyword">new</span> <span class="built_in">Date</span>(<span class="number">2020</span>, <span class="number">08</span>, <span class="number">1</span>).toGMTString()&#125;</span>`</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20190722124908457.png" alt="在这里插入图片描述"></p>
+<p>但这个属性已经逐渐被 max-age 取代；max-age，是以秒为单位，max-age 为正数时，cookie 会在 max-age 秒之后，被删除，当 max-age 为负数时，表示的是临时储存，不会生出 cookie 文件，只会存在浏览器内存中，且只会在打开的浏览器窗口或者子窗口有效，一旦浏览器关闭，cookie 就会消失，当 max-age 为 0 时，又会发生什么呢，删除 cookie，因为 cookie 机制本身没有设置删除 cookie，失效的 cookie 会被浏览器自动从内存中删除，所以，它实现的就是让 cookie 失效。</p>
+<p>利用过期时间可以用来删除 cookie：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 把expires时间设置为过去的时间</span></span><br><span class="line"><span class="keyword">let</span> date = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line"><span class="keyword">let</span> sec = date.getTime();</span><br><span class="line">date.setTime(sec - <span class="number">1</span>);</span><br><span class="line"><span class="built_in">document</span>.cookie = <span class="string">`mycookie=;expires=<span class="subst">$&#123;date.toGMTString()&#125;</span>;`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或者把 max-age 设置为0或负数</span></span><br><span class="line"><span class="built_in">document</span>.cookie = <span class="string">`mycookie=;max-age=0;`</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>secure</strong><br>当这个属性设置为 true 时，此 cookie 只会在 https 和 ssl 等安全协议下传输</p>
+<p><strong>HttpOnly</strong><br>这个属性设置为 true，就不能通过 js 脚本来获取 cookie 的值，能有效的防止 xss 攻击（也就是用户通过 xss 输入的恶意代码不能获取到 cookie）, 以上图为例， <code>_gh_sess</code>, <code>logged_in</code>通过 document.cookie 是获取不到的， 另外， document.cookie 只能拿到非 HttpOnly 的键值</p>
+<p>上述属性，除了 name，value，其他可以设置值(指通过 js)(HttpOnly 不行)， 但取不到值</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/2018/10/22/cookie%E7%9A%84%E6%9F%A5%E7%9C%8B%E5%92%8C%E6%93%8D%E4%BD%9C/" title="cookie的查看和操作" target="_blank" rel="external">https://laputaz.github.io/home/2018/10/22/cookie的查看和操作/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/juice.svg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">River</span><small class="ml-1x"></small></a></h3>
+        <div>不要沉溺过去, 写新的流水账吧</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/08/22/flat-and-deepclone/" title="深拷贝和数组扁平化"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/10/21/%E9%98%B2%E6%AD%A2%E5%AF%B9%E8%B1%A1%E8%A2%AB%E4%BF%AE%E6%94%B9/" title="不可扩展对象、密封对象、冻结对象"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>
