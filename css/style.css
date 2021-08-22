@@ -6105,7 +6105,7 @@ body.no-sidebar .sidebar {
 
 .bar.bar-footer {
   position: relative;
-  background-color: #fff;
+  /* background-color: #fff; */
   bottom: -15px;
 }
 
@@ -8531,6 +8531,8 @@ body.okayNav-loaded {
     width: -webkit-calc(100% + 60px);
     width: calc(100% + 60px);
     left: -30px;
+    background: transparent;
+    backdrop-filter: blur(10px);
   }
 }
 
