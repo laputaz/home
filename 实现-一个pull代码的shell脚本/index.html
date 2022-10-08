@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    实现：一个用来 pull 代码的 shell 脚本 | компот
+  </title>
+  <meta name="description" content="最近每次在 github 拉代码，都需要手动输一遍，有点麻烦。刚好看了一下 shell 脚本是怎么写的。用 sh 写了一下命令。https:&#x2F;&#x2F;github.com&#x2F;laputaz&#x2F;get-code">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现：一个用来 pull 代码的 shell 脚本">
+<meta property="og:url" content="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-%E4%B8%80%E4%B8%AApull%E4%BB%A3%E7%A0%81%E7%9A%84shell%E8%84%9A%E6%9C%AC/index.html">
+<meta property="og:site_name" content="River Z">
+<meta property="og:description" content="最近每次在 github 拉代码，都需要手动输一遍，有点麻烦。刚好看了一下 shell 脚本是怎么写的。用 sh 写了一下命令。https:&#x2F;&#x2F;github.com&#x2F;laputaz&#x2F;get-code">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/c5193114a3494b10a69e5db21b7bc9db.png">
+<meta property="article:published_time" content="2020-08-22T08:58:03.000Z">
+<meta property="article:modified_time" content="2022-10-08T05:12:50.728Z">
+<meta property="article:author" content="River Z">
+<meta property="article:tag" content="实现">
+<meta property="article:tag" content="shell">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/c5193114a3494b10a69e5db21b7bc9db.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-%E4%B8%80%E4%B8%AApull%E4%BB%A3%E7%A0%81%E7%9A%84shell%E8%84%9A%E6%9C%AC/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River Z"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">River Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%91%A9%E5%B0%94%E6%9B%BC%E6%96%AF%E5%85%8B/886782"
+            >Му́рманск Россия</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>Добро пожаловать мой товарищ.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/tags/css%E5%9F%BA%E7%A1%80/" style="font-size: 13.4px;">css基础</a> <a href="/tags/css%E9%97%AE%E9%A2%98/" style="font-size: 13.2px;">css问题</a> <a href="/tags/js%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">js基础</a> <a href="/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/tags/npm/" style="font-size: 13px;">npm</a> <a href="/tags/sem/" style="font-size: 13px;">sem</a> <a href="/tags/shell/" style="font-size: 13px;">shell</a> <a href="/tags/vue/" style="font-size: 13.6px;">vue</a> <a href="/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.6px;">二进制</a> <a href="/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.4px;">俄语笔记</a> <a href="/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.4px;">回顾</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.8px;">实现</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13px;">算法</a> <a href="/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.4px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">6</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-实现-一个pull代码的shell脚本" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      实现：一个用来 pull 代码的 shell 脚本
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/%E5%AE%9E%E7%8E%B0-%E4%B8%80%E4%B8%AApull%E4%BB%A3%E7%A0%81%E7%9A%84shell%E8%84%9A%E6%9C%AC/" class="article-date">
+	  <time datetime="2020-08-22T08:58:03.000Z" itemprop="datePublished">2020-08-22</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/shell/" rel="tag">shell</a>, <a class="article-tag-link-link" href="/tags/%E5%AE%9E%E7%8E%B0/" rel="tag">实现</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/%E5%AE%9E%E7%8E%B0-%E4%B8%80%E4%B8%AApull%E4%BB%A3%E7%A0%81%E7%9A%84shell%E8%84%9A%E6%9C%AC/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>最近每次在 github 拉代码，都需要手动输一遍，有点麻烦。刚好看了一下 shell 脚本是怎么写的。<br>用 sh 写了一下命令。<a target="_blank" rel="noopener" href="https://github.com/laputaz/get-code">https://github.com/laputaz/get-code</a></p>
+<span id="more"></span>
+
+<p>效果其实特别简单，主要就是为了练习练习 shell 脚本的写法。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><ol>
+<li>建立文件夹</li>
+</ol>
+<p>首先会提示，请输入文件夹名称。当文件夹名字是空的时候，继续提示。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 建立文件夹</span></span><br><span class="line"><span class="built_in">read</span> -p <span class="string">&#x27;请输入文件夹名称:&#x27;</span> -a FLODER</span><br><span class="line"><span class="keyword">while</span> [ -z <span class="variable">$FLODER</span> ]; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">read</span> -p <span class="string">&#x27;名称为空, 请重新输入:&#x27;</span> -a FLODER</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>判断文件夹是不是已存在。<br>如果选是，提示是否删除重建；<br>否则退出。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文件夹已存在</span></span><br><span class="line"><span class="keyword">if</span> [ -d <span class="variable">$FLODER</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">read</span> -p <span class="string">&quot;文件夹已存在, 是否删除文件夹并重建？(y/n)&quot;</span> -n 1</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$REPLY</span> =~ ^[Yy]$ ]]; <span class="keyword">then</span></span><br><span class="line">        rm -rf <span class="variable">$FLODER</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">exit</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>定义一个新建文件夹并进入文件夹的函数。进入后创建一个 README.md 文件。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新建文件夹</span></span><br><span class="line"><span class="function"><span class="title">newDir</span></span>() &#123;</span><br><span class="line">    mkdir <span class="variable">$FLODER</span></span><br><span class="line">    <span class="built_in">cd</span> <span class="variable">$FLODER</span></span><br><span class="line">    touch README.md</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>执行新建并进入文件夹。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">newDir</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>提示输入仓库地址，如果为空, 或者格式不对（以 ssh/http 开头），提示重新输入。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 仓库地址 http/ssh</span></span><br><span class="line"><span class="built_in">read</span> -p <span class="string">&#x27;请输入仓库地址:&#x27;</span> -a URL</span><br><span class="line"><span class="keyword">while</span> [ -z <span class="variable">$URL</span> ]; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">read</span> -p <span class="string">&#x27;地址为空, 请重新输入:&#x27;</span> -a URL</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="keyword">while</span> [[ ! <span class="variable">$URL</span> =~ ^(http)|(ssh)$ ]]; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">read</span> -p <span class="string">&#x27;地址格式不正确, 请重新输入:&#x27;</span> -a URL</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>提示输入仓库别名。默认是 origin。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 仓库别名</span></span><br><span class="line"><span class="built_in">read</span> -p <span class="string">&#x27;请输入远程仓库别名 (默认为 origin):&#x27;</span> -a NAME</span><br><span class="line"><span class="keyword">if</span> [ -z <span class="variable">$NAME</span> ]; <span class="keyword">then</span></span><br><span class="line">    NAME=<span class="string">&#x27;origin&#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>提示输入分支名。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分支名</span></span><br><span class="line"><span class="built_in">read</span> -p <span class="string">&#x27;请输入分支名 (默认为 master) :&#x27;</span> -a BRANCH</span><br><span class="line"><span class="keyword">if</span> [ -z <span class="variable">$BRANCH</span> ]; <span class="keyword">then</span></span><br><span class="line">    BRANCH=<span class="string">&#x27;master&#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li>最后执行 git 命令，切到对应分支，并提交。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># pull</span></span><br><span class="line">git init</span><br><span class="line">git remote add <span class="variable">$NAME</span> <span class="variable">$URL</span></span><br><span class="line">git checkout -b <span class="variable">$BRANCH</span></span><br><span class="line">git pull <span class="variable">$NAME</span> <span class="variable">$BRANCH</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;add README.md&quot;</span></span><br><span class="line">git push <span class="variable">$NAME</span> <span class="variable">$BRANCH</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><img src="https://img-blog.csdnimg.cn/c5193114a3494b10a69e5db21b7bc9db.png" width=400/>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-%E4%B8%80%E4%B8%AApull%E4%BB%A3%E7%A0%81%E7%9A%84shell%E8%84%9A%E6%9C%AC/" title="实现：一个用来 pull 代码的 shell 脚本" target="_blank" rel="external">https://laputaz.github.io/home/实现-一个pull代码的shell脚本/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">River Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>吃没吃过的</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/js%E5%9F%BA%E7%A1%80-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" title="js基础：排序算法总结"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/css%E9%97%AE%E9%A2%98-ios%E7%AB%AFinput%E6%97%A0%E6%B3%95%E8%87%AA%E5%8A%A8%E8%81%9A%E7%84%A6%E8%A7%A3%E5%86%B3/" title="css问题：safari 下 input 无法自动聚焦解决"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

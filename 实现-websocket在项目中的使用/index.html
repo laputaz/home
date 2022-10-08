@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    实现：websocket 在项目中的使用-订单锁定 | компот
+  </title>
+  <meta name="description" content="从前在订单模块用到了 websocket，记录一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现：websocket 在项目中的使用-订单锁定">
+<meta property="og:url" content="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-websocket%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="River Z">
+<meta property="og:description" content="从前在订单模块用到了 websocket，记录一下。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/efa27acaf83b495f8160dfe8f95c22e3.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/3569789c20b04b22af86ee2ba3b56f14.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/f88febc3756a4d21b100f37da1b5defc.png">
+<meta property="article:published_time" content="2021-03-12T05:35:28.000Z">
+<meta property="article:modified_time" content="2022-10-08T05:12:50.729Z">
+<meta property="article:author" content="River Z">
+<meta property="article:tag" content="实现">
+<meta property="article:tag" content="websocket">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/efa27acaf83b495f8160dfe8f95c22e3.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-websocket%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River Z"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">River Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%91%A9%E5%B0%94%E6%9B%BC%E6%96%AF%E5%85%8B/886782"
+            >Му́рманск Россия</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>Добро пожаловать мой товарищ.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/tags/css%E5%9F%BA%E7%A1%80/" style="font-size: 13.4px;">css基础</a> <a href="/tags/css%E9%97%AE%E9%A2%98/" style="font-size: 13.2px;">css问题</a> <a href="/tags/js%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">js基础</a> <a href="/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/tags/npm/" style="font-size: 13px;">npm</a> <a href="/tags/sem/" style="font-size: 13px;">sem</a> <a href="/tags/shell/" style="font-size: 13px;">shell</a> <a href="/tags/vue/" style="font-size: 13.6px;">vue</a> <a href="/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.6px;">二进制</a> <a href="/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.4px;">俄语笔记</a> <a href="/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.4px;">回顾</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.8px;">实现</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13px;">算法</a> <a href="/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.4px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">6</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-实现-websocket在项目中的使用" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      实现：websocket 在项目中的使用-订单锁定
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/%E5%AE%9E%E7%8E%B0-websocket%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/" class="article-date">
+	  <time datetime="2021-03-12T05:35:28.000Z" itemprop="datePublished">2021-03-12</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/websocket/" rel="tag">websocket</a>, <a class="article-tag-link-link" href="/tags/%E5%AE%9E%E7%8E%B0/" rel="tag">实现</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/%E5%AE%9E%E7%8E%B0-websocket%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>从前在订单模块用到了 websocket，记录一下。</p>
+<span id="more"></span>
+
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>admin 订单详情模块存在一个页面，叫做 fraud order list。也就是退款订单页面。</p>
+<p>大概长这样：<br><img src="https://img-blog.csdnimg.cn/efa27acaf83b495f8160dfe8f95c22e3.png" alt="在这里插入图片描述"></p>
+<p>点击操作按钮会出现弹窗的表单， 填写完保存:<br><img src="https://img-blog.csdnimg.cn/3569789c20b04b22af86ee2ba3b56f14.png" alt="在这里插入图片描述"></p>
+<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><ul>
+<li>页面不是只有一个人在操作的，同一段时间内，如果有不同的人打开弹窗，巴拉巴拉填完，后面保存的操作会覆盖前面保存的操作。</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>websocket 是在这个场景就是一个很好的解决方法。</p>
+<ul>
+<li>首先，在订单的操作栏增加一个 lock 按钮：当我要编辑这笔订单时，点击 lock 按钮，通知到服务端。</li>
+<li>服务端接受到消息，将订单锁定的状态存储起来。</li>
+<li>再推送到所有客户端浏览器，让这个订单变成已锁定，隐藏所有按钮，不能再编辑。</li>
+</ul>
+<p>这样，一个订单，在同一个时间段内，只能有一个人在处理。</p>
+<p><img src="https://img-blog.csdnimg.cn/f88febc3756a4d21b100f37da1b5defc.png" alt="在这里插入图片描述"></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>客户端部分代码。用 vue 编写。<br>这里用了一个 reconnecting-websocket 库，他封装了原生的 websocket，并且可以实现断开后自动重连。（有一些场景，例如网络断开一段时间，或者 node 服务需要重新发布，或者挂掉重启，这个时候是需要重新连接的。）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 订单列表 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">v-for</span>=<span class="string">&quot;order in orderList&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 点击后锁定 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-button</span> @<span class="attr">click</span>=<span class="string">&quot;lockOrder&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 其他按钮, 如果是锁定的，则不展示 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-button</span> @<span class="attr">click</span>=<span class="string">&quot;edit&quot;</span> <span class="attr">v-if</span>=<span class="string">&quot;all_lock_data.includes(order)&quot;</span>&gt;</span></span><br><span class="line">      操作</span><br><span class="line">    <span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-dialog</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 保存，这时解锁订单 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-button</span> @<span class="attr">click</span>=<span class="string">&quot;save() &amp;&amp; unlockOrder()&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">el-dialog</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">  <span class="comment">// 引入</span></span></span><br><span class="line"><span class="javascript">  <span class="keyword">import</span> ReconnectingWebSocket <span class="keyword">from</span> <span class="string">&#x27;reconnecting-websocket&#x27;</span></span></span><br><span class="line"><span class="javascript"></span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="javascript">    <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 初始化</span></span></span><br><span class="line"><span class="javascript">      <span class="function"><span class="title">initWebsocket</span>(<span class="params"></span>)</span> &#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 连接接口</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> socket = <span class="keyword">new</span> ReconnectingWebSocket(<span class="string">&#x27;/websocket/lock_fruad_order&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        <span class="built_in">this</span>.socket = socket</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 建立连接</span></span></span><br><span class="line"><span class="javascript">        socket.onopen = <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.info(<span class="string">&#x27;websocket connection established&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="comment">/**</span></span></span><br><span class="line"><span class="comment"><span class="javascript">         * data 格式</span></span></span><br><span class="line"><span class="comment"><span class="javascript">         * [</span></span></span><br><span class="line"><span class="comment"><span class="javascript">         *   order_id: 订单编号</span></span></span><br><span class="line"><span class="comment"><span class="javascript">         *   is_locked: 是否锁定</span></span></span><br><span class="line"><span class="comment"><span class="javascript">         *   account_name: 操作人</span></span></span><br><span class="line"><span class="comment"><span class="javascript">         * ]</span></span></span><br><span class="line"><span class="comment"><span class="javascript">         */</span></span></span><br><span class="line"><span class="javascript">        <span class="built_in">this</span>.socket.onmessage = <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">          <span class="keyword">let</span> data = <span class="built_in">JSON</span>.parse(event.data)</span></span><br><span class="line"><span class="javascript">          <span class="comment">// 记录lock的数据</span></span></span><br><span class="line"><span class="javascript">          $vm.all_lock_data = data</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript"></span></span><br><span class="line"><span class="javascript">        <span class="comment">// 关闭</span></span></span><br><span class="line"><span class="javascript">        <span class="built_in">this</span>.socket.onclose = <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.error(<span class="string">&#x27;[close] Connection died&#x27;</span>)</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript"></span></span><br><span class="line"><span class="javascript">        <span class="comment">// 出错</span></span></span><br><span class="line"><span class="javascript">        <span class="built_in">this</span>.socket.onerror = <span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">          <span class="built_in">console</span>.error(<span class="string">`[error] <span class="subst">$&#123;error.message&#125;</span>`</span>)</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">      &#125;,</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 点击锁定</span></span></span><br><span class="line"><span class="javascript">      <span class="function"><span class="title">lockOrder</span>(<span class="params">order</span>)</span> &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> data = <span class="built_in">JSON</span>.stringify([</span></span><br><span class="line"><span class="javascript">            isLock: <span class="literal">true</span>,</span></span><br><span class="line"><span class="javascript">            <span class="attr">order_number</span>: order.order_number,</span></span><br><span class="line"><span class="javascript">            <span class="attr">account_name</span>: <span class="built_in">window</span>.KLK_PAGE_DATA._session.account.account_name</span></span><br><span class="line"><span class="javascript">        ]);</span></span><br><span class="line"><span class="javascript">        <span class="built_in">this</span>.socket.send(data);</span></span><br><span class="line"><span class="javascript">      &#125;,</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 保存后取消锁定</span></span></span><br><span class="line"><span class="javascript">      <span class="function"><span class="title">unlockOrder</span>(<span class="params">order</span>)</span> &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">const</span> data = <span class="built_in">JSON</span>.stringify([</span></span><br><span class="line"><span class="javascript">            isLock: <span class="literal">false</span>,</span></span><br><span class="line"><span class="javascript">            <span class="attr">order_number</span>: order.order_number,</span></span><br><span class="line"><span class="javascript">            <span class="attr">account_name</span>: <span class="built_in">window</span>.KLK_PAGE_DATA._session.account.account_name</span></span><br><span class="line"><span class="javascript">        ]);</span></span><br><span class="line"><span class="javascript">        <span class="built_in">this</span>.socket.send(data);</span></span><br><span class="line"><span class="javascript">      &#125;</span></span><br><span class="line"><span class="javascript">    &#125;,</span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="title">created</span>(<span class="params"></span>)</span> &#123;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 初始化</span></span></span><br><span class="line"><span class="javascript">      <span class="built_in">this</span>.initWebsocket()</span></span><br><span class="line"><span class="javascript">    &#125;,</span></span><br><span class="line"><span class="javascript">  &#125;</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面就是客户端的写法，比较简单，再看看服务端。<br>服务端用的是 koa。<br>为了防止服务崩溃，发布或者重启，这里将锁定的订单都存在 redis 持久化。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">&#x27;koa&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> websockify = <span class="built_in">require</span>(<span class="string">&#x27;koa-websocket&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> KoaRouter = <span class="built_in">require</span>(<span class="string">&#x27;koa-router&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> redis = <span class="built_in">require</span>(<span class="string">&#x27;redis&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa()</span><br><span class="line"><span class="keyword">const</span> router = KoaRouter()</span><br><span class="line"><span class="keyword">const</span> rds = redis.createClient()</span><br><span class="line"><span class="comment">// 使koa实例支持 websocket</span></span><br><span class="line">app = websockify(app)</span><br><span class="line"><span class="comment">// redis的对应的数据key prefix</span></span><br><span class="line"><span class="keyword">const</span> RDS_PREFIX = <span class="string">&#x27;fruad_order_lock:&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个方法，用于广播</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">broadcastAllData</span>(<span class="params">$ws</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 根据 key prefix 找到所有数据</span></span><br><span class="line">  rds.keys(<span class="string">`<span class="subst">$&#123;RDS_PREFIX&#125;</span>*`</span>, <span class="function">(<span class="params">err, res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(err)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> keys = res</span><br><span class="line">    <span class="keyword">if</span> (keys &amp;&amp; keys.length) &#123;</span><br><span class="line">      rds.mget(keys, <span class="function"><span class="keyword">function</span> (<span class="params">err, res</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(err)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> values = res</span><br><span class="line">        <span class="keyword">let</span> data = keys.reduce(</span><br><span class="line">          <span class="function">(<span class="params">acc, key, index</span>) =&gt;</span> (&#123;</span><br><span class="line">            ...acc,</span><br><span class="line">            [key.replace(RDS_PREFIX, <span class="string">&#x27;&#x27;</span>)]: values[index],</span><br><span class="line">          &#125;),</span><br><span class="line">          &#123;&#125;</span><br><span class="line">        )</span><br><span class="line">        <span class="comment">// 广播</span></span><br><span class="line">        $ws.broadcast(<span class="built_in">JSON</span>.stringify(data))</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 未找到，广播</span></span><br><span class="line">      $ws.broadcast(<span class="built_in">JSON</span>.stringify(&#123;&#125;))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当收到客户端链接</span></span><br><span class="line">router.get(</span><br><span class="line">  <span class="string">&#x27;/websocket/lock_fruad_order&#x27;</span>,</span><br><span class="line">  <span class="function"><span class="keyword">function</span>* (<span class="params">next</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 做一些鉴权的操作，比如登录失效了，则不允许处理</span></span><br><span class="line">    <span class="keyword">let</span> has_auth = <span class="keyword">yield</span> web_comm.has_auth.call(<span class="built_in">this</span>) <span class="comment">// 根据 this 上下文中的 cookie，判断登陆态</span></span><br><span class="line">    <span class="keyword">if</span> (!has_auth) &#123;</span><br><span class="line">      <span class="comment">// 未登录，直接断开</span></span><br><span class="line">      <span class="built_in">this</span>.websocket.close(<span class="number">1003</span>, <span class="string">&#x27;Auth Error&#x27;</span>)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 否则下一步</span></span><br><span class="line">      <span class="keyword">yield</span> next</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 下一个中间件</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span>* (<span class="params">next</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> $ws = <span class="built_in">this</span>.websocket</span><br><span class="line">    <span class="comment">// 收到 lock message</span></span><br><span class="line">    $ws.on(<span class="string">&#x27;message&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">message</span>) </span>&#123;</span><br><span class="line">      <span class="comment">// print message from the client</span></span><br><span class="line">      <span class="keyword">let</span> [isLock, order_number, name] = <span class="built_in">JSON</span>.parse(message)</span><br><span class="line">      <span class="keyword">let</span> KEY = <span class="string">`<span class="subst">$&#123;RDS_PREFIX&#125;</span><span class="subst">$&#123;order_number&#125;</span>`</span></span><br><span class="line">      <span class="keyword">let</span> updateHandler = <span class="function"><span class="keyword">function</span> (<span class="params">err, res</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(err)</span><br><span class="line">        &#125;</span><br><span class="line">        broadcastAllData($ws)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 将数据存到 redis</span></span><br><span class="line">      <span class="keyword">if</span> (isLock) &#123;</span><br><span class="line">        rds.setex(KEY, <span class="number">10</span> * <span class="number">60</span>, name, updateHandler)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 解除锁定时，删除 key</span></span><br><span class="line">        rds.del(KEY, updateHandler)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// send a message to our client</span></span><br><span class="line">    broadcastAllData($ws)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// yielding `next` will pass the context (this) on to the next ws middleware</span></span><br><span class="line">    <span class="keyword">yield</span> next</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">app.use(router.routes())</span><br></pre></td></tr></table></figure>
+
+<h2 id="以上。"><a href="#以上。" class="headerlink" title="以上。"></a>以上。</h2>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-websocket%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/" title="实现：websocket 在项目中的使用-订单锁定" target="_blank" rel="external">https://laputaz.github.io/home/实现-websocket在项目中的使用/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">River Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>吃没吃过的</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0-%E4%BF%84%E8%AF%AD%E5%AD%97%E6%AF%8D%E5%92%8C%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" title="俄语笔记(一)：俄语字母和基础语法"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/css-%E7%BB%84%E4%BB%B6%E5%BA%93%E6%A0%B7%E5%BC%8F%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86/" title="回顾：组件库样式问题整理"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

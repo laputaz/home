@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    js基础：es6 中需要注意的一些点 | компот
+  </title>
+  <meta name="description" content="es6 的一些需要额外注意的点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js基础：es6 中需要注意的一些点">
+<meta property="og:url" content="https://laputaz.github.io/home/js%E5%9F%BA%E7%A1%80-es6%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E7%82%B9/index.html">
+<meta property="og:site_name" content="River Z">
+<meta property="og:description" content="es6 的一些需要额外注意的点">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-09-05T09:36:36.000Z">
+<meta property="article:modified_time" content="2022-10-08T05:12:50.726Z">
+<meta property="article:author" content="River Z">
+<meta property="article:tag" content="js基础">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/js%E5%9F%BA%E7%A1%80-es6%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E7%82%B9/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River Z"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">River Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%91%A9%E5%B0%94%E6%9B%BC%E6%96%AF%E5%85%8B/886782"
+            >Му́рманск Россия</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>Добро пожаловать мой товарищ.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/tags/css%E5%9F%BA%E7%A1%80/" style="font-size: 13.4px;">css基础</a> <a href="/tags/css%E9%97%AE%E9%A2%98/" style="font-size: 13.2px;">css问题</a> <a href="/tags/js%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">js基础</a> <a href="/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/tags/npm/" style="font-size: 13px;">npm</a> <a href="/tags/sem/" style="font-size: 13px;">sem</a> <a href="/tags/shell/" style="font-size: 13px;">shell</a> <a href="/tags/vue/" style="font-size: 13.6px;">vue</a> <a href="/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.6px;">二进制</a> <a href="/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.4px;">俄语笔记</a> <a href="/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.4px;">回顾</a> <a href="/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.8px;">实现</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13px;">算法</a> <a href="/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.4px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">6</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-js基础-es6中需要注意的一些点" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js基础：es6 中需要注意的一些点
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/js%E5%9F%BA%E7%A1%80-es6%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E7%82%B9/" class="article-date">
+	  <time datetime="2018-09-05T09:36:36.000Z" itemprop="datePublished">2018-09-05</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/js%E5%9F%BA%E7%A1%80/" rel="tag">js基础</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/js%E5%9F%BA%E7%A1%80-es6%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E7%82%B9/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>es6 的一些需要额外注意的点</p>
+<span id="more"></span>
+
+<ol>
+<li><p>let &amp;&amp; const</p>
+<ul>
+<li>拥有块级作用域</li>
+<li>不可重复声明</li>
+<li>暂时性死区 (作用域内声明前, 不可用, 报错)</li>
+<li>未声明前, typeof 也是直接报错, 但 typeof 一个为定义的变量不会报错, 输出 undefined (typeof 不再安全)</li>
+<li>const，声明必须赋值 (并不是变量的值不得改动，而是变量指向的那个内存地址所保存的数据不得改动)</li>
+<li>let、const、class 声明的全局变量，不属于顶层对象的属性。从 ES6 开始，全局变量将逐步与顶层对象的属性脱钩。</li>
+<li>globalThis 全局对象(提案)</li>
+</ul>
+</li>
+<li><p>解构</p>
+<ul>
+<li>字符串也可以解构赋值。 const [a, b, c, d, e] = ‘hello’;</li>
+<li>解构赋值时，如果等号右边是数值和布尔值，则会先转为对象</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> &#123; <span class="attr">toString</span>: s &#125; = <span class="number">123</span></span><br><span class="line">s === <span class="built_in">Number</span>.prototype.toString</span><br></pre></td></tr></table></figure></li>
+<li><p>字符串方法</p>
+<ul>
+<li>includes(), startsWith(), endsWith(), padStart()，padEnd(), tirmStart(), tirmEnd()</li>
+</ul>
+</li>
+<li><p>数字</p>
+<ul>
+<li>Number.isFinite(), Number.isNaN() 与 isNaN() 区别, isNaN()会先转换成数字, 如 isNaN(‘a’) //true</li>
+<li>Number.isInteger(), Number.isSafeInteger()</li>
+<li>Math.sign 方法用来判断一个数到底是正数、负数、还是零</li>
+<li>指数运算符（**）</li>
+</ul>
+</li>
+<li><p>函数</p>
+<ul>
+<li>length 属性 , 含义是，该函数预期传入的参数个数, 指定了默认值后，该参数不被统计</li>
+<li>rest 参数（形式为…变量名）,rest 参数之后不能再有其他参数</li>
+<li>name 属性, 函数名 var f = function () {}; // es5 f.name=&gt; “” // es6 f.name=&gt; “f”</li>
+<li>箭头函数内的 this 对象，就是定义时所在的对象</li>
+<li>箭头函数不可以当作构造函数</li>
+<li>箭头函数不可以使用 arguments 对象</li>
+<li>箭头函数不能用作 Generator 函数</li>
+</ul>
+</li>
+<li><p>数组</p>
+<ul>
+<li>扩展运算符, 复制数组, 合并数组</li>
+<li>与解构赋值结合 const [first, …rest] = [1, 2, 3, 4, 5];</li>
+<li>将字符串转为真正的数组 […’hello’]</li>
+<li>Iterator</li>
+<li>Array.from 将两类对象转为真正的数组：类似数组的对象和可遍历的对象, Array.from(Set)</li>
+<li>Array.of 方法用于将一组值，转换为数组 Array.of(3, 11, 8)</li>
+<li>find() 和 findIndex()</li>
+<li>fill() // let a = []; a.length =100; a.fill(1) // [1,1,1,1,….100 个 1]</li>
+<li>includes()</li>
+<li>flat() / flatMap() 扁平化数组</li>
+<li>数组的空位, ES6 则是明确将空位转为 undefined // Array(3) // [, , ,]</li>
+</ul>
+</li>
+<li><p>对象</p>
+<ul>
+<li>Object.getOwnPropertyNames 包含对象自身的所有属性（不含 Symbol 属性，但是包括不可枚举属性）</li>
+<li>Object.getOwnPropertySymbols 返回一个数组，包含对象自身的所有 Symbol 属性的键名</li>
+<li>Reflect.ownKeys 返回一个数组，包含对象自身的所有键名，不管键名是 Symbol 或字符串，也不管是否可枚举</li>
+<li>扩展运算符 // {…{b:2}, a: 1} //{b: 2, a: 1}</li>
+<li>Object.is 跟 === 一样</li>
+<li>Object.assign(target, source1, source2) 将源对象（source）的所有可枚举属性，复制到目标对象（target）(<strong>浅拷贝</strong>)</li>
+<li>Object.getPrototypeOf() =&gt; <strong>proto</strong></li>
+<li>Object.keys()，Object.values()，Object.entries() (键值对数组)</li>
+</ul>
+</li>
+<li><p>set / map</p>
+<ul>
+<li>在 Set 内部，两个 NaN 是相等</li>
+<li>Map 的遍历顺序就是插入顺序</li>
+</ul>
+</li>
+<li><p>promise</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//	加载图片</span></span><br><span class="line"><span class="keyword">const</span> preloadImage = <span class="function"><span class="keyword">function</span> (<span class="params">path</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> image = <span class="keyword">new</span> Image()</span><br><span class="line">    image.onload = resolve</span><br><span class="line">    image.onerror = reject</span><br><span class="line">    image.src = path</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Promise.all / Promise.race</li>
+</ul>
+</li>
+<li><p>Iterator</p>
+<ul>
+<li>任何数据结构只要部署 Iterator 接口，就可以完成遍历操作 for…of</li>
+<li>对象（Object）之所以没有默认部署 Iterator 接口，是因为对象的哪个属性先遍历，哪个属性后遍历是不确定的</li>
+<li>获取 Iterator<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> iter = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>][<span class="built_in">Symbol</span>.iterator]()</span><br><span class="line">iter.next() <span class="comment">//&#123;value: 1, done: false&#125;</span></span><br><span class="line">iter.next() <span class="comment">//&#123;value: 2, done: false&#125;</span></span><br><span class="line">iter.next() <span class="comment">//&#123;value: 3, done: true&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>调用 Iterator 接口的场合 =&gt; 解构赋值, 扩展运算符, yield* , for…of, Array.from(),Map(), Set(), Promise.all / Promise.race</li>
+</ul>
+<ol start="11">
+<li><p>async</p>
+<ul>
+<li>async 函数完全可以看作多个异步操作，包装成的一个 Promise 对象，而 await 命令就是内部 then 命令的语法糖</li>
+<li>async 函数内部 return 语句返回的值，会成为 then 方法回调函数的参数</li>
+<li>没有 return , 返回 resolve(undefined)</li>
+<li>async 函数内部抛出错误，会导致返回的 Promise 对象变为 reject 状态。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;出错了&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f()</span><br><span class="line">  .then(<span class="function">(<span class="params">v</span>) =&gt;</span> <span class="built_in">console</span>.log(v))</span><br><span class="line">  .catch(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(e)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>await 命令只能出现在 async 函数内部，否则都会报错</p>
+</li>
+</ol>
+<p>13.类 注意的几个点 :</p>
+<ul>
+<li>在<code>class</code>中定义的方法, 均为原型方法</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">F</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">say</span>(<span class="params"></span>)</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">F.prototype.hasOwnProperty(<span class="string">&#x27;say&#x27;</span>) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>class</code> 中定义的属性, 均为实例属性, 而非在原型上, 并且构造函数中定义相同属性会覆盖<code>class</code>中的定义</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">W</span> </span>&#123;</span><br><span class="line">  a = <span class="number">1</span></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.a = <span class="number">2</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> w = <span class="keyword">new</span> W()</span><br><span class="line">w.hasOwnProperty(<span class="string">&#x27;a&#x27;</span>) <span class="comment">//true</span></span><br><span class="line">w.a <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>类本身指向构造函数</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.getPrototypeOf(w).constructor === W</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>class</code> 没有写构造函数, 会自动创建一个, 并返回<code>this</code></li>
+<li>与<code>es5</code>不同的是, 类中定义的方法是不可枚举的, <code>es5</code>的<code>prototype</code>写法可以</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//class</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">F</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">say</span>(<span class="params"></span>)</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">Object</span>.keys(F.prototype) <span class="comment">// []</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// es5</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">G</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">G.prototype.say = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="built_in">Object</span>.keys(G.prototype) <span class="comment">// [&#x27;say&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>__proto__</code> 并不是语言本身的特性，这是各大厂商具体实现时添加的私有属性，我们可以使用 Object.getPrototypeOf</li>
+<li><code>static</code>修饰的方法不会被实例继承, 静态方法, 只能被类调用, 可以与实例方法重名</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">H</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="function"><span class="title">say</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="title">say</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> h = <span class="keyword">new</span> H()</span><br><span class="line">h.say() <span class="comment">// 2</span></span><br><span class="line">H.say() <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用<code>extends</code>继承时, 若子类显式地写了构造函数, 那么构造函数 中必须调用<code>super()</code>, 子类未显式写构造函数则不用</li>
+<li><code>class</code>中可以写<code>get</code>, <code>set</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">K</span> </span>&#123;</span><br><span class="line">  <span class="keyword">get</span> <span class="title">a</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.b</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">set</span> <span class="title">a</span>(<span class="params">val</span>) &#123;</span><br><span class="line">    <span class="built_in">this</span>.b = val</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/js%E5%9F%BA%E7%A1%80-es6%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E7%82%B9/" title="js基础：es6 中需要注意的一些点" target="_blank" rel="external">https://laputaz.github.io/home/js基础-es6中需要注意的一些点/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">River Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>吃没吃过的</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/Vue%E6%BA%90%E7%A0%81%E6%95%B4%E7%90%86,%20%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86%E5%92%8C%E5%93%8D%E5%BA%94%E5%BC%8F/" title="vue：源码整理, 数据代理和响应式"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/js%E5%9F%BA%E7%A1%80-promise%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E5%92%8C%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E7%82%B9/" title="js基础：promise 的简单实现和需要注意的一些点"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>
