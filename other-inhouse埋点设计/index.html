@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    inhouse 埋点设计 | компот
+  </title>
+  <meta name="description" content="inhouse 埋点方案设计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="inhouse 埋点设计">
+<meta property="og:url" content="https://laputaz.github.io/home/other-inhouse%E5%9F%8B%E7%82%B9%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="inhouse 埋点方案设计">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-04T15:16:42.000Z">
+<meta property="article:modified_time" content="2024-10-09T05:36:33.283Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="回顾">
+<meta property="article:tag" content="方案设计">
+<meta property="article:tag" content="埋点">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/other-inhouse%E5%9F%8B%E7%82%B9%E8%AE%BE%E8%AE%A1/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">River</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%91%A9%E5%B0%94%E6%9B%BC%E6%96%AF%E5%85%8B/886782"
+            >Му́рманск Россия</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>Добро пожаловать мой товарищ.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.4px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.8px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.1px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.5px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.3px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.2px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.1px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.6px;">回顾</a> <a href="/home/tags/%E5%9F%8B%E7%82%B9/" style="font-size: 13px;">埋点</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.1px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.9px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.7px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.2px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.2px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.1px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.2px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">19</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-other-inhouse埋点设计" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      inhouse 埋点设计
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/other-inhouse%E5%9F%8B%E7%82%B9%E8%AE%BE%E8%AE%A1/" class="article-date">
+	  <time datetime="2021-09-04T15:16:42.000Z" itemprop="datePublished">2021-09-04</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/%E5%9B%9E%E9%A1%BE/" rel="tag">回顾</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9F%8B%E7%82%B9/" rel="tag">埋点</a>, <a class="article-tag-link-link" href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" rel="tag">方案设计</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/other-inhouse%E5%9F%8B%E7%82%B9%E8%AE%BE%E8%AE%A1/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>inhouse 埋点方案设计</p>
+<span id="more"></span>
+
+<h3 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h3><p>目前公司已经拥有多套第三方的 tracking 系统，比如 GA，Mixpanel 等，主要是为了满足 marketing 和 product analytics 等方面的分析需求。随着业务的飞速发展，GA 和 Mixpanel 不断地增加新的埋点，两套系统已经变的非常复杂，而且已经存在不少数据质量的问题。</p>
+<p>搜索和推荐目前正在朝着大数据驱动的智能平台方向发展，对数据的采集有了新的需求。搜索和推荐将以业务的核心指标作为优化的最终目标，比如 CTR，CVR，GMV 等；实现这些优化的重要手段将是机器学习。而机器学习需要大量的数据，这些数据通过现有的第三方 tracking 系统是很难获取的。比如：</p>
+<ul>
+<li>曝光数据是计算核心指标 CTR 的重要数据源，但目前各个第三方平台并没有采集。</li>
+<li>埋点原始数据可以增强数据基础能力，让更深度的分析成为可能，但第三方平台不一定能提供原始数据。</li>
+</ul>
+<p>因此我们打算开发一套内部的 tracking 系统，采集我们所需要的一切用户数据，上报到我们自建的大数据平台中，为实现数据驱动和平台智能化提供基础数据能力的支持。</p>
+<p>此外，旧的埋点方案存在一些问题，导致埋点效率低、数据质量不稳定。</p>
+<p>对于产品或其他数据使用方来说：</p>
+<ul>
+<li>埋点口径不一致、不规范</li>
+<li>埋点数据不准确</li>
+<li>埋点数据难以验证</li>
+</ul>
+<p>对于前端开发来说：</p>
+<ul>
+<li>来源路径都需要手动埋点，成本较高</li>
+<li>前端需要自行通过接口拉取额外的属性数据</li>
+<li>需要处理服务端字段名与第三方埋点字段名的映射关系</li>
+<li>模块复用容易导致埋点代码逻辑出错</li>
+<li>埋点没有规范，特殊逻辑较多</li>
+<li>通过 in-house tracking 项目，我们希望在框架层面上解决这些问题，使新的埋点系统可以做到高效率、高质量、可验证与可持续。</li>
+</ul>
+<h2 id="整体设计目标"><a href="#整体设计目标" class="headerlink" title="整体设计目标"></a>整体设计目标</h2><ol>
+<li>前端埋点：支持核心指标分析</li>
+</ol>
+<ul>
+<li>准确并且精细的追踪每一条用户流量路径，能够准确的复盘每一个订单的来源</li>
+<li>支持 CTR、CVR、GMV 等核心指标的计算</li>
+</ul>
+<ol start="2">
+<li>前端埋点：标准化和框架化</li>
+</ol>
+<ul>
+<li>保证埋点数据的准确性</li>
+<li>减少研发埋点成本</li>
+<li>兼容第三方 tracking 系统</li>
+<li>支持实时将 in-house 的埋点数据按需转化并转发到第三方，比如 Mixpanel 和 GA</li>
+<li>与 Kepler AB 实验系统结合</li>
+<li>有效的标识每个实验所影响的流量和数据，包括前端实验和后端实验</li>
+<li>准确的衡量分析实验的指标及效果</li>
+</ul>
+<ol start="3">
+<li>支持后端埋点</li>
+</ol>
+<ul>
+<li>后端可按需发送埋点 log，可与前端埋点协同分析</li>
+<li>规范数据测试流程</li>
+<li>埋点数据测试流程标准化和自动化，支持大面积埋点需求测试</li>
+<li>埋点数据测试纳入回归测试中，保证新需求不影响埋点数据</li>
+</ul>
+<h2 id="整体设计框架"><a href="#整体设计框架" class="headerlink" title="整体设计框架"></a>整体设计框架</h2><p>设计框架图<br>数据模型<br>SPM 模型<br>页面、模块、元素是层级关系<br>spm 格式是 page.module.item</p>
+<h2 id="核心数据关联"><a href="#核心数据关联" class="headerlink" title="核心数据关联"></a>核心数据关联</h2><ul>
+<li>session_id<br>聚合同一个用户在一个连续的时间周期内的行为<br>是用户行为分析和核心指标计算的一个重要的概念</li>
+<li>page_open_id<br>聚合同一个用户在同一次页面打开中的行为<br>前后端数据的重要连接器</li>
+<li>click_id<br>由点击事件生成并传递给点击所打开的页面<br>前后页面之间的连接器，使深度的路径分析成为可能</li>
+</ul>
+<h2 id="前端埋点"><a href="#前端埋点" class="headerlink" title="前端埋点"></a>前端埋点</h2><ol>
+<li>元素编码化<br>借鉴阿里的 SPM (super position model) 模型，平台统一使用一套编码规范来定位页面上的每一个元素。SPM 编码由 页面编码、模块编码和元素编码 三级构成。</li>
+<li>编码与页面元素绑定<br>通过声明式标记配合 UI 页面元素的层级结构来埋点的方式, 减少埋点对于业务代码的入侵。</li>
+<li>事件类型</li>
+</ol>
+<ul>
+<li>pageview 事件：页面级别，用于追踪页面流量</li>
+<li>exposure 事件：模块级别，使用有效曝光数据计算 CTR</li>
+<li>action 事件：模块或者元素级别，默认是 click 事件，后续会有 input、hover 等事件</li>
+<li>custom 事件：自定义事件类型。无法被以上三种标准化事件包括的事件，比如要求在页面拿到某个接口数据之后再触发</li>
+</ul>
+<ol start="4">
+<li>数据关联</li>
+</ol>
+<ul>
+<li>unique_event_id：每一个事件都会生成的 UUID，用于标记每个事件，便于后续对数据进行去重。</li>
+<li>page_open_id：每一次页面打开时生成的 unique ID，请求时发送到后端服务。用于聚合同一个页面上发生的所有事件，以及关联前端埋点与后端埋点。</li>
+<li>对于 pageview 事件来说，page_open_id 等于 unique_event_id。</li>
+<li>由于 page_open_id 是 page 级别的属性，会被模块和元素级别的事件继承，因此 exposure 和 action 事件上都会包含其对应的 pageview 事件的 page_open_id。</li>
+</ul>
+<ol start="5">
+<li>click_id：每一次用户点击时生成的 unique ID，页面跳转时发送到下一页面。用于关联前后两个页面跳转，提供深度路径分析能力。</li>
+</ol>
+<ul>
+<li>对于 action（click）事件来说，其 click_id 等于 unique_event_id。</li>
+<li>由于 click_id 会被传递到点击跳转的下一个页面，并且被放在下个页面的 page 级别属性上，所以跳转的页面上的所有事件的 page.click_id 都会记录此点击的 click_id。</li>
+</ul>
+<ol start="6">
+<li>session_id：frontLogSrv 根据维护的 session 生成的 unique ID。用于聚合同一用户的一段连续行为。</li>
+</ol>
+<h2 id="数据转发服务"><a href="#数据转发服务" class="headerlink" title="数据转发服务"></a>数据转发服务</h2><p>数据转发服务是 in-house 前端埋点数据与 Mixpanel/GA 等第三方埋点工具的数据中转站，主要负责数据补全和数据转换/转发两大功能模块。</p>
+<h2 id="数据补全"><a href="#数据补全" class="headerlink" title="数据补全"></a>数据补全</h2><p>前端直接发送的埋点数据遵循尽量精简的原则，一般只发送必要的、只能由前端获得的数据，其他可由后端补全的数据则会在这一阶段进行补全，补全后的数据会发到大数据平台作为 in-house 的数据进行后续处理，同时也会进入下一阶段进行数据转换。<br>数据转换和转发<br>数据转换和转发模块主要服务于第三方埋点工具，会根据 Mixpanel/GA 等第三方的需要对数据进行转换，然后发送到对应的第三方平台。<br>大数据平台数据补全<br>在 IHT 系统运行一段时间后，发现由后端服务来进行数据补全有一定的局限。因此我们运用大数据平台的能力，将数据补全功能从转发服务中抽离开来。具体设计详见数据补全方案文档。</p>
+<h2 id="Kepler-AB-实验信息"><a href="#Kepler-AB-实验信息" class="headerlink" title="Kepler AB 实验信息"></a>Kepler AB 实验信息</h2><p>Kepler 同时支持前端和后端的实验。在 in-house 的整体方案中，我们希望可以结合 AB 实验的数据来对用户行为进行分析，同时也希望 in-house 的数据可以作为 Kepler AB 实验结果分析的一个出口。<br>前端实验<br>前端发送埋点数据时，会将用户命中的所有实验的分组结果加入到每一个事件中。因此对于前端实验，我们通过前端埋点数据即可对比不同分组的用户数据。<br>后端实验<br>后端进行实验处理时，通过 Kepler SDK 查询用户命中实验信息时，会使用 Kepler 封装的 Logging 模块，上报用户命中的实验信息，以及可选的业务自定义字段（比如模型打分结果）。在进行实验分析时，通过 Kepler Logging 上报的后端数据，结合通过 page_open_id 连接到的前端埋点，即可计算出实验指标。<br>其他后端 log<br>除了需要进行 AB 实验的模块之外，后端服务的其他模块可能也会需要进行埋点。比如搜索服务可能需要记录用户的搜索词，以便进行用户搜索词的词频分析。这些数据会直接发送到统一日志上报服务中。<br>统一日志上报系统<br>前述的三种数据（in-house 的前端埋点数据、Kepler AB 实验的埋点数据，以及后端埋点数据），都会通过基础架构的统一日志上报系统进行上报，并通过 kafka 集群最终存储到 S3 桶中。<br>测试方案<br>测试方案</p>
+<h2 id="具体设计方案"><a href="#具体设计方案" class="headerlink" title="具体设计方案"></a>具体设计方案</h2><p>前端埋点<br>SPM 定义和规范<br>SPM 编码会包括页面、模块、元素三个层级，以{pageCode}.{moduleCode}.{itemCode}的形式拼接为最终的 spm 编码。元素归属于某个模块，而模块会归属于某个页面；但页面与页面之间、模块与模块之间、元素与元素之间都不会存在层级关系。<br>页面、模块和元素与代码中的概念或者产品定义的概念都没有耦合关系, 它们的定义和映射关系主要由文档来维护。</p>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>规范</p>
+<ul>
+<li>Page<br>页面<br>页面是一个或者多个模块的集合。<br>一般 web 上的一个 URL path，以及 APP 上的一个全屏的界面，就是一个页面。有时候为了方便用户操作，我们会在某些页面上弹出浮层来展示比较大的一块内容，用户交互完后就会关闭浮层返回之前的页面。这些浮层可能会也可能不会被定义为页面，取决于埋点需求方的定义。<br>页面层级上只发送 pageview 事件，主要用来进行流量分析和用户路径分析。<br>页面一般是对站点的整体流量做出贡献，或者对用户跳转路径有影响的模块集合<br>页面内容一般会超过一个屏幕的大小<br>页面作为一个整体被加载，当页面被加载时，其中的每个元素不一定都已经被用户看到<br>Module</li>
+<li>模块<br>模块是页面的一部分，是一个或多个元素的集合。<br>模块是在功能和位置上比较相近的元素的虚拟集合，一般可以对应到 UI 上的一个线框。模块是计算曝光的最小单元，一般不应超过屏幕大小。<br>模块层级上会发送 exposure 事件和 action 事件，主要用于计算模块本身或模块中元素的 CTR。<br>模块一般是作为一个整体被曝光的元素集合，一般不应该超过屏幕大小<br>当一个模块被曝光时，我们认为其中的每个元素都已经被用户看到。当一个浮层在逻辑上既可以是页面也可以是模块的时候，这里可以作为主要的区分点<br>部分列表式的模块（比如首页热门推荐中的多个活动卡片）在命名上会统一使用_LIST 作为后缀，此时这个模块名是指这个列表中的每一个项，埋点数据中会再发送 list_len 和 list_index 字段来区分不同位置的项<br>模块支持发送 action 事件，但一般只针对没有显式地定义所含元素的模块发送。对于有显式定义元素的模块，则应该对元素而不是对模块发送 action 事件</li>
+<li>Item<br>元素<br>元素是模块的一部分。<br>元素是最小可交互单位，一般来说，是一个按钮或者链接。<br>元素层级上会发送 action 事件。结合其所在的模块的曝光，可用于计算元素 CTR；通过 click_id 向下一个页面的传递，可用于连接用户在不同页面之间的跳转路径。<br>元素一般包含了具体的交互功能<br>元素自身没有是否曝光的属性<br>当将界面 UI 定义为元素时，即是将其作为埋点上关注的最小单位，元素中不再包含其他可追踪的单位</li>
+</ul>
+<h3 id="配置化页面的-spm"><a href="#配置化页面的-spm" class="headerlink" title="配置化页面的 spm"></a>配置化页面的 spm</h3><p>对于配置化的页面，为了在前端内容动态下发的同时，能够保证 spm 对于前端页面元素的唯一性和描述性，我们结合配置化页面接口的结构对模块名做了特殊设计。这些模块名会遵循特定格式：sectionName:sectionType:tabName:dataType:dataName</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">sectionName：楼层名，由埋点需求方定义。</span><br><span class="line">sectionType：前端的容器类型，包括：any,common,...</span><br><span class="line">tabName：tab名字，对于同个楼层有多个tab的情况，需要对不同的tab给不同的名字。目前暂时没有多个tab的情况所以tabName都是空的。</span><br><span class="line">dataType：由业务线开发回传。</span><br><span class="line">dataName：具体的模块名称，由埋点需求方定义。</span><br><span class="line">公共属性和schema</span><br><span class="line">埋点事件的最终schema可以查看orion接口定义（持续更新）。</span><br><span class="line">站点层级的公共属性 site_common</span><br><span class="line">site_name：站点名称</span><br><span class="line">language：用户所选语言</span><br><span class="line">currency：用户所选货币</span><br><span class="line">事件的公共属性 event_common</span><br><span class="line">timestamp：事件发生时间戳</span><br><span class="line">spm：标记事件发生位置的spm，可能是page、module或item</span><br><span class="line">experiments：用户命中的所有实验的列表</span><br><span class="line">kepler_device_id：kepler系统的device_id，作为IHT系统的用户标识符</span><br><span class="line">流量公共属性 traffic_common</span><br><span class="line">utm系列参数（之前前端有一个根据aff参数来更新utm参数的逻辑，经过讨论这块仍然由前端处理）</span><br><span class="line">aff系列参数</span><br><span class="line">klk_campaign_id、google_ads_id、google_displayads_id、campaign_id等其他追踪标识</span><br><span class="line">页面属性 page</span><br><span class="line">object_id：页面所对应的活动、城市等对象的id，如activity_71, city_2</span><br><span class="line">click_id：触发此页面打开的对应的点击事件的click_id，用于前后页面连接</span><br><span class="line">click_spm：触发此页面打开的对应的点击事件的spm</span><br><span class="line">page_open_id：每次页面打开独立生成的id</span><br><span class="line">is_first_enter：APP是否第一次打开当前页面</span><br><span class="line">app_open：APP用户打开方式，direct or deeplink</span><br><span class="line">app_webview_os：web页面若是由APP打开的，则标记打开的系统Android/iOS</span><br><span class="line">extra：埋点自定义的页面额外属性</span><br><span class="line">extra.object_kvs：当一个页面需要使用多个id来描述时使用</span><br><span class="line">模块属性 module</span><br><span class="line">object_id：模块所对应的活动、城市等对象的id，如activity_71, city_2</span><br><span class="line">list_len：对于列表式的模块，记录列表的长度</span><br><span class="line">list_index：对于列表式的模块，记录当前模块在列表中的位置</span><br><span class="line">extra：埋点自定义的模块额外属性</span><br><span class="line">extra.object_kvs：当一个模块需要使用多个id来描述时使用</span><br><span class="line">元素属性 item</span><br><span class="line">object_id：元素所对应的活动、城市等对象的id，如activity_71, city_2</span><br><span class="line">extra：埋点自定义的元素额外属性</span><br><span class="line">extra.object_kvs：当一个元素需要使用多个id来描述时使用</span><br><span class="line">superProperty</span><br><span class="line">Mixpanel SDK 默认收集的设备属性，前端需要对这些数据进行缓存。Mixpanel SDK上的字段命名规范是以$为前缀，为了避免与其他字段名重复，这个命名规范需要继续保留</span><br></pre></td></tr></table></figure>
+
+<p>事件类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">default trigger</span><br><span class="line">message</span><br><span class="line">pageview</span><br><span class="line">进入页面（无需数据加载完成）</span><br><span class="line">event_type: pageview</span><br><span class="line">site_common</span><br><span class="line">traffic_common</span><br><span class="line">event_common</span><br><span class="line">super_properties</span><br><span class="line">page</span><br><span class="line">exposure</span><br><span class="line">元素露出面积超过阈值（可配置，目前是 80%），曝光时间大于等于阈值（可配置，目前是 0.5）</span><br><span class="line">event_type: exposure</span><br><span class="line">site_common</span><br><span class="line">event_common</span><br><span class="line">super_properties</span><br><span class="line">page</span><br><span class="line">module</span><br><span class="line">duration</span><br><span class="line">action</span><br><span class="line">元素被用户点击</span><br><span class="line">event_type: action</span><br><span class="line">site_common</span><br><span class="line">event_common</span><br><span class="line">super_properties</span><br><span class="line">page</span><br><span class="line">module</span><br><span class="line">item</span><br><span class="line">click_id</span><br><span class="line">action_type: click/hover/input/slide</span><br><span class="line">custom</span><br><span class="line">自定义触发条件</span><br><span class="line">event_type: custom</span><br><span class="line">site_common</span><br><span class="line">traffic_common</span><br><span class="line">event_common</span><br><span class="line">super_properties</span><br><span class="line">page</span><br><span class="line">custom_extra</span><br><span class="line"></span><br><span class="line">pageview 事件</span><br></pre></td></tr></table></figure>
+
+<p>页面依赖的接口失败的情况暂时不上报<br>页面打开来源：对于从 deeplink 进入和系统通知唤醒的情况，需要通过页面属性中的 app_open 字段标记。需要注意 Android 和 iOS 的统一；Android 上对于 deeplink 的中转页面不应该记录 pageview<br>搜索起始页作为一个特殊的页面，可能在 APP 的多个页面上被打开。在不同页面上被打开时，具体处理逻辑可能不同，而从数据分析的视角也希望将不同来源的页面区分开，因此这个页面做了特殊处理，会将前一个页面的编码加入到搜索起始页中作为区分{previousPageCode}_SearchStart。这个特殊逻辑由于实现逻辑复杂容易出错，暂时不做。<br>exposure 事件<br>exposure 事件只在模块上触发<br>有两个阈值设置，需要达到曝光事件的阈值才需要发送曝光<br>曝光时长阈值：默认 0.5<br>曝光面积阈值：默认 80%<br>曝光事件开关：不是所有定义的模块都需要追踪曝光，只需要对需求文档上定义的模块进行埋点即可<br>曝光捕获性能：客户端对于曝光捕获的性能需要进行进行关注，需要保证捕获性能不会影响到用户的体验<br>模块在页面上交叉超过曝光面积阈值时算曝光开始，模块开始曝光之后，模块和页面交叉低于曝光面积阈值算曝光结束，duration = 曝光结束时间 - 曝光开始时间<br>特殊处理：有一些 exposure 事件需要在列表刷新的时候进行记录，比如搜索 suggest 列表，用户持续输入的过程中列表的内容会进行刷新，刷新时需要重新计算 exposure，在 SDK 设计上需要考虑到这样的情况<br>action 事件<br>action 事件可能在模块上也可能在元素上触发<br>action 表示用户直接的操作，可能是 click、input、slide 等，目前大部分情况下都是 click 事件<br>对于 click 事件，每次用户点击时都需要生成一个 unique 的 click_id，并将 click_id 和 click_spm（当前元素的 spm）传递到下一个打开的页面<br>部分页面里面可能有可操作元素，但是没有定义模块，这时候在模块编码的位置上记录为 DefaultModule，便于后续 spm 的切分统计<br>custom 事件<br>custom 事件可以跟页面绑定，也可以不跟任何页面绑定。跟页面绑定时，spm 的 page 编码等于绑定的页面的编码；而 module 编码可以自定义。<br>custom 事件会继承 page 级别的属性。<br>click_spm 和 click_id<br>click_spm 和 click_id 在进行分析的时候非常重要，可以告诉我们不同模块的转化表现。但是当埋点不全、埋点数据丢失、用户行为链路复杂等多种因素作用下，正确记录 click_spm 并不那么容易。<br>APP 设计方案<br>当前 APP 端对 click_spmn 和 click_id 的处理逻辑是（经讨论后修改的版本，详见 orion 工单）：<br>对于每个 pageview 事件，APP SDK 会在已发生的事件队列中寻找最后一个 action/custom/pageview 事件。<br>找到对应的事件后，获取该事件的 unique_event_id 作为 page.click_id，获取该事件的 event_common.spm 作为 page.click_spm。<br>如果找不到对应的事件，则 page.click_id=-1, page.click_spm=unknown。<br>这个设计是为了在寻找 pageview 的来源 click_id/click_spm 时，可以只基于事件流，而不需要处理其他特殊逻辑，减少出错的可能。<br>之所以关联 custom 事件，是因为一些 pageview 可能是由于 AppLaunch、AppOpen 等 custom 事件（见上面的新增 event 需求）而打开的，我们希望此时的 click_spm 记录的是 AppLaunch、AppOpen，而不是上一个点击事件。<br>之所以关联 pageview 事件，是因为当页面埋了 pageview 的点而没有埋点击事件时，跳转到下一个页面仍然可以记录到是从哪个页面点击来的。随着我们逐渐提高 pageview 埋点的覆盖率，这个也会在很大程度上提高 click_spm 的准确性（减少关联到上上个页面的情况）。<br>这个方案可能存在的问题是：<br>当埋点不全时，pageview 可能会关联到不正确的事件。如 A-B-C，若 B 没有埋点，则 C 页面的 click_id/click_spm 会找到 A 页面上的点击事件。<br>解决方案：对 klk 站点上的所有页面添加 pageview 埋点，APP 在进行点击关联时加上 pageview 事件，这样若点击的 module/item 没有埋点，APP 也能关联到 page 级别的 spm。若所有页面都已经有 pageview 埋点，则 click_spm 的合理性和可解释性将极大增强。<br>对于手势返回，系统暂时无法监测到，如 A-B-A 的场景，第二个 A 页面拿到的 click_spm 会是第一个 A 页面的点击事件。<br>解决方案：APP 看下技术方案，是否可能给手势返回加一个 custom 事件埋点。<br>Web 设计方案<br>在 web 中传递 click_spm 和 click_id，最直观和主流的做法是通过 url 参数传递。但是由于这样做会影响网站的 SEO 表现，因此我们只能够采取其他方式实现。</p>
+<p>目前的实现方案是：<br>用户产生点击时，将点击事件的 spm 和 click_id 记录到浏览器的 local storage 中。<br>用户在其他页面上发生的事件，会去查找 local storage 中记录的 click_id 和 click_spm。<br>这样在一般情况下，click_id 和 click_spm 实现了不同页面乃至不同 tab 之间的传递。<br>这个方案可能存在的问题是：<br>用户的点击链路更加复杂时，如打开多个 tab，或者在当前 tab 中再次点击刷新页面时，click_spm 和 click_id 的存储可能产生错乱的情况。<br>解决方案：待梳理。<br>相关文档<br>SPM 定义与埋点需求文档<br>前端发送数据 schema 定义<br>In-house tracking design and detailed requirements [设计原版]<br>In-House Tracking 设计文档 [FanJun 修改版]<br>Android 技术方案<br>Web 技术方案<br>iOS 技术方案<br>数据转发服务</p>
+<p>数据转发服务的具体功能需求<br>数据转发服务技术方案<br>基础架构团队技术方案（作为数据转发服务上游）<br>数据转发服务补全后的 schema<br>大数据平台数据补全</p>
+<p>大数据平台补全方案<br>Kepler AB 实验信息<br>项目相关背景<br>Kepler 项目宣讲会<br>Kepler 技术方案<br>Kepler APP 接入方案<br>后端实验支持<br>Kepler Backend AB Framework Requirements and Design [原版需求设计]<br>Kepler 后端接入介绍<br>与 in-house tracking 的结合<br>前端实验<br>前端的每条埋点数据都会将用户命中的所有实验信息带上，因此不需要 Kepler AB 项目的额外支持。<br>后端实验<br>Kepler 已经增加了对后端实验的支持，为了与 in-house tracking 项目结合进行分析，需要支持将后端实验命中数据 log 到大数据平台。<br>因此需要 Kepler 增加一个 Logging SDK，各服务在实验处理起始位置，通过调用 Kepler SDK 获得用户的实验命中结果；在实验处理结束位置，通过调用 Kepler Logging SDK 即可将用户命中实验的信息、以及业务自定义的字段发送到大数据平台。<br>不管检查到用户是掉入 variant、control 还是没有命中，都需要打 log，这样确保我们能够得到完整的数据，进行比较全面的分析<br>这个 log 在统一日志上报系统中有一个单独的 type=5，便于与其他类型的日志分开便于后续分析<br>业务自定义参数可能在查询用户命中结果的请求返回之后才生成，根据实验的实际情况也可能没有业务自定义参数，Logging SDK 需要两种情况都兼容</p>
+<p>Kepler Logging SDK 技术方案/设计文档<br>其他后端 log<br>其他后端 log 是指除了在做 AB 实验的位置使用 Kepler Logging SDK 统一上报的实验日志信息之外，各个后端服务根据自己的业务需求，需要将数据发送到大数据平台进行后续分析的 log。目前主要有以下场景需要将后端 log 打到大数据平台：<br>搜索服务：每次搜索请求<br>搜索词<br>complete 后的搜索词<br>城市、tag、价格等 filter<br>命中活动数量<br>推荐服务：每次推荐请求<br>算法参数<br>模型打分<br>推荐活动数量</p>
+<p>使用统一日志上报系统的 type=5 进行这部分的日志上报。<br>统一日志上报系统<br>in-house tracking 项目需要在统一日志上报系统中注册三种 type：<br>type=3 用于发送前端埋点数据<br>type=5 用于发送后端日志数据（Kepler SDK / 搜索推荐服务）<br>统一日志上报系统相关文档<br>统一日志上报与存储设计文档<br>统一日志上报与存储-统一存储 JSON 协议-公共文档<br>测试方案<br>测试方案初始讨论<br>TODO 验收+回归<br>Reference<br>Orion 需求列表<br>IHT 二期需求汇总</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/other-inhouse%E5%9F%8B%E7%82%B9%E8%AE%BE%E8%AE%A1/" title="inhouse 埋点设计" target="_blank" rel="external">https://laputaz.github.io/home/other-inhouse埋点设计/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">River</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/js-admin%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1/" title="js-admin权限设计"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/%E5%89%8D%E7%AB%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94%20copy/" title="前端包管理工具对比"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>
