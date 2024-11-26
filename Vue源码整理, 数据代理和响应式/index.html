@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    vue：源码整理, 数据代理和响应式 | laputa z
+  </title>
+  <meta name="description" content="最近看了一下 Vue 相关的东西 ,整理一下流程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue：源码整理, 数据代理和响应式">
+<meta property="og:url" content="https://laputaz.github.io/home/Vue%E6%BA%90%E7%A0%81%E6%95%B4%E7%90%86,%20%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86%E5%92%8C%E5%93%8D%E5%BA%94%E5%BC%8F/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="最近看了一下 Vue 相关的东西 ,整理一下流程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190530005231261.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190530005522213.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190530005659144.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019070309492596.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pkaGFudW5pdHk=,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2018-09-22T23:28:34.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.887Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="手写">
+<meta property="article:tag" content="vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190530005231261.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/Vue%E6%BA%90%E7%A0%81%E6%95%B4%E7%90%86,%20%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86%E5%92%8C%E5%93%8D%E5%BA%94%E5%BC%8F/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Vue源码整理, 数据代理和响应式" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      vue：源码整理, 数据代理和响应式
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/Vue%E6%BA%90%E7%A0%81%E6%95%B4%E7%90%86,%20%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86%E5%92%8C%E5%93%8D%E5%BA%94%E5%BC%8F/" class="article-date">
+	  <time datetime="2018-09-22T23:28:34.000Z" itemprop="datePublished">2018-09-22</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/javascript/" rel="tag">javascript</a>, <a class="article-tag-link-link" href="/home/tags/vue/" rel="tag">vue</a>, <a class="article-tag-link-link" href="/home/tags/%E6%89%8B%E5%86%99/" rel="tag">手写</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/Vue%E6%BA%90%E7%A0%81%E6%95%B4%E7%90%86,%20%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86%E5%92%8C%E5%93%8D%E5%BA%94%E5%BC%8F/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>最近看了一下 Vue 相关的东西 ,整理一下流程。</p>
+<span id="more"></span>
+
+<p>最近很慌, 想看源码, 先把简单的相关概念理一理</p>
+<h4 id="Object-defineProperty"><a href="#Object-defineProperty" class="headerlink" title="Object.defineProperty"></a>Object.defineProperty</h4><p>首先, 概念 :</p>
+<blockquote>
+<p>Object.defineProperty() 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。</p>
+</blockquote>
+<p>没啥好说的, 直接上例子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">// 定义一个对象</span><br><span class="line">const obj = &#123;</span><br><span class="line">	firstName: &#x27;D&#x27;,</span><br><span class="line">	lastName: &#x27;Z&#x27;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 数据描述符-----------------------------------------------</span><br><span class="line">// 新增一个属性</span><br><span class="line">Object.defineProperty(obj, &#x27;age&#x27;, &#123;</span><br><span class="line">	configurable: false,  // 不可重新定义</span><br><span class="line">	enumerable: false,    // 不可枚举</span><br><span class="line">	value: 18,			  // 值</span><br><span class="line">	writable: false	   	  // 不可写</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 不可重新配置</span><br><span class="line">Object.defineProperty(obj, &#x27;age&#x27;, &#123;</span><br><span class="line">	configurable: false,</span><br><span class="line">	enumerable: true</span><br><span class="line">&#125;)   // 报错</span><br><span class="line"></span><br><span class="line">// 不可删除</span><br><span class="line">delete obj.age  // false</span><br><span class="line">console.log(obj.age) // 18</span><br><span class="line"></span><br><span class="line">// 不可枚举</span><br><span class="line">Object.keys(obj)   // [&quot;firstName&quot;, &quot;lastName&quot;]</span><br><span class="line"></span><br><span class="line">// 不可写</span><br><span class="line">obj.age = 17</span><br><span class="line">console.log(obj.age) // 18</span><br><span class="line"></span><br><span class="line">// 存取描述符-----------------------------------------------</span><br><span class="line">Object.defineProperty(obj, &#x27;fullName&#x27;, &#123;</span><br><span class="line">	get() &#123;</span><br><span class="line">		return  this.firstName + &#x27;-&#x27; + this.lastName</span><br><span class="line">	&#125;,</span><br><span class="line">	set(value) &#123;</span><br><span class="line">		const arr = value.split(&#x27;-&#x27;)</span><br><span class="line">		this.firstName = arr[0]</span><br><span class="line">		this.lastName = arr[1]</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">obj.fullName  // D-Z</span><br><span class="line">obj.fullName = &#x27;A-B&#x27;</span><br><span class="line">obj.lastName  // B</span><br><span class="line">obj.firstName // A</span><br></pre></td></tr></table></figure>
+
+<p><code>configurable: false</code> 不可重新定义, 也就是说再执行 <code>Object.defineProperty(obj, &#39;age&#39;, &#123;...&#125;)</code>将会报错, 并且, 属性<code>不可删除</code><br><code>enumerable: false</code> 不可枚举, 也就是再执行<code>Object.keys()</code>或<code>for in</code> 等将取不到该属性<br><code>value:18</code> 值<br><code>writable: false</code> 不可写, 也就是对<code>age</code>赋值操作将不会生效, 但不会报错<br><code>get</code>取值操作 , <code>function</code>, 默认<code>undefined</code><br><code>set</code>属性值修改时，触发执行该方法 , <code>function</code>, 默认<code>undefined</code></p>
+<p>以上这一些属性, 称为<strong>描述符</strong>, 需要注意的是, 当使用了 getter 或 setter 方法，不允许使用 writable 和 value 这两个属性<br>get set 看起来就很像 vue 的计算属性</p>
+<h4 id="伪数组"><a href="#伪数组" class="headerlink" title="伪数组"></a>伪数组</h4><p>伪数组 (ArrayLike) ，又称类数组。是一个类似数组的对象，但是有如下几个特征。<br>按索引方式储存数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0: xxx, 1: xxx, 2: xxx...</span><br></pre></td></tr></table></figure>
+
+<p>具有 length 属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">但是length属性不是动态的，不会随着成员的变化而改变</span><br></pre></td></tr></table></figure>
+
+<p>不具有数组的 push()， forEach()等方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arrayLike.<span class="property">__proto__</span> === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span> <span class="comment">//true</span></span><br><span class="line">arrayLike <span class="keyword">instanceof</span> <span class="title class_">Object</span> <span class="comment">//true</span></span><br><span class="line">arrayLike <span class="keyword">instanceof</span> <span class="title class_">Array</span> <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>以下是常见伪数组：</p>
+<ul>
+<li>arguments</li>
+<li>NodeList =&gt; document.querySelectorAll(‘div’).constructor.name // NodeList</li>
+<li>HTMLCollection =&gt; document.getElementsByClassName(‘head_wrapper’).constructor.name // HTMLCollection</li>
+<li>jQuery =&gt; $()</li>
+</ul>
+<p>转换为真数组方法</p>
+<ol>
+<li>遍历伪数组存入真数组</li>
+<li>Array.prototype.splice.call(arrayLike)</li>
+<li>Array.from(arrayLike)</li>
+<li>[…arrayLike]</li>
+<li>原型继承,arrayLike.<strong>proto</strong>=Array.prototype</li>
+<li>其他工具库中的方法，如 jQuery 中的 makeArray() toArray()等</li>
+</ol>
+<h4 id="NodeType"><a href="#NodeType" class="headerlink" title="NodeType"></a>NodeType</h4><p>元素,属性,文本等, 都实现了 Node 接口, 都会有 NodeType 属性, 它标识了节点属于的 类型<br>常见的有:<br>1 -&gt; 元素 节点<br>3 -&gt; 文字节点<br>8 -&gt; 注释节点<br>11 -&gt; DocumentFragment 节点</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;my&quot;</span>&gt;</span></span><br><span class="line">  123</span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>456<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>789<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的 html 片段, 分别用 childNodes 和 children 取值, 结果分别是什么呢</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.my&#x27;</span>).<span class="property">childNodes</span> <span class="comment">// NodeList(5) [text, span, text, span, text]</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.my&#x27;</span>).<span class="property">children</span> <span class="comment">// HTMLCollection(2) [span, span]</span></span><br></pre></td></tr></table></figure>
+
+<p>从图中可以看到, my div 下, 包含了 5 个 Node, 其中 123, 以及两个小红框位置的换行符, 属于 TextNode , span 标签属于 ElementNode<br><img src="https://img-blog.csdnimg.cn/20190530005231261.png"><br><img src="https://img-blog.csdnimg.cn/20190530005522213.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20190530005659144.png" alt="在这里插入图片描述"><br>childNodes 和 children 结果分别是节点 list 和 子元素 list</p>
+<h4 id="DocumentFragment"><a href="#DocumentFragment" class="headerlink" title="DocumentFragment"></a>DocumentFragment</h4><p>文档片段接口，表示一个没有父级文件的最小文档对象.<br>通常的用例是创建文档片段，将元素附加到文档片段，然后将文档片段附加到 DOM 树。在 DOM 树中，文档片段被其所有的子元素所代替。<br>因为文档片段存在于内存中，并不在 DOM 树中，所以将子元素插入到文档片段时不会引起页面回流（对元素位置和几何上的计算）。因此，使用文档片段通常会带来更好的性能。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> content = <span class="variable language_">document</span>.<span class="title function_">createDocumentFragment</span>()</span><br><span class="line"><span class="keyword">let</span> el = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;.nums&#x27;</span>)</span><br><span class="line">content.<span class="title function_">appendChild</span>(el)</span><br><span class="line"><span class="comment">// 这个时候 .nums 元素会从页面消失, 存入content这个Fragment片段</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy"></a>Proxy</h4><p>Proxy 用于修改某些操作的默认行为，也可以理解为在目标对象之前架设一层拦截，外部所有的访问都必须先通过这层拦截，因此提供了一种机制，可以对外部的访问进行过滤和修改。这个词的原理为代理，在这里可以表示由它来“代理”某些操作，译为“代理器”。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="title class_">Proxy</span>(</span><br><span class="line">  &#123;&#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="title function_">get</span>(<span class="params">target, key, receiver</span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`getting <span class="subst">$&#123;key&#125;</span>!`</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">Reflect</span>.<span class="title function_">get</span>(target, key, receiver)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">set</span>(<span class="params">target, key, value, receiver</span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`setting <span class="subst">$&#123;key&#125;</span>!`</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">Reflect</span>.<span class="title function_">set</span>(target, key, value, receiver)</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>上面代码对一个空对象架设了一层拦截，重新定义了属性的读取(get)和设置(set)行为。对设置了拦截行为的对象 obj，去读写它的属性，用自己的定义覆盖了语言的原始定义，运行得到下面的结果</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">obj.<span class="property">count</span> = <span class="number">1</span></span><br><span class="line"><span class="comment">//  setting count!</span></span><br><span class="line">++obj.<span class="property">count</span></span><br><span class="line"><span class="comment">//  getting count!</span></span><br><span class="line"><span class="comment">//  setting count!</span></span><br><span class="line"><span class="comment">//  2</span></span><br></pre></td></tr></table></figure>
+
+<!-- more -->
+
+<h4 id="1-数据代理-gt-Object-defineProperty"><a href="#1-数据代理-gt-Object-defineProperty" class="headerlink" title="1. 数据代理 -&gt; Object.defineProperty()"></a>1. 数据代理 -&gt; Object.defineProperty()</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> vm = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">  <span class="attr">data</span>: &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">0</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 为什么能通过 vm.a 访问到 data 中的 a ?</span></span><br><span class="line"><span class="comment">// 因为会通过 Object.defineProperty 设置了数据代理</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(vm, <span class="string">&#x27;a&#x27;</span>, &#123;</span><br><span class="line">  <span class="title function_">get</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> data.<span class="property">a</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">set</span>(<span class="params">val</span>) &#123;</span><br><span class="line">    data.<span class="property">a</span> = val</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-模板解析-gt-NodeType-gt-Reg-gt-moustache-gt-v-on-gt-bind-html-class-text"><a href="#2-模板解析-gt-NodeType-gt-Reg-gt-moustache-gt-v-on-gt-bind-html-class-text" class="headerlink" title="2. 模板解析 -&gt; NodeType -&gt; Reg -&gt; moustache -&gt; v-on -&gt; bind/html/class/text"></a><del>2. 模板解析 -&gt; NodeType -&gt; Reg -&gt; moustache -&gt; v-on -&gt; bind/html/class/text</del></h4><p>Vue 2 是虚拟节点 VNode</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> vm = <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">  <span class="attr">el</span>: <span class="string">&#x27;#my&#x27;</span>,</span><br><span class="line">  <span class="attr">data</span>: &#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">0</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 拿到 el 对应的模板以后, createDocumentFragment() 产生一个Dom片段</span></span><br><span class="line"><span class="comment">// 再将el所有子节点插入到该Fragment</span></span><br><span class="line"><span class="comment">// 遍历Fragment中每个节点</span></span><br><span class="line"><span class="comment">// 文本 =&gt; 匹配&#123;&#123;&#125;&#125;</span></span><br><span class="line"><span class="comment">// 元素 =&gt; 编译元素的指令</span></span><br><span class="line"><span class="comment">// 普通指令/事件指令 =&gt; 编译完后删除该指令</span></span><br><span class="line"><span class="comment">// 包含子节点 =&gt; 继续迭代</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-数据绑定和响应式-gt-使用数据劫持的技术实现"><a href="#3-数据绑定和响应式-gt-使用数据劫持的技术实现" class="headerlink" title="3. 数据绑定和响应式 -&gt; 使用数据劫持的技术实现"></a>3. 数据绑定和响应式 -&gt; 使用数据劫持的技术实现</h4><p>一旦更新 data 中某个属性数据, 所有界面直接使用或间接使用该属性的节点会更新<br>基本思路: 通过 defineProperty 监视 data 中所有层级数据的变化, 变化则更新界面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vm.a = 3</span><br><span class="line">=&gt; vm.a.set // 更新data中的a</span><br><span class="line">=&gt; vm.data.a = 3</span><br><span class="line">=&gt; vm.data.a.set //更新界面</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">增加observe =&gt; 递归对每个属性 Object.defineProperty 增加 get set, 并且设为configurable:false</span><br><span class="line">除了事件指令, 每个指令/表达式 =&gt; 增加watcher</span><br><span class="line"></span><br><span class="line">Dep -&gt; &#123;</span><br><span class="line">	实例创建时间 =&gt; 给data中每个属性增加observe数据劫持时(增加get,set)创建的, 在模板编译之前, new watcher()以前</span><br><span class="line">	数量 =&gt; 与data中属性一一对应(所有层级)</span><br><span class="line">	结构 =&gt; &#123;</span><br><span class="line">		id: 标识 uid</span><br><span class="line">		subs: [] subscribe订阅者数组, 内容是 watchers // 即需要更新的所有相关表达式</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">watcher -&gt; &#123;</span><br><span class="line">	实例创建时间 =&gt; 初始化解析大括号表达式/一般指令时创建</span><br><span class="line">	数量 =&gt; 与大括号表达式/一般指令一一对应</span><br><span class="line">	结构 =&gt; &#123;</span><br><span class="line">		cb: cb 界面更新回调</span><br><span class="line">		vm: vm</span><br><span class="line">		exp: 对应的表达式</span><br><span class="line">		depIds: &#123;&#125; 相关的n个dep      // 主要用于判断关系是否建立, 避免再次建立dep watcher关系</span><br><span class="line">		value: get() 当前表达式value</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Dep与Watcher关系</span><br><span class="line">关系 -&gt;</span><br><span class="line">	data属性 -&gt; 一个dep -&gt; n个watcher(属性在模板多次使用)</span><br><span class="line">	表达式 -&gt; watcher -&gt; n个dep(多层表达式, 如a.b, 对应了两个dep)</span><br><span class="line">建立 -&gt;</span><br><span class="line">	初始化data数据 -&gt; 每个数据增加dep, 并增加 get, set -&gt; 编译模板 -&gt; 拿到表达式 -&gt; 每个表达式增加一个watcher -&gt; watcher初始化会有个value属性 -&gt; 该value属性调用了dep的get方法 -&gt; dep的get方法depend() -&gt; 通过watcher的depIds判断关系是否建立 -&gt; dep 保存watcher到subs -&gt; watcher 的depIds保存dep</span><br><span class="line">响应式 -&gt;</span><br><span class="line">	vm.name = &#x27;abc&#x27; -&gt; data中name属性值变化 -&gt; name的 set() -&gt; dep.notify()  -&gt; dep中subs数组中每个watcher进行update() -&gt; watcher.cb 回调 -&gt; updater更新界面</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>整体实现分为已下步骤</p>
+<ol>
+<li>实现一个 Observer，对数据进行劫持，通知数据的变化（将使用的要点为：Object.defineProperty()方法）</li>
+<li>实现一个 Compile，对指令进行解析，初始化视图，并且订阅数据的变更，绑定好更新函数</li>
+<li>实现一个 Watcher，将其作为以上两者的一个中介点，在接收数据变更的同时，让 Dep 添加当前 Watcher，并及时通知视图进行 update</li>
+<li>实现一些 VUE 的其他功能（Computed、menthods）</li>
+<li>实现 MVVM，整合以上几点，作为一个入口函数</li>
+</ol>
+<p><img src="https://img-blog.csdnimg.cn/2019070309492596.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pkaGFudW5pdHk=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/Vue%E6%BA%90%E7%A0%81%E6%95%B4%E7%90%86,%20%E6%95%B0%E6%8D%AE%E4%BB%A3%E7%90%86%E5%92%8C%E5%93%8D%E5%BA%94%E5%BC%8F/" title="vue：源码整理, 数据代理和响应式" target="_blank" rel="external">https://laputaz.github.io/home/Vue源码整理, 数据代理和响应式/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/try-catch-return/" title="try里面放return，finally还会执行吗"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/js%E5%9F%BA%E7%A1%80-es6%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E7%82%B9/" title="js基础：es6 中需要注意的一些点"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

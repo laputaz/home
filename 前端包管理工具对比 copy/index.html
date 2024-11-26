@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    前端包管理工具对比 | laputa z
+  </title>
+  <meta name="description" content="前端包管理工具总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端包管理工具对比">
+<meta property="og:url" content="https://laputaz.github.io/home/%E5%89%8D%E7%AB%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94%20copy/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="前端包管理工具总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/72a820f238fa4220b3c387663151001e~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9759ce1de6394c8fb3ae1988f41c0212~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d226cf764d064ccda92ff4c5d2f4f326~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/84056d7c0e38453788fea8850958a404~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c7ec2067f074f9092de09343cb69e23~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="article:published_time" content="2021-08-09T10:13:05.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="npm">
+<meta property="article:tag" content="yarn">
+<meta property="article:tag" content="包管理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/72a820f238fa4220b3c387663151001e~tplv-k3u1fbpfcp-zoom-1.image">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E5%89%8D%E7%AB%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94%20copy/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-前端包管理工具对比 copy" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      前端包管理工具对比
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/%E5%89%8D%E7%AB%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94%20copy/" class="article-date">
+	  <time datetime="2021-08-09T10:13:05.000Z" itemprop="datePublished">2021-08-09</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/javascript/" rel="tag">javascript</a>, <a class="article-tag-link-link" href="/home/tags/npm/" rel="tag">npm</a>, <a class="article-tag-link-link" href="/home/tags/yarn/" rel="tag">yarn</a>, <a class="article-tag-link-link" href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" rel="tag">包管理</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/%E5%89%8D%E7%AB%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94%20copy/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>前端包管理工具总结</p>
+<span id="more"></span>
+
+<h1 id="1-包管理工具"><a href="#1-包管理工具" class="headerlink" title="1 包管理工具"></a>1 包管理工具</h1><h2 id="1-1-npm"><a href="#1-1-npm" class="headerlink" title="1.1 npm"></a>1.1 npm</h2><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>npm 是随同 NodeJS 一起安装的包管理工具，允许用户下载或上传包或命令行程序供开发者使用；</p>
+<h3 id="npm-install-流程"><a href="#npm-install-流程" class="headerlink" title="npm install 流程"></a>npm install 流程</h3><p>执行命令后，首先会构建依赖树，然后针对每个节点下的包，会经历下面四个步骤:</p>
+<ol>
+<li> 将依赖包的版本区间解析为某个具体的版本号</li>
+<li> 下载对应版本依赖的 tar 包到本地离线镜像</li>
+<li> 将依赖从离线镜像解压到本地缓存</li>
+<li> 将依赖从缓存拷贝到当前目录的 node_modules 目录</li>
+</ol>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><p>npm init -y 直接生成默认配置</p>
+<p>npm -v 版本查看</p>
+<p>npm list 查看已安装包 带上[–depth 0] 不深入到包的支点</p>
+<p>npm info jquery 查看版本</p>
+<p>npm install 包名@版本号</p>
+<p>npm install -g cnpm –registry=<a target="_blank" rel="noopener" href="https://registry.npm.taobao.org/">https://registry.npm.taobao.org</a> 安装淘宝镜像</p>
+<p>npm search 搜索词 -g 用于搜索 npm 仓库，它后面可以跟字符串，也可以跟正则表达式</p>
+<p>npm update <name> [-g] 更新模块</p>
+<p>npm run 执行脚本</p>
+<p>npm publish 发布模块</p>
+<p>npm dedupe 合并重复依赖，减少重复</p>
+<h3 id="问题（3-版本之前）"><a href="#问题（3-版本之前）" class="headerlink" title="问题（3 版本之前）"></a>问题（3 版本之前）</h3><ol>
+<li> 依赖层级太深，会导致文件路径过长的问题，尤其在 window 系统下，会造成安装失败或删除 node_modules 失败。</li>
+<li> 大量重复的包被安装，node_moudles 体积超级大。比如跟 foo 同级目录下有一个 baz，两者都依赖于同一个版本的 lodash，那么 lodash 会分别在两者的 node_modules 中被安装，也就是重复安装。</li>
+<li> 模块实例不能共享。比如 React 有一些内部变量，在两个不同包引入的 React 不是同一个模块实例，因此无法共享内部变量，导致一些不可预知的 bug。</li>
+</ol>
+<p><strong>PS</strong>：3 版本及其后的和 yarn 的问题一致；</p>
+<h3 id="包调试方案"><a href="#包调试方案" class="headerlink" title="包调试方案"></a>包调试方案</h3><h4 id="npm-yarn-link"><a href="#npm-yarn-link" class="headerlink" title="npm/yarn link"></a>npm/yarn link</h4><p>npm link 用于连接本地项目和本地 npm 模块，使得可以在本地进行模块测试；</p>
+<p><strong>具体用法</strong>：</p>
+<ol>
+<li> 项目和模块在同一个目录下，可以使用相对路径：npm link ../module</li>
+</ol>
+<!---->
+
+<ol start="2">
+<li> 项目和模块不在同一个目录下</li>
+</ol>
+<!---->
+
+<ol>
+<li><ol>
+<li> cd 到模块目录，npm link，进行全局 link</li>
+<li> cd 到项目目录，npm link 模块名(package.json 中的 name)</li>
+</ol>
+</li>
+</ol>
+<!---->
+
+<ol start="3">
+<li> 解除 link：npm unlink 模块名</li>
+</ol>
+<p><strong>原理</strong>：在全局包路径中创建一个软链（Symlinked）指向对应的 npm 包，然后在项目中通过软链将全局的软链指向到 node_modules 的对应包中；</p>
+<p><strong>此方案缺点</strong>：</p>
+<ol>
+<li> 影响 node_modules 中原本的依赖包;</li>
+<li> 软链接和文件系统引发的其他各种奇怪的问题；</li>
+<li> webpack 在进行编译的时候无法编译软链接的依赖库。</li>
+</ol>
+<h4 id="相对路径或者绝对路径使用"><a href="#相对路径或者绝对路径使用" class="headerlink" title="相对路径或者绝对路径使用"></a>相对路径或者绝对路径使用</h4><p>// import { Button } from ‘good-ui’ // 为了调试，强行改成了绝对或者相对路径 import { Button } from ‘C:/codes/good-ui/dist’</p>
+<p>此方案缺点：需要频繁改业务代码，这既麻烦又危险（路径有可能进行修改，在 git 提交代码的时候，引用路径忘记修正回来则其他开发者无法正常使用）。</p>
+<h4 id="yalc"><a href="#yalc" class="headerlink" title="yalc"></a>yalc</h4><p>模拟 npm 发布，并将包缓存本地，下载时也是模拟 npm install，所以不会存在相关依赖库丢失，只是模拟发布和下载不会真的推包；</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/72a820f238fa4220b3c387663151001e~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p><strong>使用方法</strong>：</p>
+<ol>
+<li> 需要发包的项目中执行：yarn build &amp;&amp; yalc publish</li>
+<li> 使用包的项目中执行：yalc add 包名</li>
+</ol>
+<h3 id="其他概念"><a href="#其他概念" class="headerlink" title="其他概念"></a>其他概念</h3><p><strong>dependencies 与 devDependencies 之间的区别</strong>：dependencie 配置当前程序所依赖的其他包。devDependencie 配置当前程序所依赖的其他包，只会下载模块，而不下载这些模块的测试和文档框架</p>
+<p><strong>包版本概念</strong>：^表示第一位版本号不变，后面两位取最新的；~表示前两位不变，最后一个取最新；*表示全部取最新</p>
+<p><strong>lock 文件</strong>：npm5 通过添加 lock 文件来记录依赖树信息，进行依赖锁定,从而唯一确定 node_modules 的结构,这样处理可以保证团队成员使用同一份 node_modules 依赖结构。</p>
+<h2 id="1-2-yarn"><a href="#1-2-yarn" class="headerlink" title="1.2 yarn"></a>1.2 yarn</h2><p>快速、可靠、安全的依赖管理工具。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>npm install –global yarn</p>
+<h3 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h3><ol>
+<li> 速度快：Yarn 缓存了每个下载过的包，所以再次使用时无需重复下载。 同时利用并行下载以最大化资源利用率，因此安装速度更快。如果你以前安装过某个包，再次安装时可以在没有任何互联网连接的情况下进行。</li>
+<li> 超级安全：在执行代码之前，Yarn 会通过算法校验每个安装包的完整性。</li>
+<li> 超级可靠：使用详细、简洁的锁文件格式和明确的安装算法，Yarn 能够保证在不同系统上无差异的工作。</li>
+<li> 确定性：不管安装顺序如何，相同的依赖关系将在每台机器上以相同的方式安装。</li>
+<li> 网络性能：Yarn 有效地对请求进行排队处理，避免发起的请求如瀑布般倾泻，以便最大限度地利用网络资源。</li>
+<li> 相同的软件包：从 npm 安装软件包并保持相同的包管理流程。</li>
+<li> 网络弹性：重试机制确保单个请求失败并不会导致整个安装失败。</li>
+<li> 扁平模式：将依赖包的不同版本归结为单个版本，以避免创建多个副本。所有的依赖都被拍平到 node_modules 目录下，不再有很深层次的嵌套关系。这样在安装新的包时，根据 node require 机制，会不停往上级的 node_modules 当中去找，如果找到相同版本的包就不会重新安装，解决了大量包重复安装的问题，而且依赖层级也不会太深。</li>
+</ol>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ol>
+<li> NPM 分身：依赖结构的<strong>不确定性</strong>。只提升 package.json 里面排在前面的包的重复引用包，其他版本的不提升；</li>
+<li> 扁平化算法本身的<strong>复杂性</strong>很高，耗时较长。</li>
+<li> <strong>幽灵依赖或幻影依赖</strong>：项目中仍然可以非法访问 package.json 没有声明过依赖的包，因为部分包被提升了；</li>
+</ol>
+<h3 id="常用命令-1"><a href="#常用命令-1" class="headerlink" title="常用命令"></a>常用命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>慕课释义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>yarn add</td>
+<td>添加依赖</td>
+</tr>
+<tr>
+<td>yarn audit</td>
+<td>对已安装的软件包执行漏洞审核</td>
+</tr>
+<tr>
+<td>yarn autoclean</td>
+<td>从程序包依赖项中清除并删除不必要的文件</td>
+</tr>
+<tr>
+<td>yarn bin</td>
+<td>显示依赖 bin 文件夹的位置</td>
+</tr>
+<tr>
+<td>yarn cache</td>
+<td>管理用户目录中的依赖缓存</td>
+</tr>
+<tr>
+<td>yarn check</td>
+<td>验证当前项目中程序包依赖项</td>
+</tr>
+<tr>
+<td>yarn config</td>
+<td>管理依赖配置文件</td>
+</tr>
+<tr>
+<td>yarn create</td>
+<td>创建 Yarn 工程</td>
+</tr>
+<tr>
+<td>yarn dedupe</td>
+<td>删除重复的依赖</td>
+</tr>
+<tr>
+<td>yarn generate-lock-entry</td>
+<td>生成 Yarn 锁文件</td>
+</tr>
+<tr>
+<td>yarn global</td>
+<td>在全局安装依赖</td>
+</tr>
+<tr>
+<td>yarn help</td>
+<td>显示 Yarn 的帮助信息</td>
+</tr>
+<tr>
+<td>yarn import</td>
+<td>迁移当前依赖的项目 package-lock.json</td>
+</tr>
+<tr>
+<td>yarn info</td>
+<td>显示有关依赖的信息</td>
+</tr>
+<tr>
+<td>yarn init</td>
+<td>初始化工程并创建 package.json 文件</td>
+</tr>
+<tr>
+<td>yarn install</td>
+<td>用于安装项目的所有依赖项</td>
+</tr>
+<tr>
+<td>yarn licenses</td>
+<td>列出已安装依赖的许可证及源码 url</td>
+</tr>
+<tr>
+<td>yarn link</td>
+<td>链接依赖文件夹</td>
+</tr>
+<tr>
+<td>yarn list</td>
+<td>列出已安装的依赖</td>
+</tr>
+<tr>
+<td>yarn login</td>
+<td>存储您在 registry 上的用户名和 email</td>
+</tr>
+<tr>
+<td>yarn logout</td>
+<td>清除你在 registry 上用户名和 email</td>
+</tr>
+<tr>
+<td>yarn outdated</td>
+<td>列出所有依赖项的版本信息</td>
+</tr>
+<tr>
+<td>yarn owner</td>
+<td>展示依赖作者</td>
+</tr>
+<tr>
+<td>yarn pack</td>
+<td>创建依赖项的压缩 gzip</td>
+</tr>
+<tr>
+<td>yarn policies</td>
+<td>规定整个项目中执行 Yarn 的版本</td>
+</tr>
+<tr>
+<td>yarn publish</td>
+<td>将依赖发布到 npm 注册表</td>
+</tr>
+<tr>
+<td>yarn remove</td>
+<td>删除依赖</td>
+</tr>
+<tr>
+<td>yarn run</td>
+<td>运行定义的程序脚本命令</td>
+</tr>
+<tr>
+<td>yarn tag</td>
+<td>在依赖上添加，删除或列出标签</td>
+</tr>
+<tr>
+<td>yarn team</td>
+<td>管理组织中的团队，并更改团队成员身份</td>
+</tr>
+<tr>
+<td>yarn test</td>
+<td>运行程序的 test 命令</td>
+</tr>
+<tr>
+<td>yarn upgrade</td>
+<td>将指定依赖升级为最新版本</td>
+</tr>
+<tr>
+<td>yarn upgrade-interactive</td>
+<td>更新过期依赖的简便方法</td>
+</tr>
+<tr>
+<td>yarn version</td>
+<td>展示依赖版本信息</td>
+</tr>
+<tr>
+<td>yarn versions</td>
+<td>展示所有依赖项版本信息</td>
+</tr>
+<tr>
+<td>yarn why</td>
+<td>显示有关为什么安装依赖的信息</td>
+</tr>
+<tr>
+<td>yarn workspace</td>
+<td>Yarn 的工作区信息</td>
+</tr>
+<tr>
+<td>yarn workspaces</td>
+<td>Yarn 的所有工作区信息</td>
+</tr>
+</tbody></table>
+<h2 id="1-3-pnpm"><a href="#1-3-pnpm" class="headerlink" title="1.3 pnpm"></a>1.3 pnpm</h2><p>快速的，节省磁盘空间的包管理工具；</p>
+<h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><p>npm install –global pnpm</p>
+<h3 id="作用-2"><a href="#作用-2" class="headerlink" title="作用"></a>作用</h3><ol>
+<li> 快速：pnpm 比其他包管理器快 2 倍；</li>
+<li> 高效：node_modules 中的文件为复制或链接自特定的内容寻址存储库；</li>
+<li> 支持 monorepos：pnpm 内置支持单仓多包；</li>
+<li> 严格：pnpm 默认创建了一个非平铺的 node_modules，因此代码无法访问任意包；</li>
+</ol>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>node_modules 并不是扁平化结构，而是目录树结构，同时还有个.pnpm 目录，.pnpm 以平铺的形式存储着所有的包，并以<strong>组织名(若无会省略)+包名@版本号/node_modules/名称(项目名称)</strong> 结构存储；由于它只会根据项目中的依赖生成，并不存在提升，所以它不会存在之前提到的<strong>幻影依赖</strong>问题；</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9759ce1de6394c8fb3ae1988f41c0212~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>pnpm 资源在磁盘上的存储位置为.pnpm-store 的文件夹中，Mac/linux 中默认会设置到{home dir}&gt;/.pnpm-store/v3；windows 下会设置到当前盘的根目录下，比如 C（C/.pnpm-store/v3）、D 盘（D/.pnpm-store/v3）。由于每个磁盘有自己的存储方式，所以 Store 会根据磁盘来划分。 如果磁盘上存在主目录，存储则会被创建在 <home dir>/.pnpm-store；如果磁盘上没有主目录，那么将在文件系统的根目录中创建该存储。 例如，如果安装发生在挂载在 /mnt 的文件系统上，那么存储将在 /mnt/.pnpm-store 处创建。 Windows 系统上也是如此。可以在不同的磁盘上设置同一个存储，但在这种情况下，pnpm 将<strong>复制包</strong>而不是<strong>硬链接</strong>它们，因为<strong>硬链接只能发生在同一文件系统同一分区上</strong>。如图可以看到在使用 pnpm 对项目安装依赖的时候，如果某个依赖在 sotre 目录中存在了话，那么就会直接从 store 目录里面去 hard-link，避免了二次安装带来的时间消耗，如果依赖在 store 目录里面不存在的话，就会去下载一次。</p>
+<h3 id="常用命令-2"><a href="#常用命令-2" class="headerlink" title="常用命令"></a>常用命令</h3><ol>
+<li> pnpm store prune 删除不被引用的包</li>
+<li> pnpm add xxx 添加包</li>
+</ol>
+<!---->
+
+<ol>
+<li><ol>
+<li> –save-prod, -P：安装到<strong>dependencies</strong></li>
+<li> –save-dev, -D：安装到<strong>devDependencies</strong></li>
+<li> –save-optional, -O：安装到<strong>optionalDependencies</strong></li>
+<li> –save-peer：安装到<strong>peerDependencies</strong>和<strong>devDependencies</strong>中</li>
+<li> –global：安装全局依赖。</li>
+<li> –workspace：仅添加在 workspace 找到的依赖项。</li>
+</ol>
+</li>
+</ol>
+<!---->
+
+<ol start="3">
+<li> pnpm remove xxx 删除某个包</li>
+<li> pnpm install 安装所有依赖</li>
+<li> pnpm list 以一个树形结构输出所有的已安装 package 的版本及其依赖。添加参数–json 后会输出 JSON 格式的日志。</li>
+<li> pnpm run xxx 跑脚本；</li>
+</ol>
+<h3 id="其他概念-1"><a href="#其他概念-1" class="headerlink" title="其他概念"></a>其他概念</h3><p><strong>inode</strong> ：是描述文件/目录属性的数据库，例如元数据和硬盘上的物理位置. 它们本质上是完整地址的数字等价物。使用 inode，操作系统可以检索有关文件的信息，例如权限和数据在硬盘驱动器上的物理位置，以访问文件。如果文件从一个文件夹移动到另一个文件夹，该文件将被移动到硬盘驱动器上的不同位置，其 inode 值将随之自动更改。</p>
+<p><strong>硬连接</strong>：硬连接指通过索引节点来进行连接。在 Linux 的文件系统中，保存在磁盘分区中的文件不管是什么类型都给它分配一个编号，称为索引节点号(Inode Index)。在 Linux 中，多个文件名指向同一索引节点是存在的。一般这种连接就是硬连接。硬连接的作用是允许一个文件拥有多个有效路径名，这样用户就可以建立硬连接到重要文件，以防止“误删”的功能。其原因如上所述，因为对应该目录的索引节点有一个以上的连接。只删除一个连接并不影响索引节点本身和其它的连接，只有当最后一个连接被删除后，文件的数据块及目录的连接才会被释放。也就是说，文件真正删除的条件是与之相关的所有硬连接文件均被删除。<strong>hark link</strong> <strong>只能用于文件不能用于目录</strong>；</p>
+<p><strong>软连接</strong>：另外一种连接称之为符号连接（Symbolic Link），也叫软连接。软链接文件有类似于 Windows 的快捷方式。它实际上是一个特殊的文件。在符号连接中，文件实际上是一个文本文件，其中包含的有另一文件的位置信息。<strong>目录使用软连接</strong>；</p>
+<p><strong>peerDependencies</strong>的目的是提示宿主环境去安装满足插件 peerDependencies 所指定依赖的包，然后在插件 import 或者 require 所依赖的包的时候，永远都是引用宿主环境统一安装的 npm 包，最终解决插件与所依赖包不一致的问题。</p>
+<p>pnpm v3 链接图：</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d226cf764d064ccda92ff4c5d2f4f326~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/84056d7c0e38453788fea8850958a404~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h1 id="2-Monorepo"><a href="#2-Monorepo" class="headerlink" title="2 Monorepo"></a>2 Monorepo</h1><p>monorepo 就是把多个工程放到一个 git 仓库中进行管理，因此他们可以共享同一套构建流程（更改代码、发包）、代码规范也可以做到统一，特别是如果存在模块间的相互引用的情况，查看代码、修改 bug、调试等会更加方便。</p>
+<h1 id="3-基于-lerna-搭建-monorepo"><a href="#3-基于-lerna-搭建-monorepo" class="headerlink" title="3 基于 lerna 搭建 monorepo"></a>3 基于 lerna 搭建 monorepo</h1><p>lerna 是一个管理工具，用于管理包含多个软件包（package）的 js 项目，优化了使用 git 和 npm 管理多包存储库的工作流。</p>
+<h2 id="3-1-工作的两种模式"><a href="#3-1-工作的两种模式" class="headerlink" title="3.1 工作的两种模式"></a>3.1 工作的两种模式</h2><p>lerna 默认使用的是集中版本，所有的 package 共用一个 version。如果希望不同的 package 拥有自己的版本，可以使用<a href="https://link.juejin.cn/?target=https://github.com/lerna/lerna/%23independent-mode">Independent</a>模式</p>
+<h3 id="Fixed-Locked-mode-default"><a href="#Fixed-Locked-mode-default" class="headerlink" title="Fixed/Locked mode (default)"></a>Fixed/Locked mode (default)</h3><p>vue,babel 都是用这种，在 publish 的时候,会在 lerna.json 文件里面”version”: “0.1.5”，依据这个号，进行增加，只选择一次，其他有改动的包自动更新版本号。</p>
+<h3 id="Independent-mode"><a href="#Independent-mode" class="headerlink" title="Independent mode"></a>Independent mode</h3><p>lerna init –independent 初始化项目。 lerna.json 文件里面”version”: “independent”,</p>
+<p>每次 publish 时，您都将得到一个提示符，提示每个已更改的包，以指定是补丁、次要更改、主要更改还是自定义更改。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c7ec2067f074f9092de09343cb69e23~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h2 id="3-2-解决了哪些问题？"><a href="#3-2-解决了哪些问题？" class="headerlink" title="3.2 解决了哪些问题？"></a>3.2 解决了哪些问题？</h2><p>规范问题和简化流程；</p>
+<ol>
+<li> 自动解决 packages 之间的依赖关系</li>
+<li> 可采用 Independent 模式，通过 git 检测文件改动，自动发布，；</li>
+<li> 根据 git 提交记录，自动生成 CHANGELOG</li>
+<li> 统一整个工程化，比如 eslint 规则检查、prettier 自动格式化代码、提交代码，代码检查 hook、遵循 semver 版本规范</li>
+</ol>
+<h2 id="3-3-指令总览"><a href="#3-3-指令总览" class="headerlink" title="3.3 指令总览"></a>3.3 指令总览</h2><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>解释</th>
+<th>链接(英文)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lerna publish</td>
+<td>在当前项目中发布包注意: Lerna <strong>永远不会</strong>发布标记为 private 的包（package.json 中的”private“: true）</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/publish#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna version</td>
+<td>更改自上次发布以来的包版本号</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/version#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna bootstrap</td>
+<td>将本地包链接在一起并安装剩余的包依赖项</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/bootstrap#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna list</td>
+<td>列出本地包</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/list#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna changed</td>
+<td>列出自上次标记发布以来发生变化的本地包</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/changed#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna diff</td>
+<td>自上次发布以来的所有包或单个包的区别</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/diff#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna exec</td>
+<td>在每个包中执行任意命令</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/exec#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna run</td>
+<td>在包含该脚本中的每个包中运行 npm 脚本</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/run#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna init</td>
+<td>创建一个新的 Lerna 仓库或将现有的仓库升级到 Lerna 的当前版本</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/init#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna add</td>
+<td>向匹配的包添加依赖关系</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/add#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna clean</td>
+<td>从所有包中删除 node_modules 目录</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/clean#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna import</td>
+<td>将一个包导入到带有提交历史记录的 monorepo 中</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/import#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna link</td>
+<td>将所有相互依赖的包符号链接在一起</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/link#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna create</td>
+<td>创建一个新的由 lerna 管理的包</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/create#readme">前往</a></td>
+</tr>
+<tr>
+<td>lerna info</td>
+<td>打印本地环境信息</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna/blob/master/commands/info#readme">前往</a></td>
+</tr>
+</tbody></table>
+<h2 id="3-4-搭建-lerna-项目"><a href="#3-4-搭建-lerna-项目" class="headerlink" title="3.4 搭建 lerna 项目"></a>3.4 搭建 lerna 项目</h2><ol>
+<li> 安装 lerna：npm install –global lerna</li>
+<li> 初始化项目：git init lerna-repo &amp;&amp; cd lerna-repo</li>
+<li> 初始化 lerna：lerna init；得到文件夹 lerna-repo/ packages/ package.json lerna.json</li>
+<li> 创建子应用：lernam create 子应用名称；</li>
+</ol>
+<h1 id="4-基于-pnpm-搭建-monorepo"><a href="#4-基于-pnpm-搭建-monorepo" class="headerlink" title="4 基于 pnpm 搭建 monorepo"></a>4 基于 pnpm 搭建 monorepo</h1><ol>
+<li> 调整目录结构如下</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># app</span><br><span class="line">├── packages</span><br><span class="line">│   ├── pkg1</span><br><span class="line">│   │   ├── package.json</span><br><span class="line">│   │   └── pnpm-lock.yaml</span><br><span class="line">│   ├── pkg2</span><br><span class="line">│   │   ├── package.json</span><br><span class="line">│   │   └── pnpm-lock.yaml</span><br><span class="line">│   ├── pkg3</span><br><span class="line">│   │   ├── package.json</span><br><span class="line">│   │   └── pnpm-lock.yaml</span><br><span class="line">│   └── app</span><br><span class="line">│       ├── package.json</span><br><span class="line">│       └── pnpm-lock.yaml</span><br><span class="line">├── package.json</span><br><span class="line">├── pnpm-lock.yaml</span><br><span class="line">└── pnpm-workspace.yaml</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li> 配置 pnpm-workspace.yaml，让 pnpm 知道都有哪些 workspace。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># ./pnpm-workspace.yaml</span><br><span class="line">packages:</span><br><span class="line">  # root directory</span><br><span class="line">  - &quot;.&quot;</span><br><span class="line">  # all packages in subdirs of packages/</span><br><span class="line">  - &quot;packages/**&quot;</span><br><span class="line">  # exclude packages that are inside test/ directories</span><br><span class="line">  - &quot;!**/test/**&quot; # &#x27;!&#x27; means exclude</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li> 配置执行脚本，如执行某个包的 dev 指令，pnpm run –filter @package/app dev</li>
+<li> 批量执行命令，如对所有的包进行 lint：pnpm run –filter=&quot;@app/*&quot; lint</li>
+<li> 复用同仓库下的代码：假设 app 依赖于<a href="mailto:&#112;&#107;&#103;&#x31;&#64;&#x31;&#46;&#x35;&#46;&#48;">&#112;&#107;&#103;&#x31;&#64;&#x31;&#46;&#x35;&#46;&#48;</a>和<a href="mailto:&#x70;&#x6b;&#103;&#x32;&#64;&#49;&#46;&#x35;&#46;&#x30;">&#x70;&#x6b;&#103;&#x32;&#64;&#49;&#46;&#x35;&#46;&#x30;</a>，而后两者均依赖于<a href="mailto:&#112;&#107;&#x67;&#x33;&#64;&#x31;&#x2e;&#53;&#x2e;&#48;">&#112;&#107;&#x67;&#x33;&#64;&#x31;&#x2e;&#53;&#x2e;&#48;</a>。常规的做法是直接使用 npm 上的版本。但是如果想直接用当前正在开发中的<a href="mailto:&#x70;&#107;&#103;&#51;&#64;&#x31;&#46;&#x35;&#46;&#49;">&#x70;&#107;&#103;&#51;&#64;&#x31;&#46;&#x35;&#46;&#49;</a>，而又还没有发布到 npm 上， 就很难办了。总不能 import xxx from “../../pacakge/pkc3/xxx”吧。这个时候 workspace 就派上了用场，可以这样给 pkg1 写依赖；在设置依赖版本的时候推荐用 workspace: *，就可以保持依赖的版本是工作空间里最新版本，不需要每次手动更新依赖版本。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// packages/pkg1/package.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;dependencies&quot;: &#123;</span><br><span class="line">        &quot;@laffery/pkg3&quot;: &quot;workspace:1.5.1&quot;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="5-Turborepo"><a href="#5-Turborepo" class="headerlink" title="5 Turborepo"></a>5 Turborepo</h1><p>Turborepo 是一个为 monorepo 而生的极快的构建系统。目的是为了解决大型 monorepo 项目构建速度缓慢的一大痛点。turbo 的核心是永远不会重新构建已经构建过的内容。turbo 会把每次构建的产物与日志缓存起来，下次构建时只有文件发生变动的部分才会重新构建，没有变动的直接命中缓存并重现日志。turbo 拥有更智能的任务<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E8%B0%83%E5%BA%A6%E7%A8%8B%E5%BA%8F&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:2290454921%7D">调度程序</a>，充分利用空闲 CPU，使得整体构建速度更快。另外，turbo 还具有远程缓存功能，可以与团队和 CI/CD 共享构建缓存。</p>
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ul>
+<li>增量构建：缓存构建内容，并跳过已经计算过的内容，通过增量构建来提高构建速度</li>
+<li>内容 hash：通过文件内容计算出来的 hash 来判断文件是否需要进行构建</li>
+<li>云缓存：可以和团队成员共享 CI/CD 的云构建缓存，来实现更快的构建</li>
+<li>并行执行：在不浪费空闲 CPU 的情况下，以最大并行数量来进行构建</li>
+<li>任务管道：通过定义任务之间的关系，让 Turborepo 优化构建的内容和时间</li>
+<li>约定式配置：通过约定来降低配置的复杂度，只需要几行简单的 JSON 就能完成配置</li>
+</ul>
+<p>turbo 通过「智能缓存」与「<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22answer%22,%22sourceId%22:2290454921%7D">任务调度</a>」，极大的提升了构建速度，节省了计算资源。并且 turbo 配置非常简单，侵入性小，可以渐进式的采用。相信未来 turbo 会成为 monorepo 工具链上的重要一环。</p>
+<h2 id="搭建项目"><a href="#搭建项目" class="headerlink" title="搭建项目"></a>搭建项目</h2><ol>
+<li> 将 Turborepo 添加到项目最外层的 devDependecies 中，npm install turbo -D</li>
+<li> 在 package.json 中增加 Turborepo 的配置项</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// package.json 将想要&quot;涡轮增压&quot;的命令添加到管道中 管道定义了 npm 包中 scripts 的依赖关系，</span><br><span class="line">// 并且为这些命令开启了缓存。这些命令的依赖关系和缓存设置会应用到 monorepo 中的各个包中</span><br><span class="line">&#123;</span><br><span class="line">  &quot;turbo&quot;: &#123;</span><br><span class="line">    &quot;pipeline&quot;: &#123;</span><br><span class="line">            &quot;build&quot;: &#123;</span><br><span class="line">                &quot;dependsOn&quot;: [&quot;^build&quot;],</span><br><span class="line">                &quot;outputs&quot;: [&quot;.next/**&quot;]</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;test&quot;: &#123;</span><br><span class="line">                &quot;dependsOn&quot;: [&quot;^build&quot;],</span><br><span class="line">                &quot;outputs&quot;: []</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;lint&quot;: &#123;</span><br><span class="line">                &quot;outputs&quot;: []</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;dev&quot;: &#123;</span><br><span class="line">                &quot;cache&quot;: false</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>build 和 test 这两个任务具有依赖性，必须要等他们的依赖项对应的任务完成后才能执行，所以这里用^来表示。 对于每个包中 package.json 中的 script 命令，如果没有配置覆盖项，那么 Turborepo 将缓存默认输出到 dist/** 和 build/**文件夹中。可以通过 outputs 数组来设置缓存的输出目录，示例中将缓存保存到.next/**文件夹中。Turborep 会自动将没个 script 的控制台 log 缓存到.turbo/turbo-<script>.log 目录中，不需要自己手动去指定。 dev 这个任务通过 cache 设置为 false 来禁用这个命令的缓存功能。</p>
+<h1 id="6-参考资料"><a href="#6-参考资料" class="headerlink" title="6 参考资料"></a>6 参考资料</h1><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/aaa7db89a5b2">npm link 的使用</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7033400734746066957">【一库】yalc: 可能是最好的前端 link 调试方案（已经非常谦虚了）</a></p>
+<p><a target="_blank" rel="noopener" href="http://m.imooc.com/wiki/yarnlesson-yarntext">Yarn 命令</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903568751722509">lerna 管理前端模块最佳实践</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.febeacon.com/lerna-docs-zh-cn/routes/commands/">lerna 指令参考地址（汉化）</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903856153821198#heading-6">Lerna 中文教程详解</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7032116303737389086/">Hard links and Symbolic links （硬链接 VS 符号链接）</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/itech/archive/2009/04/10/1433052.html">Linux 软连接和硬链接</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7053340250210795557">都 2022 年了，pnpm 快到碗里来！</a></p>
+<p><a target="_blank" rel="noopener" href="https://lerna.js.org/docs/recipes/using-pnpm-with-lerna">将 pnpm 与 Lerna 结合使用</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/505956571">如何评价 turborepo 这个 Monorepos 解决方案？</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7048234698048274469#heading-5">https://juejin.cn/post/7048234698048274469#heading-5</a></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E5%89%8D%E7%AB%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94%20copy/" title="前端包管理工具对比" target="_blank" rel="external">https://laputaz.github.io/home/前端包管理工具对比 copy/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/js-admin%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1/" title="js-admin权限设计"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/%E5%9B%9E%E9%A1%BE-admin%E9%A1%B9%E7%9B%AE%E6%A2%B3%E7%90%86/" title="回顾-admin项目梳理"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    回顾：cypress 总结、质量左移指南 | laputa z
+  </title>
+  <meta name="description" content="我们经常有听到 TDD、写单测等等，那么跟 UI 强关联的组件的测试应该怎么做？ 本文使用 Cypress 框架，通过一个组件示例，一步步进行实践，尝试把 TDD 在前端落地。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回顾：cypress 总结、质量左移指南">
+<meta property="og:url" content="https://laputaz.github.io/home/cypress%20%E6%80%BB%E7%BB%93%E3%80%81%E8%B4%A8%E9%87%8F%E5%B7%A6%E7%A7%BB%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="我们经常有听到 TDD、写单测等等，那么跟 UI 强关联的组件的测试应该怎么做？ 本文使用 Cypress 框架，通过一个组件示例，一步步进行实践，尝试把 TDD 在前端落地。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/829e2409335d47e4ad8230ab4a2048bc.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/ed26499fe43840c2820a8ac9f9aa37b7.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/6834b1a33e224d13a7c9adf4f3bc4858.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/ac286f7be9ae4b44a34633c7a9a260be.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/53f43c98d82c44b3819b6336b68f2ae7.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/c1e841b244454181a7e63ccf512d0549.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/cc1b5282ce7b49d1b9d59042d78482b6.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/4689821fdc2641c1b6a49f79fc8ca372.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/fb9547c627bf4894bf51d8b2f04ce5e4.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/e773df936daa45ae9f235d6266543043.png">
+<meta property="article:published_time" content="2023-07-20T19:06:34.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="回顾">
+<meta property="article:tag" content="踩坑">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i-blog.csdnimg.cn/direct/829e2409335d47e4ad8230ab4a2048bc.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/cypress%20%E6%80%BB%E7%BB%93%E3%80%81%E8%B4%A8%E9%87%8F%E5%B7%A6%E7%A7%BB%E6%8C%87%E5%8D%97/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-cypress 总结、质量左移指南" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      回顾：cypress 总结、质量左移指南
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/cypress%20%E6%80%BB%E7%BB%93%E3%80%81%E8%B4%A8%E9%87%8F%E5%B7%A6%E7%A7%BB%E6%8C%87%E5%8D%97/" class="article-date">
+	  <time datetime="2023-07-20T19:06:34.000Z" itemprop="datePublished">2023-07-20</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/%E5%9B%9E%E9%A1%BE/" rel="tag">回顾</a>, <a class="article-tag-link-link" href="/home/tags/%E8%B8%A9%E5%9D%91/" rel="tag">踩坑</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/cypress%20%E6%80%BB%E7%BB%93%E3%80%81%E8%B4%A8%E9%87%8F%E5%B7%A6%E7%A7%BB%E6%8C%87%E5%8D%97/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>我们经常有听到 TDD、写单测等等，那么跟 UI 强关联的组件的测试应该怎么做？</p>
+<p>本文使用 Cypress 框架，通过一个组件示例，一步步进行实践，尝试把 TDD 在前端落地。</p>
+<span id="more"></span>
+
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>Cypress 是一个完整易用的测试框架，我们可以使用 Cypress 进行 e2e 测试、集成测试、单元测试<br>用来实现组件测试有着几大优势</p>
+<p>支持真实的浏览器运行环境，直接使用 web 浏览器上的开发工具直接调试</p>
+<p>在运行测试的时候，会获取快照，记录了测试执行过程的每一步细节</p>
+<p>运行速度非常快，基本可以与浏览器内容实时同步</p>
+<p>在 Cypress 官方的组件测试示例仓库 cypress-component-examples 中，选择 vite-vue 作为初始化的模板</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">实际业务中已有的项目可以参考 Vite Based Projects (Vue, React) 中说明进行接入</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/direct/829e2409335d47e4ad8230ab4a2048bc.png" alt="在这里插入图片描述"></p>
+<p>可以看到，有一个 HelloWorld.spec.js 的测试文件</p>
+<p>首先开始安装、运行，看看是什么效果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pnpm install</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">在浏览器打开测试用例集的界面</span></span><br><span class="line">pnpm cypress open-ct</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/direct/ed26499fe43840c2820a8ac9f9aa37b7.png" alt="在这里插入图片描述"></p>
+<p>从 Cypress 自带的测试用例预览界面可以看到，用例已经正常运行通过了，接下来进入正文</p>
+<p>由于后续示例代码使用 ts 编写，这里先添加 @vitejs/plugin-vue-jsx 插件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vite.config.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; defineConfig &#125; <span class="keyword">from</span> <span class="string">&#x27;vite&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> vue <span class="keyword">from</span> <span class="string">&#x27;@vitejs/plugin-vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> vueJsx <span class="keyword">from</span> <span class="string">&#x27;@vitejs/plugin-vue-jsx&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// https://vitejs.dev/config/</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineConfig</span>(&#123;</span><br><span class="line">  <span class="attr">plugins</span>: [<span class="title function_">vue</span>(), <span class="title function_">vueJsx</span>()],</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cypress.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;testFiles&quot;</span><span class="punctuation">:</span> <span class="string">&quot;**/*.spec.[jt]s&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;componentFolder&quot;</span><span class="punctuation">:</span> <span class="string">&quot;src&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="组件测试"><a href="#组件测试" class="headerlink" title="组件测试"></a>组件测试</h2><p>以一个 Rate 评分组件为例</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/6834b1a33e224d13a7c9adf4f3bc4858.png" alt="在这里插入图片描述"></p>
+<ol>
+<li>基础显示</li>
+<li>支持点击选中</li>
+<li>支持传入初始值选中</li>
+<li>支持 hover 高亮</li>
+</ol>
+<p>受限篇幅，本文只支持以上功能</p>
+<h2 id="测试驱动开发"><a href="#测试驱动开发" class="headerlink" title="测试驱动开发"></a>测试驱动开发</h2><p>测试驱动开发，即 TDD，它的规则很简单，可以归纳为下面三条：</p>
+<ul>
+<li>先编写一个因为缺乏实现代码而运行失败的测试，然后编写实现代码。</li>
+<li>只允许编写一个刚好失败的测试 - 编译失败也算失败。</li>
+<li>只允许编写刚好能使当前失败测试通过的实现代码。</li>
+</ul>
+<p>遵循 TDD 三原则，意味着你的每一行实现代码都是有测试保证的，先有的测试，才有的你那一行恰好可以通过的实现代码。你的测试是完备的，你有信心部署你测试全过的代码，这些测试告诉我们，我们的系统是可靠、可部署的。<br>通过上述的三原则，从第一个测试用例开始</p>
+<h3 id="编写第一个测试用例"><a href="#编写第一个测试用例" class="headerlink" title="编写第一个测试用例"></a>编写第一个测试用例</h3><p>在 components 下新建 rate 目录存放相关代码实现以及测试用例</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/ac286f7be9ae4b44a34633c7a9a260be.png" alt="在这里插入图片描述"></p>
+<p>如上图所示，由于我们还没开始写 Rate 组件的实现，现在导入组件是编译报错的状态</p>
+<p>假设初始化会渲染 5 个类为 mio-rate-item 的元素，那么此时写下第一个测试用例代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; mount &#125; <span class="keyword">from</span> <span class="string">&#x27;@cypress/vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Rate</span> <span class="keyword">from</span> <span class="string">&#x27;./index&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;rate component&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;should render 5 item elements&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">mount</span>(<span class="title class_">Rate</span>);</span><br><span class="line"></span><br><span class="line">    cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item&#x27;</span>).<span class="title function_">should</span>(<span class="string">&#x27;have.length&#x27;</span>, <span class="number">5</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/direct/53f43c98d82c44b3819b6336b68f2ae7.png" alt="在这里插入图片描述"></p>
+<p>打开浏览器用例运行界面，可以看到左侧的用例列表多出来了 src/component/rate/rate.spec.ts ，且编译摆错了。</p>
+<h3 id="针对第一个用例编写实现代码"><a href="#针对第一个用例编写实现代码" class="headerlink" title="针对第一个用例编写实现代码"></a>针对第一个用例编写实现代码</h3><p>为了使刚才写的第一个用例通过，回想之前提到的三原则，这次只针对性的写这个用例对应的实现代码</p>
+<p>创建一个容器，然后渲染 5 个类名为 mio-rate-item 的子元素</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// rate/index.tsx</span></span><br><span class="line"><span class="keyword">import</span> &#123; defineComponent &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; renderIcon &#125; <span class="keyword">from</span> <span class="string">&#x27;./icon&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./index.css&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">getNumberList</span> = (<span class="params">num: number</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: num &#125;).<span class="title function_">map</span>(<span class="function">(<span class="params">_, i</span>) =&gt;</span> i + <span class="number">1</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">useRateClasses</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> [<span class="string">&#x27;mio-rate-item&#x27;</span>];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineComponent</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Rate&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setup</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">renderRateItem</span> = (<span class="params"></span>) =&gt; (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&#123;useRateClasses()&#125;</span>&gt;</span>&#123;renderIcon()&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">renderRate</span> = (<span class="params"></span>) =&gt; (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;mio-rate&quot;</span>&gt;</span>&#123;getNumberList(5).map(() =&gt; renderRateItem())&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="title function_">renderRate</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/direct/c1e841b244454181a7e63ccf512d0549.png" alt="在这里插入图片描述"></p>
+<p>查看用例运行界面可以发现用例已经运行通过了，右侧的界面成功的渲染了 5 个 ⭐️</p>
+<h3 id="第二个测试用例"><a href="#第二个测试用例" class="headerlink" title="第二个测试用例"></a>第二个测试用例</h3><p>根据上述的步骤继续，这次需要支持点击选择功能</p>
+<p>假设我们点击后会给选中的子元素加上 .is-active ，那么自然而然写下测试用例代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; mount &#125; <span class="keyword">from</span> <span class="string">&#x27;@cypress/vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Rate</span> <span class="keyword">from</span> <span class="string">&#x27;./index&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;rate component&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;should render 5 item elements&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">mount</span>(<span class="title class_">Rate</span>);</span><br><span class="line"></span><br><span class="line">    cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item&#x27;</span>).<span class="title function_">should</span>(<span class="string">&#x27;have.length&#x27;</span>, <span class="number">5</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;should be highlighted when the element is clicked&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">mount</span>(<span class="title class_">Rate</span>);</span><br><span class="line"></span><br><span class="line">    cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item.is-active&#x27;</span>).<span class="title function_">should</span>(<span class="string">&#x27;have.length&#x27;</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 点击第 3 个子元素</span></span><br><span class="line">    cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item:nth-of-type(3)&#x27;</span>).<span class="title function_">click</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 带有 .is-active 的子元素应该有 3 个</span></span><br><span class="line">    cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item.is-active&#x27;</span>).<span class="title function_">should</span>(<span class="string">&#x27;have.length&#x27;</span>, <span class="number">3</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/direct/cc1b5282ce7b49d1b9d59042d78482b6.png" alt="在这里插入图片描述"></p>
+<p>查看运行界面，可以看到用例运行状态是失败的，右侧渲染的组件中也没有高亮</p>
+<p>然后需要在对应的组件文件进行实现</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineComponent, ref, <span class="title class_">Ref</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; renderIcon &#125; <span class="keyword">from</span> <span class="string">&#x27;./icon&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./index.css&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">getNumberList</span> = (<span class="params">num: number</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Array</span>.<span class="title function_">from</span>(&#123; <span class="attr">length</span>: num &#125;).<span class="title function_">map</span>(<span class="function">(<span class="params">_, i</span>) =&gt;</span> i + <span class="number">1</span>);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">useRateClasses</span>(<span class="params">&#123;</span></span><br><span class="line"><span class="params">  currentValue,</span></span><br><span class="line"><span class="params">  index,</span></span><br><span class="line"><span class="params">&#125;: &#123;</span></span><br><span class="line"><span class="params">  currentValue: Ref&lt;number&gt;,</span></span><br><span class="line"><span class="params">  index: number,</span></span><br><span class="line"><span class="params">&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> [<span class="string">&#x27;mio-rate-item&#x27;</span>, currentValue.<span class="property">value</span> &gt;= index ? <span class="string">&#x27;is-active&#x27;</span> : <span class="string">&#x27;&#x27;</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineComponent</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Rate&#x27;</span>,</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setup</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> currentValue = <span class="title function_">ref</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">onClickItem</span> = (<span class="params">index: number</span>) =&gt; (currentValue.<span class="property">value</span> = index);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">renderRateItem</span> = (<span class="params">index: number</span>) =&gt; (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">class</span>=<span class="string">&#123;useRateClasses(&#123;</span> <span class="attr">currentValue</span>, <span class="attr">index</span> &#125;)&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> onClickItem(index)&#125;</span></span><br><span class="line"><span class="language-xml">      &gt;</span></span><br><span class="line"><span class="language-xml">        &#123;renderIcon()&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">renderRate</span> = (<span class="params"></span>) =&gt; (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;mio-rate&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;getNumberList(5).map((i) =&gt; renderRateItem(i))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> <span class="title function_">renderRate</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/direct/4689821fdc2641c1b6a49f79fc8ca372.png" alt="在这里插入图片描述"></p>
+<p>切换到用例运行的面板，可以看到用例已经执行成功了</p>
+<p>点击步骤可查看组件的中间状态，如果中间出现问题，还可以打开 chrome devtools 去调试</p>
+<h3 id="重复上述步骤"><a href="#重复上述步骤" class="headerlink" title="重复上述步骤"></a>重复上述步骤</h3><p>根据之前提到的 TDD 三原则，重复的进行 写用例 -&gt; 写实现代码 -&gt; 调试通过 -&gt; 重构/优化设计 -&gt; 写用例 -&gt; … 的过程。</p>
+<ul>
+<li>v-model 功能</li>
+</ul>
+<p>支持传入初始值选中显示</p>
+<ul>
+<li>props 用例</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; mount, mountCallback &#125; <span class="keyword">from</span> <span class="string">&#x27;@cypress/vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Rate</span> <span class="keyword">from</span> <span class="string">&#x27;./index&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;rate component&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="title function_">describe</span>(<span class="string">&#x27;v-model value&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 当前 describe 作用域下每个用例执行前进行 mount</span></span><br><span class="line">    <span class="title function_">beforeEach</span>(</span><br><span class="line">      <span class="title function_">mountCallback</span>(<span class="title class_">Rate</span>, &#123;</span><br><span class="line">        <span class="attr">propsData</span>: &#123;</span><br><span class="line">          <span class="attr">modelValue</span>: <span class="number">3</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="title function_">it</span>(<span class="string">&#x27;should work when set props value&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item.is-active&#x27;</span>)</span><br><span class="line">        .<span class="title function_">should</span>(<span class="string">&#x27;have.length&#x27;</span>, <span class="number">3</span>)</span><br><span class="line">        .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="comment">// 参考 @vue/test-utils 的 wrapper api</span></span><br><span class="line">          <span class="title class_">Cypress</span>.<span class="property">vueWrapper</span>.<span class="title function_">setProps</span>(&#123;</span><br><span class="line">            <span class="attr">modelValue</span>: <span class="number">4</span>,</span><br><span class="line">          &#125;);</span><br><span class="line">          cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item.is-active&#x27;</span>).<span class="title function_">should</span>(<span class="string">&#x27;have.length&#x27;</span>, <span class="number">4</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Props 逻辑实现</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineComponent</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Rate&#x27;</span>,</span><br><span class="line">  <span class="attr">props</span>: &#123;</span><br><span class="line">    <span class="attr">modelValue</span>: &#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="title class_">Number</span>,</span><br><span class="line">      <span class="attr">default</span>: <span class="number">0</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="title function_">setup</span>(<span class="params">props</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> currentValue = <span class="title function_">ref</span>(props.<span class="property">modelValue</span>);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">watch</span>(</span><br><span class="line">      <span class="function">() =&gt;</span> props.<span class="property">modelValue</span>,</span><br><span class="line">      <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">        currentValue.<span class="property">value</span> = value;</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>emit 用例</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">it</span>(<span class="string">&#x27;should be emit input when the element is clicked&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item.is-active&#x27;</span>).<span class="title function_">should</span>(<span class="string">&#x27;have.length&#x27;</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">  cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item:nth-of-type(2)&#x27;</span>)</span><br><span class="line">    .<span class="title function_">click</span>()</span><br><span class="line">    .<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="title function_">expect</span>(<span class="title class_">Cypress</span>.<span class="property">vueWrapper</span>.<span class="title function_">emitted</span>()[<span class="string">&#x27;update:modelValue&#x27;</span>].<span class="property">length</span>).<span class="property">to</span>.<span class="title function_">eq</span>(<span class="number">1</span>);</span><br><span class="line">      <span class="title function_">expect</span>(<span class="title class_">Cypress</span>.<span class="property">vueWrapper</span>.<span class="title function_">emitted</span>()[<span class="string">&#x27;update:modelValue&#x27;</span>][<span class="number">0</span>][<span class="number">0</span>]).<span class="property">to</span>.<span class="title function_">eq</span>(<span class="number">2</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>emit 实现</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setup</span>(<span class="params">props, &#123; emit &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> currentValue = <span class="title function_">ref</span>(props.<span class="property">modelValue</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">watch</span>(currentValue, <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">emit</span>(<span class="string">&#x27;update:modelValue&#x27;</span>, value);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>悬浮高亮功能</p>
+<ul>
+<li>用例</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">it</span>(<span class="string">&#x27;should be highlighted when hover&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">mount</span>(<span class="title class_">Rate</span>);</span><br><span class="line"></span><br><span class="line">  cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item:nth-of-type(3)&#x27;</span>).<span class="title function_">trigger</span>(<span class="string">&#x27;mouseenter&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item.is-active&#x27;</span>).<span class="title function_">should</span>(<span class="string">&#x27;have.length&#x27;</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">  cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item:nth-of-type(3)&#x27;</span>).<span class="title function_">trigger</span>(<span class="string">&#x27;mouseleave&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  cy.<span class="title function_">get</span>(<span class="string">&#x27;.mio-rate-item.is-active&#x27;</span>).<span class="title function_">should</span>(<span class="string">&#x27;have.length&#x27;</span>, <span class="number">0</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>实现</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">useRateClasses</span>(<span class="params">&#123;</span></span><br><span class="line"><span class="params">  currentValue,</span></span><br><span class="line"><span class="params">  currentOverValue,</span></span><br><span class="line"><span class="params">  index,</span></span><br><span class="line"><span class="params">&#125;: &#123;</span></span><br><span class="line"><span class="params">  currentValue: Ref&lt;number&gt;,</span></span><br><span class="line"><span class="params">  currentOverValue: Ref&lt;number&gt;,</span></span><br><span class="line"><span class="params">  index: number,</span></span><br><span class="line"><span class="params">&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> [</span><br><span class="line">    <span class="string">&#x27;mio-rate-item&#x27;</span>,</span><br><span class="line">    (currentOverValue.<span class="property">value</span> || currentValue.<span class="property">value</span>) &gt;= index ? <span class="string">&#x27;is-active&#x27;</span> : <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">  ];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// setup ...</span></span><br><span class="line"><span class="keyword">const</span> currentOverValue = <span class="title function_">ref</span>(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">renderRateItem</span> = (<span class="params">index: number</span>) =&gt; (</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    <span class="attr">class</span>=<span class="string">&#123;useRateClasses(&#123;</span> <span class="attr">currentValue</span>, <span class="attr">currentOverValue</span>, <span class="attr">index</span> &#125;)&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> onClickItem(index)&#125;</span></span><br><span class="line"><span class="language-xml">    onMouseenter=&#123;() =&gt; (currentOverValue.value = index)&#125;</span></span><br><span class="line"><span class="language-xml">    onMouseleave=&#123;() =&gt; (currentOverValue.value = 0)&#125;</span></span><br><span class="line"><span class="language-xml">  &gt;</span></span><br><span class="line"><span class="language-xml">    &#123;renderIcon()&#125;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h3><p><img src="https://i-blog.csdnimg.cn/direct/fb9547c627bf4894bf51d8b2f04ce5e4.png" alt="在这里插入图片描述"></p>
+<p>可以看到，用例已经全部运行通过了</p>
+<h3 id="重构"><a href="#重构" class="headerlink" title="重构"></a>重构</h3><p>完成了上述的过程是否就已经结束了呢？其实还漏了一个重要的步骤，那就是重构。<br>如果有任何重复的逻辑、比较冗余的代码，重构可以消除重复并提高表达能力（减少耦合，增加内聚力）。<br>再次运行测试验证重构是否引入新的错误。如果没有通过，很可能是在重构时犯了一些错误，需要立即修复并重新运行，直到所有测试通过。<br>以上述实现的 v-model 功能为例，在封装组件的时候，这类功能是比较常见的，那么这部分是否可以抽离出一个单独的函数来维护？先简单来实践一下<br>首先封装一个名为 useVModel 的函数，将 v-model 所涉及到的关联逻辑放进来</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> useVModel = &lt;T <span class="keyword">extends</span> &#123; <span class="attr">modelValue</span>: T[<span class="string">&#x27;modelValue&#x27;</span>] &#125;&gt;<span class="function">(<span class="params">props: T</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; emit &#125; = <span class="title function_">getCurrentInstance</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> proxy = <span class="title function_">ref</span>(props.<span class="property">modelValue</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">watch</span>(proxy, <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">emit</span>(<span class="string">&#x27;update:modelValue&#x27;</span>, value);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">watch</span>(</span><br><span class="line">    <span class="function">() =&gt;</span> props.<span class="property">modelValue</span>,</span><br><span class="line">    <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">      proxy.<span class="property">value</span> = value <span class="keyword">as</span> <span class="title class_">UnwrapRef</span>&lt;T[<span class="string">&#x27;modelValue&#x27;</span>]&gt;;</span><br><span class="line">    &#125;,</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> proxy;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>替换完成后，再次执行刚才写的测试用例，正常通过。<br>通过这个重构操作，上述封装的 useVModel 就可以在其他地方进行复用，也简化了在业务上的调用逻辑。<br>总的来说，有了之前的测试用例基础，重构也有对应的质量保障，且重构能够 消除重复设计，优化设计结构 ，对于整体的代码质量，可维护性与可扩展性都有了提升。</p>
+<h2 id="编写总结"><a href="#编写总结" class="headerlink" title="编写总结"></a>编写总结</h2><p>测试驱动开发 要求每次只添加一个行为，先写一个失败的测试，然后写出恰好能使这个测试通过的实现代码。<br>你写出的每一个测试都是一份代码示例，如何调用 API，如何创建某个对象。测试已经有了超过 90% 使用场景覆盖，而且这可以立即发现错误，去调试、修复它。如果先写一大堆实现代码，再来补测试，这时候已经先入为主，你很难发现自己的代码有什么问题。<br>在此过程中穿插的重构，也会让我们不断的思考如何实现好的代码，提升整体的代码质量。<br>另外，在工具层面，Cypress 新的组件测试器对测试组件有着很好的支持，而且对于 vite 项目来说，也有比较好的集成，是测试在浏览器中呈现的任何内容理想选择。</p>
+<h2 id="质量左移"><a href="#质量左移" class="headerlink" title="质量左移"></a>质量左移</h2><p>Cypress 给项目带来的价值：</p>
+<ul>
+<li>缺陷前移</li>
+<li>质量后盾</li>
+<li>提升个人能力</li>
+</ul>
+<h3 id="缺陷前移"><a href="#缺陷前移" class="headerlink" title="缺陷前移"></a>缺陷前移</h3><p>什么是缺陷前移？<br>简单理解：缺陷前移就是在前期阶段做详尽的分析，采取好的措施去尽早地发现不合理的地方，尽早地暴露问题，促使团队更早地识别修复缺陷，这样后面出问题的几率就会越低，效能越好。编码阶段的措施可以是完成业务开发的同时产出测试用例，尽可能保证所有的代码都被测试到，所有的业务流程都能被测试用例覆盖到。<br>为什么要做缺陷前移？</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/e773df936daa45ae9f235d6266543043.png" alt="在这里插入图片描述"></p>
+<p>如上图，项目修复 Bug 流程简化版所示，前期修改 Bug 很简单，开发自检出来有 Bug，自己改代码修复，然后上库代码即可。后期修改 Bug 就会增加很多很多前期没有的环节了：</p>
+<p>开发需要根据测试人员描述去复现 Bug，可能需要自己构建复现的环境，Bug 可能是必现的，可能是偶现的，如果复现不出来，还需要找测试人员沟通，让测试人员复现。从这一点可以看出，前端测试属于正向追溯，开发人员可以直接把问题复现，直接看到用例的代码执行细节，方便进行问题定位。而后期修改 Bug 属于逆向追溯，盲目性和工作量都是大大增加的。<br>Bug 解决得慢、后期 Bug 数量多都可能会阻塞项目进度，导致项目延期。<br>修改好 Bug 后，开发人员还要提供代码改动点，评估改动关联影响，给予测试人员测试建议。<br>修改好 Bug 后，还需要分析 Bug 产生的原因，开发人员需要对 Bug 负责任，转交给项目负责人审核。<br>测试人员需要重新构建新环境进行 Bug 修复验证，需要对 Bug 进行测试发散，如果 Bug 没改好，或者改动引发了新问题，还需要让开发人员重新修改 Bug，重新走一系列改 Bug 流程。<br>……</p>
+<p>Bug 越到后面抛出，项目中人员所付出的时间也就越多，项目所承担的风险也就越大。基于 Cypress 做缺陷前移，在开发阶段写组件测试、e2e 测试，在前期就把问题测出来，而不是等到后期才测出，缺陷前移率越高，项目的健康度、项目的能效也就越好。</p>
+<h3 id="质量后盾"><a href="#质量后盾" class="headerlink" title="质量后盾"></a>质量后盾</h3><p>开发代码上库前一般会有 CodeReview、代码走读等机制去严格把关代码的质量，CodeReview、代码走读机制都是以人为主体的保障，CodeReview 的效果好坏会受人的当前状态和人的技术能力水平影响。比如一个人粗枝大叶，看代码不够细心，或者这个人感冒发烧、失恋、基金亏损导致头脑不清醒，CodeReview 的效果都会大打折扣，项目的质量不能仅仅通过 CodeReview 去保障，而前端测试是以机器为主体的保障，机器不会受情绪影响。<br>相信你或者你身边的同事都遇到过，编写代码改了好几个文件，然后上库代码的时候，忘记提交其中的一个文件，执行报错影响基础功能，合代码时没发现，等到测试人员反馈，等到被投诉时才知道自己犯了这么一个低级错误。假设 CI 流水线上有前端测试去保障基础业务功能，这种低级错误一般都可以在合代码跑流水线的时候暴露出来了。<br>针对改代码漏测场景、改老问题引发新问题，可以通过提高前端测试的覆盖率来保障基本的业务流程跑通、业务功能不出问题。<br>组件测试可以反映出你的组件封装得好不好用，如果你的组件不好用，测试代码写起来肯定也是偏向复杂的，上库代码审核的时候，CodeReview 的人也可以通过你写的测试用例理解你的代码，拥有前端测试用辅助的 CodeReview 效果肯定会比没有的好。<br>项目迭代积累下来的测试用例，可以用来支撑未来模块的重构优化、项目的架构演进。<br>升级第三方库对项目的影响面广，比如升级<a href="mailto:&#118;&#x75;&#x65;&#64;&#x32;&#x2e;&#x35;">&#118;&#x75;&#x65;&#64;&#x32;&#x2e;&#x35;</a>到<a href="mailto:&#x76;&#117;&#101;&#x40;&#x32;&#x2e;&#x36;">&#x76;&#117;&#101;&#x40;&#x32;&#x2e;&#x36;</a>，如果有问题，开发人员是比较难提前感知到的。</p>
+<h3 id="提升个人能力"><a href="#提升个人能力" class="headerlink" title="提升个人能力"></a>提升个人能力</h3><p>懂前端去做前端测试是一个优势，而测试与前端属于不同的领域，需要自己折腾，自己学习很多东西：</p>
+<p>项目引入测试框架，Cypress 集成到 CI 流水线上，肯定会遇到很多问题，比如内网代理，测试框架与技术栈的冲突……在解决这些问题的同时锻炼了你的解决问题能力<br>Cypress 有自己的 API 封装、有自己的插件，如何使用 Cypress 编写用例？如何用 Cypress 测试一个组件？如何测试 TypeScript 的类型声明？你在学习新知识、实践新知识的同时也锻炼了你的学习上手能力<br>如何基于 UI 组件库、基于项目去封装好用的测试 API？如果做好大型项目的 e2e 测试和组件测试？这可以锻炼你的设计能力<br>测试框架的选型如何做选择？选 Jest 还是 Cypress？这可以考察锻炼你的预研能力</p>
+<p>当你把 Cypress 很好地集成进项目里面时，想必那时候你的能力也成长了许多。</p>
+<h2 id="如何使用-Cypress-做前端测试"><a href="#如何使用-Cypress-做前端测试" class="headerlink" title="如何使用 Cypress 做前端测试"></a>如何使用 Cypress 做前端测试</h2><ul>
+<li>测试设计</li>
+<li>实践建议</li>
+<li>调试技巧</li>
+</ul>
+<h3 id="测试设计"><a href="#测试设计" class="headerlink" title="测试设计"></a>测试设计</h3><p>这里提供一种可行的测试规划设计：</p>
+<ul>
+<li><p>版本前期做到测试用例覆盖业务的主流程，版本后期持续沉淀更多的测试用例，比如对一些边界场景下产生的 Bug，补充相应的测试用例。</p>
+</li>
+<li><p>对于迭代很快、生命周期又短的页面（如商家活动页、运营页），允许不做前端测试。图表组件一般交互性不强，代码不会很复杂，也可以不对图表组件做前端测试。</p>
+</li>
+<li><p>前端开发者在写测试用例时，需要尽可能不去依赖公共组件的 DOM 结构、内部封装细节，假设你写了 200 条测试用例依赖了弹窗组件的 DOM 结构细节，有一天组件库升级修改了弹窗组件的 DOM 结构，到时候你就需要手动修改这 200 条测试用例，改起来十分痛苦。得益于 Cypress 的 command 特性，开发者可以对公共组件库的组件行为、组件断言进行二次封装，做到开发者在写测试用例时尽可能使用封装好的 command，不需要去关注组件的内部细节。</p>
+</li>
+<li><p>大粒度测试结合小粒度测试，大粒度测试业务流程，小粒度测试相对独立的组件。</p>
+</li>
+</ul>
+<p>我们在写测试用例可能会有一种感觉，就是你发现要测的东西测重复了，比如你在子组件里测了这个功能，然后你在父组件里又把这个功能测了一遍。为了更好的测试效率和测试效果，我们要对前端测试区分粒度。<br>大粒度通常是页面级别的，干扰项、依赖项多，依赖接口数据，依赖他人的组件。干扰项和依赖项都需要去做 mock。运行时间上，大粒度测试耗时会比较久。在业务没有变化的情况下，假设我们对代码进行重构，我们是不需要去改动大粒度测试的测试用例代码的。大粒度测试的标题可以与需求点、QA 测试点一一对应起来，格式可以参考：test(‘已知 xxx，进行 xxx，期望 xxx’, () =&gt; { /** 用例代码 */ });。<br>小粒度测试通常是针对单一组件、单一函数、类级别的，干扰项很少。小粒度测试运行速度很快，如果模块重构，相关组件的测试代码很可能需要被一起重构掉或者重写掉。小粒度测试的标题对应组件的实现细节：test(‘prop username work’, () =&gt; { /** 用例代码 */ });。</p>
+<h3 id="实践建议"><a href="#实践建议" class="headerlink" title="实践建议"></a>实践建议</h3><ol>
+<li><p>对于组件测试，不需要测试组件内部实现的 API，使用组件时内部 API 对开发人员是隐藏的，我们应该测试组件的使用功能，vue 组件一般是测试传入的 props、slots，测试对外暴露的 API，像浮层类 UI 组件可能还需要测试父组件销毁时，浮层类组件是否跟着销毁。如果项目对无障碍性有要求，还需要测试组件的无障碍性。</p>
+</li>
+<li><p>不要把所有的单测代码都塞在一个测试用例里面，这样会降低阅读性和维护性，而且还会降低单测运行速度，适当拆分成多个可以做到并发运行单测。</p>
+</li>
+<li><p>像 Math.random、new Date 等尽量不要在单测中使用，因为这些 API 带有不确定性，应该使用固定的具体值，我们要尽可能保证测试用例不管运行多少次，每次运行它的前置条件的完全一致的。</p>
+</li>
+<li><p>试代码不完善导致测试是通过的，但是功能是有 Bug 的。</p>
+</li>
+</ol>
+<h2 id="带来的问题"><a href="#带来的问题" class="headerlink" title="带来的问题"></a>带来的问题</h2><p>Cypress 接入项目是会增加使用成本的，不同的测试框架，API 都存在差异，前端开发人员需要学习上手 Cypress 框架的框架理念、框架 API。<br>在编码阶段让开发人员写测试用例会增加开发人员的工作量，但是不会加工资，开发人员评估工作量任务排期的时候，需要把前端测试的工作量也计算进去。<br>一些防抖节流操作可能导致测试用例偶尔挂掉、偶尔通过，排查这一类问题时费时费力。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/cypress%20%E6%80%BB%E7%BB%93%E3%80%81%E8%B4%A8%E9%87%8F%E5%B7%A6%E7%A7%BB%E6%8C%87%E5%8D%97/" title="回顾：cypress 总结、质量左移指南" target="_blank" rel="external">https://laputaz.github.io/home/cypress 总结、质量左移指南/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/%E7%AE%97%E6%B3%95-%E7%8F%82%E7%8F%82%E5%90%83%E9%A6%99%E8%95%89%E9%97%AE%E9%A2%98/" title="算法-珂珂吃香蕉问题"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/chatgpt-%E5%88%A9%E7%94%A8chatgpt%E7%9A%84api%E5%86%99%E4%B8%80%E4%B8%AAAI%E5%B7%A5%E5%85%B7/" title="ChatGPT - 利用 ChatGPT 的 api 编写 AI 问答界面"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

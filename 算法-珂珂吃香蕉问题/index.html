@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    算法-珂珂吃香蕉问题 | laputa z
+  </title>
+  <meta name="description" content="leetcode 875：爱吃香蕉的珂珂 https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;koko-eating-bananas&#x2F;可以看看我的题解：https:&#x2F;&#x2F;leetcode.cn&#x2F;problems&#x2F;koko-eating-bananas&#x2F;solutions&#x2F;1094146&#x2F;bu-yao-shang-lai-jiu-gao-su-wo-shi-er-fe-8n1y&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法-珂珂吃香蕉问题">
+<meta property="og:url" content="https://laputaz.github.io/home/%E7%AE%97%E6%B3%95-%E7%8F%82%E7%8F%82%E5%90%83%E9%A6%99%E8%95%89%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="leetcode 875：爱吃香蕉的珂珂 https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;koko-eating-bananas&#x2F;可以看看我的题解：https:&#x2F;&#x2F;leetcode.cn&#x2F;problems&#x2F;koko-eating-bananas&#x2F;solutions&#x2F;1094146&#x2F;bu-yao-shang-lai-jiu-gao-su-wo-shi-er-fe-8n1y&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-11T10:13:05.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="基础">
+<meta property="article:tag" content="手写">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E7%AE%97%E6%B3%95-%E7%8F%82%E7%8F%82%E5%90%83%E9%A6%99%E8%95%89%E9%97%AE%E9%A2%98/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-算法-珂珂吃香蕉问题" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      算法-珂珂吃香蕉问题
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/%E7%AE%97%E6%B3%95-%E7%8F%82%E7%8F%82%E5%90%83%E9%A6%99%E8%95%89%E9%97%AE%E9%A2%98/" class="article-date">
+	  <time datetime="2023-09-11T10:13:05.000Z" itemprop="datePublished">2023-09-11</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/javascript/" rel="tag">javascript</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a>, <a class="article-tag-link-link" href="/home/tags/%E6%89%8B%E5%86%99/" rel="tag">手写</a>, <a class="article-tag-link-link" href="/home/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/%E7%AE%97%E6%B3%95-%E7%8F%82%E7%8F%82%E5%90%83%E9%A6%99%E8%95%89%E9%97%AE%E9%A2%98/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>leetcode 875：爱吃香蕉的珂珂 <a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/koko-eating-bananas/">https://leetcode-cn.com/problems/koko-eating-bananas/</a><br>可以看看我的题解：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/koko-eating-bananas/solutions/1094146/bu-yao-shang-lai-jiu-gao-su-wo-shi-er-fe-8n1y/">https://leetcode.cn/problems/koko-eating-bananas/solutions/1094146/bu-yao-shang-lai-jiu-gao-su-wo-shi-er-fe-8n1y/</a></p>
+<span id="more"></span>
+
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>珂珂喜欢吃香蕉。这里有  N  堆香蕉，第 i 堆中有  piles[i]  根香蕉。警卫已经离开了，将在  H  小时后回来。</p>
+<p>珂珂可以决定她吃香蕉的速度  K （单位：根/小时）。每个小时，她将会选择一堆香蕉，从中吃掉 K 根。如果这堆香蕉少于 K 根，她将吃掉这堆的所有香蕉，然后这一小时内不会再吃更多的香蕉。</p>
+<p>珂珂喜欢慢慢吃，但仍然想在警卫回来前吃掉所有的香蕉。</p>
+<p>返回她可以在 H 小时内吃掉所有香蕉的最小速度 K（K 为整数）。</p>
+<p>示例 1：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: piles = [3,6,7,11], H = 8</span><br><span class="line">输出: 4</span><br></pre></td></tr></table></figure>
+
+<p>示例  2：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: piles = [30,11,23,4,20], H = 5</span><br><span class="line">输出: 30</span><br></pre></td></tr></table></figure>
+
+<p>示例  3：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: piles = [30,11,23,4,20], H = 6</span><br><span class="line">输出: 23</span><br></pre></td></tr></table></figure>
+
+<h2 id="心路历程"><a href="#心路历程" class="headerlink" title="心路历程"></a>心路历程</h2><p>很多答案一开始就说是二分法，然后给我介绍二分法。<br>对于我这种菜鸟，一开始看真的一头雾水。😭<br>在这里写一下完整的心里历程。</p>
+<h2 id="题意分解"><a href="#题意分解" class="headerlink" title="题意分解"></a>题意分解</h2><p>题目的意思是说：</p>
+<ol>
+<li>珂珂要吃香蕉，面前摆了 n 堆，一堆一堆地吃；</li>
+<li>珂珂 1 小时能吃 k 个；但如果一堆少于 k 个，那也得花一小时 (一小时到了，才吃下一堆)</li>
+<li>如果 1 堆大于 k 个，那么超过 k 的部分也算 1 小时。（例如，一堆 10 个，k=3 时，珂珂花 3 小时吃了 9 个，剩下的 1 个也算 1 小时，也就是总用时 4 小时）</li>
+<li>问：只给 h 小时，珂珂要吃多慢(k 多小)，才能充分占用这 h 小时</li>
+</ol>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>珂珂吃的速度和时间是此消彼长的关系，吃的速度越快，花的时间越少。吃的速度越慢，花的时间越多。</p>
+<p>我们要让珂珂吃得够慢，又能吃完。</p>
+<p>那我们从最最慢开始，让珂珂一小时只吃 1 个（k=1），看珂珂能否在 h 小时内吃完。</p>
+<p>如果吃不完，就吃 2 个(k+1)，重头吃一遍。</p>
+<p>一直到找到 k。</p>
+<p>说到这里，就可以写出推断的代码了。（那怎么判断吃不吃得完? 这么想：它就是一个函数，吃得完返回 true，吃不完返回 false，具体实现可以后面再做）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> minEatingSpeed = <span class="keyword">function</span>(<span class="params">piles, h</span>) &#123;</span><br><span class="line">    <span class="comment">// 每小时吃 k 根, 最小是 1 根, 从 1 开始试吃</span></span><br><span class="line">    <span class="keyword">let</span> k = <span class="number">1</span></span><br><span class="line">    <span class="comment">// 一直试吃</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="comment">// 可以吃完，返回 k</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="title function_">canFinish</span>(...)) &#123;</span><br><span class="line">            <span class="keyword">return</span> k</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 当不能吃完的时候，多吃一根再试试</span></span><br><span class="line">        k++</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>接下来问题变成, 怎么判断能否吃完？硬算！</p>
+<p>按顺序去吃每一堆，记录时间；最后超过了 h 小时，说明吃不完：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每小时吃 k, 有 piles 堆, 给了 h 小时</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">canFinish</span>(<span class="params">k, h, piles</span>) &#123;</span><br><span class="line">  <span class="comment">// 假设总时间为 total, 当 total 大于 h 的时候，说明吃不完</span></span><br><span class="line">  <span class="keyword">let</span> totalTime = <span class="number">0</span></span><br><span class="line">  <span class="comment">// 循环每堆</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; piles.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="comment">// 当香蕉少于 k 的时候，当成 1 小时算</span></span><br><span class="line">    <span class="keyword">if</span> (piles[i] &lt;= k) &#123;</span><br><span class="line">      totalTime += <span class="number">1</span></span><br><span class="line">      <span class="comment">// 当香蕉大于 k 的时候，多出的部分按1小时记</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      totalTime += <span class="title class_">Math</span>.<span class="title function_">ceil</span>(piles[i] / k)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 已经超时了？那就直接返回吃不完，不再继续吃</span></span><br><span class="line">    <span class="keyword">if</span> (totalTime &gt; h) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 最后吃完了</span></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那第一版代码就完成了：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> minEatingSpeed = <span class="keyword">function</span> (<span class="params">piles, h</span>) &#123;</span><br><span class="line">  <span class="comment">// 每小时吃 k 根, 最小是 1 根, 从 1 开始试吃</span></span><br><span class="line">  <span class="keyword">let</span> k = <span class="number">1</span></span><br><span class="line">  <span class="comment">// 一直试吃</span></span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="comment">// 可以吃完，返回 k</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">canFinish</span>(k, h, piles)) &#123;</span><br><span class="line">      <span class="keyword">return</span> k</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 当不能吃完的时候，多吃一根再试试</span></span><br><span class="line">    k++</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 每小时吃 k, 有 piles 堆, 给了 h 小时</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">canFinish</span>(<span class="params">k, h, piles</span>) &#123;</span><br><span class="line">  <span class="comment">// 假设总时间为 total, 当 total 大于 h 的时候，说明吃不完</span></span><br><span class="line">  <span class="keyword">let</span> totalTime = <span class="number">0</span></span><br><span class="line">  <span class="comment">// 循环每堆</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; piles.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="comment">// 当香蕉少于 k 的时候，当成 1 小时算</span></span><br><span class="line">    <span class="keyword">if</span> (piles[i] &lt;= k) &#123;</span><br><span class="line">      totalTime += <span class="number">1</span></span><br><span class="line">      <span class="comment">// 当香蕉大于 k 的时候，多出的部分按1小时记</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      totalTime += <span class="title class_">Math</span>.<span class="title function_">ceil</span>(piles[i] / k)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 已经超时了？那就直接返回吃不完，不再继续吃</span></span><br><span class="line">    <span class="keyword">if</span> (totalTime &gt; h) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 最后吃完了</span></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>我们发现，k 从 1 开始遍历，效率太低了。k 最小是 1，最大是最多的那一堆香蕉数量。</p>
+<p>也就是，我们要在一个范围里找 k，这个时候，我才想到二分法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> minEatingSpeed = <span class="keyword">function</span> (<span class="params">piles, h</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> l = <span class="number">1</span></span><br><span class="line">  <span class="keyword">let</span> r = <span class="title class_">Math</span>.<span class="title function_">max</span>(...piles)</span><br><span class="line">  <span class="keyword">let</span> mid</span><br><span class="line">  <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">    mid = <span class="title class_">Math</span>.<span class="title function_">floor</span>(l + (r - l) / <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">canFinish</span>(mid, h, piles)) &#123;</span><br><span class="line">      r = mid</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      l = mid + <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> l</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="最后代码"><a href="#最后代码" class="headerlink" title="最后代码"></a>最后代码</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> minEatingSpeed = <span class="keyword">function</span> (<span class="params">piles, h</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> l = <span class="number">1</span></span><br><span class="line">  <span class="keyword">let</span> r = <span class="title class_">Math</span>.<span class="title function_">max</span>(...piles)</span><br><span class="line">  <span class="keyword">let</span> mid</span><br><span class="line">  <span class="keyword">while</span> (l &lt; r) &#123;</span><br><span class="line">    mid = <span class="title class_">Math</span>.<span class="title function_">floor</span>(l + (r - l) / <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">canFinish</span>(mid, h, piles)) &#123;</span><br><span class="line">      r = mid</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      l = mid + <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> l</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每小时吃 k, 总数 piles, 时间总长 h</span></span><br><span class="line"><span class="comment">// 一个约束条件是，当香蕉少于 k 的时候，当成 1 小时算</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">canFinish</span>(<span class="params">k, h, piles</span>) &#123;</span><br><span class="line">  <span class="comment">// 循环每堆</span></span><br><span class="line">  <span class="comment">// 假设总时间为 total, 当 total 大于 h 的时候，说明吃不完</span></span><br><span class="line">  <span class="keyword">let</span> totalTime = <span class="number">0</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; piles.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="comment">// console.log(p[i],  k)</span></span><br><span class="line">    <span class="comment">// 当香蕉少于 k 的时候，当成 1 小时算</span></span><br><span class="line">    <span class="keyword">if</span> (piles[i] &lt;= k) &#123;</span><br><span class="line">      totalTime += <span class="number">1</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      totalTime += <span class="title class_">Math</span>.<span class="title function_">ceil</span>(piles[i] / k)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (totalTime &gt; h) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>二分法思路很简单，不就是减半减半再减半吗，但难的是边界问题:</p>
+<ol>
+<li>left &lt; right 还是 left &lt;= right</li>
+<li>left 等于 mid 还是 mid + 1 ? right 等于 mid 还是 mid - 1 ？</li>
+<li>最后返回 mid ? 还是返回 left ? 还是返回 right?</li>
+</ol>
+<p>关于二分的边界，这里有一篇文章写的很详细：<br><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/binary-search/solution/er-fen-cha-zhao-xiang-jie-by-labuladong/">https://leetcode-cn.com/problems/binary-search/solution/er-fen-cha-zhao-xiang-jie-by-labuladong/</a></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E7%AE%97%E6%B3%95-%E7%8F%82%E7%8F%82%E5%90%83%E9%A6%99%E8%95%89%E9%97%AE%E9%A2%98/" title="算法-珂珂吃香蕉问题" target="_blank" rel="external">https://laputaz.github.io/home/算法-珂珂吃香蕉问题/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/home/cypress%20%E6%80%BB%E7%BB%93%E3%80%81%E8%B4%A8%E9%87%8F%E5%B7%A6%E7%A7%BB%E6%8C%87%E5%8D%97/" title="回顾：cypress 总结、质量左移指南"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

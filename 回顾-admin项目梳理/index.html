@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    回顾-admin项目梳理 | laputa z
+  </title>
+  <meta name="description" content="旧的 admin 项目结构梳理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回顾-admin项目梳理">
+<meta property="og:url" content="https://laputaz.github.io/home/%E5%9B%9E%E9%A1%BE-admin%E9%A1%B9%E7%9B%AE%E6%A2%B3%E7%90%86/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="旧的 admin 项目结构梳理">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-18T10:13:05.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="回顾">
+<meta property="article:tag" content="方案设计">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E5%9B%9E%E9%A1%BE-admin%E9%A1%B9%E7%9B%AE%E6%A2%B3%E7%90%86/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-回顾-admin项目梳理" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      回顾-admin项目梳理
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/%E5%9B%9E%E9%A1%BE-admin%E9%A1%B9%E7%9B%AE%E6%A2%B3%E7%90%86/" class="article-date">
+	  <time datetime="2021-07-18T10:13:05.000Z" itemprop="datePublished">2021-07-18</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/%E5%9B%9E%E9%A1%BE/" rel="tag">回顾</a>, <a class="article-tag-link-link" href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" rel="tag">方案设计</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/%E5%9B%9E%E9%A1%BE-admin%E9%A1%B9%E7%9B%AE%E6%A2%B3%E7%90%86/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>旧的 admin 项目结构梳理</p>
+<span id="more"></span>
+
+<h1 id="项目梳理"><a href="#项目梳理" class="headerlink" title="项目梳理"></a>项目梳理</h1><p><code>admin</code> 团队由于业务需要或者职能的转变, 项目经历过几次更迭</p>
+<ol>
+<li><code>old admin</code> 成立以来一直到现在的古老 <code>admin</code> 系统</li>
+<li><code>new admin</code> 新的 <code>admin</code> 系统</li>
+<li><code>mspa</code> 更加独立的 <code>admin</code> 系统</li>
+<li><code>low code</code> 提供高复用方案</li>
+</ol>
+<h1 id="old-admin-目录结构及运行流程梳理"><a href="#old-admin-目录结构及运行流程梳理" class="headerlink" title="old admin 目录结构及运行流程梳理"></a>old admin 目录结构及运行流程梳理</h1><p><code>old admin</code> 技术栈老旧且庞大混杂, 包含了<code>node</code>层(<code>koa</code>) / <code>handlebars</code> / <code>jquery</code> / <code>element-ui 1.x</code> / <code>bootstrap</code> / <code>gulp</code> 混杂 <code>webpack</code></p>
+<p>这里不会写出所有的细节, 类似于 koa-compress / koa-proxy / koa-router 等不会列举出来, 只写出最主要的流程</p>
+<h2 id="代码处理"><a href="#代码处理" class="headerlink" title="代码处理"></a>代码处理</h2><ol>
+<li>使用 <code>gulp</code> + <code>webpack</code> 开始编译代码</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gulp dev # for dev hmr</span><br><span class="line">gulp build # for prod</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><code>dev</code> / <code>build</code> 命令在 <code>gulpfile.js</code> 文件中定义的, 其中 <code>gulp</code> 会启动 <code>webpack</code> 处理文件</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">gulp.<span class="title function_">task</span>(</span><br><span class="line">  <span class="string">&#x27;dev&#x27;</span>,</span><br><span class="line">  [</span><br><span class="line">    <span class="string">&#x27;conf_gen&#x27;</span>, <span class="comment">// 生成 config 环境url配置</span></span><br><span class="line">    <span class="string">&#x27;js:locales&#x27;</span>, <span class="comment">// 处理多语言文件</span></span><br><span class="line">    <span class="string">&#x27;css&#x27;</span>, <span class="comment">// 处理css</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    gulp.<span class="title function_">start</span>(<span class="string">&#x27;webpack:js:dev&#x27;</span>); <span class="comment">// 启动 webpack</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>主要的 <code>webpack</code> 配置</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="comment">// git-revision-webpack-plugin 在代码中注入当前的 commit 信息</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">entry</span>: &#123;</span><br><span class="line">    <span class="attr">index</span>: &#123;&#125;, <span class="comment">// 登录, 新的mspa</span></span><br><span class="line">    <span class="attr">storage</span>: &#123;</span><br><span class="line">      <span class="comment">// 每个模块的入口</span></span><br><span class="line">      <span class="attr">storage_add</span>: [<span class="string">&#x27;pages/storage/storage_add.js&#x27;</span>],</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">setting</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">act</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">credit_mgt</span>: &#123;</span><br><span class="line">      <span class="attr">credit_mgt</span>: [<span class="string">&#x27;pages/credit-mgt/main.js&#x27;</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">chunkFilename</span>: <span class="string">&#x27;js/[name].[chunkhash].js&#x27;</span>,</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;js/[name].bundle.js&#x27;</span>,</span><br><span class="line">    <span class="attr">publicPath</span>: <span class="title function_">get_public_path_desktop</span>(),</span><br><span class="line">    <span class="attr">path</span>: __dirname + <span class="string">&#x27;/s/dist/desktop/&#x27;</span>, <span class="comment">// 打包到 s/dist 目录下</span></span><br><span class="line">    <span class="comment">// /s/dist/desktop/ dev</span></span><br><span class="line">    <span class="comment">// //admin.klook.com/s/dist/desktop/ prod</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">module</span>: &#123;&#125;, <span class="comment">// 处理 vue / scss / md 等文件的 load</span></span><br><span class="line">  <span class="attr">resolve</span>: &#123;</span><br><span class="line">    <span class="attr">alias</span>: &#123;</span><br><span class="line">      <span class="comment">// 一些路径的别名</span></span><br><span class="line">      <span class="attr">src</span>: <span class="string">&#x27;web/s/src&#x27;</span>,</span><br><span class="line">      <span class="attr">desktop</span>: <span class="string">&#x27;src/desktop&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="comment">// 插件</span></span><br><span class="line">    <span class="keyword">new</span> webpack.<span class="title class_">ProvidePlugin</span>(&#123;</span><br><span class="line">      <span class="attr">$</span>: <span class="string">&#x27;jquery&#x27;</span>, <span class="comment">// 注入一些全局变量</span></span><br><span class="line">      <span class="attr">ADMIN_API</span>: <span class="string">&#x27;admin_api&#x27;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">optimization</span>: &#123;</span><br><span class="line">    <span class="attr">vendors</span>: &#123;</span><br><span class="line">      <span class="comment">// extract 3-party modules for better cache</span></span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;vendors&#x27;</span>,</span><br><span class="line">      <span class="attr">filename</span>: <span class="string">&#x27;js/vendors.bundle.js&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">iview</span>: &#123;</span><br><span class="line">      <span class="comment">// iview here</span></span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;iview&#x27;</span>,</span><br><span class="line">      <span class="attr">filename</span>: <span class="string">&#x27;js/iview.bundle.js&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">commons</span>: &#123;</span><br><span class="line">      <span class="comment">// 其他的文件</span></span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;commons&#x27;</span>,</span><br><span class="line">      <span class="attr">filename</span>: <span class="string">&#x27;js/commons.bundle.js&#x27;</span>,</span><br><span class="line">      <span class="attr">chunks</span>: <span class="string">&#x27;initial&#x27;</span>, <span class="comment">//</span></span><br><span class="line">      <span class="attr">minChunks</span>: <span class="number">10</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;, <span class="comment">// 分chunk</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><ol>
+<li><code>dev</code> 时以 <code>app.js</code> 为入口启动 <code>node</code> 服务</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node app.js --port=1122 # --harmony flag 可以让旧版本的 node 支持 es6</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><code>app.js</code> 中的流程</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> compress = <span class="built_in">require</span>(<span class="string">&#x27;koa-compress&#x27;</span>); <span class="comment">// gzip压缩</span></span><br><span class="line"><span class="keyword">var</span> logger = <span class="built_in">require</span>(<span class="string">&#x27;koa-logger&#x27;</span>); <span class="comment">// 打印请求</span></span><br><span class="line"><span class="keyword">var</span> koa = <span class="built_in">require</span>(<span class="string">&#x27;koa&#x27;</span>); <span class="comment">// koa</span></span><br><span class="line"><span class="keyword">var</span> proxy = <span class="built_in">require</span>(<span class="string">&#x27;koa-proxy&#x27;</span>); <span class="comment">// 请求代理转发</span></span><br><span class="line"><span class="keyword">var</span> web_all_init = <span class="built_in">require</span>(<span class="string">&#x27;./handlers/web_all.js&#x27;</span>).<span class="property">init</span>; <span class="comment">// 入口方法</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// koa 实例</span></span><br><span class="line"><span class="keyword">var</span> app = (<span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title function_">koa</span>());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化</span></span><br><span class="line"><span class="title function_">web_all_init</span>(app);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取 --port=1122 端口参数</span></span><br><span class="line"><span class="keyword">var</span> port = argv.<span class="property">p</span> || argv.<span class="property">port</span> || <span class="number">1122</span>;</span><br><span class="line">app.<span class="title function_">listen</span>(port);</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>web_all.js</code> 中的流程</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> nav_config = <span class="built_in">require</span>(<span class="string">&quot;./nav_config.js&quot;</span>).<span class="property">nav_config</span>; <span class="comment">// 菜单栏设置</span></span><br><span class="line"><span class="keyword">var</span> koa_hbs = <span class="built_in">require</span>(<span class="string">&quot;koa-hbs&quot;</span>); <span class="comment">// handle-bars 处理插件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 入口</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">init</span>(<span class="params">app, opt</span>) &#123;</span><br><span class="line">    <span class="comment">// 静态资源路径</span></span><br><span class="line">    opt.<span class="property">static_root</span> = opt.<span class="property">static_root</span> || path.<span class="title function_">join</span>(webroot, <span class="string">&quot;s/dist&quot;</span>);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 路由, 匹配 mobile.js desktop.js 中配置的路由</span></span><br><span class="line">    app.<span class="title function_">use</span>(<span class="title function_">create_web_all</span>(mobile_handler, desktop_handler));</span><br><span class="line">    <span class="comment">// _render</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_render</span> = <span class="keyword">function</span>(<span class="params">tpl, locales</span>) &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        <span class="comment">// 注入一些全局变量到 window 下</span></span><br><span class="line">        <span class="attr">_session</span>: &#123;&#125;,</span><br><span class="line">        <span class="attr">_permission</span>: &#123;&#125;,</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">render</span>(tpl, locals);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>desktop.js</code> 中间件中的流程</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 匹配路径, 渲染相应的html文件</span></span><br><span class="line">router.<span class="title function_">get</span>(</span><br><span class="line">  [<span class="string">&#x27;/api/partner_new_version&#x27;</span>, <span class="string">&#x27;/api/new_partner&#x27;</span>],</span><br><span class="line">  web_comm.<span class="property">auth_klk</span>, <span class="comment">// 公共鉴权</span></span><br><span class="line">  web_comm.<span class="title function_">auth_klk_roles</span>(</span><br><span class="line">    <span class="comment">// 角色鉴权</span></span><br><span class="line">    <span class="string">`<span class="subst">$&#123;role_map[<span class="string">&#x27;API&#x27;</span>][<span class="string">&#x27;API-PARTNER-BROWSE&#x27;</span>]&#125;</span>`</span></span><br><span class="line">  ),</span><br><span class="line">  <span class="keyword">function</span>* () &#123;</span><br><span class="line">    <span class="comment">// 返回渲染页面</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="variable language_">this</span>.<span class="title function_">_render</span>(<span class="string">&#x27;pages/api/index&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&#x27;api&#x27;</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>在返回的 <code>html</code> 中, 会用 <code>hbs</code> 手动写入引入的 <code>js</code> 文件, 以 <code>3</code> 中的 <code>pages/api/index</code> 为例</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;!&lt; layout &#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 标题  --&gt;</span></span><br><span class="line">&#123;&#123;#contentFor &quot;title&quot;&#125;&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>&#123;&#123;title&#125;&#125;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">&#123;&#123;/contentFor&#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 主内容  --&gt;</span></span><br><span class="line">&#123;&#123;#contentFor &#x27;main-content&#x27;&#125;&#125; &#123;&#123;&#123;&#123;raw-helper&#125;&#125;&#125;&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span>&gt;</span></span><br><span class="line">  &#123;&#123;#if (eq extra_info [])&#125;&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  &#123;&#123;#else&#125;&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    &#123;&#123;/contentFor&#125;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- handlebars mustache 语法 引入script --&gt;</span></span><br><span class="line">    &#123;&#123;#contentFor &quot;script_self&quot;&#125;&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;s &#x27;/s/dist/desktop/js/api_index.bundle.js&#x27;&#125;&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    &#123;&#123;/contentFor&#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>如果是新的 vue spa 流程, 会以 “pages/admin_spa” 为统一入口</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;app&quot;</span> /&gt;</span></span><br><span class="line">&#123;&#123;#contentFor &quot;script_self&quot;&#125;&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;&#123;&#123;s &#x27;/s/dist/desktop/js/admin_spa.bundle.js&#x27;&#125;&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">&#123;&#123;/contentFor&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>其中 <code>bundle</code> : <code>/s/dist/desktop/js/admin_spa.bundle.js</code> 的打包入口在 <code>webpack</code> 的 <code>entry</code> 中指定, 为 <code>admin_spa.js (main.js)</code></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// admin_spa.js 中正常地初始化 vue spa 即可</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span><br><span class="line">  store,</span><br><span class="line">  router,</span><br><span class="line">  <span class="attr">el</span>: <span class="string">&#x27;#app&#x27;</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>每个模块, 如库存/商户/活动/财务, 都将是独立的 spa</li>
+</ol>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">deploy.sh</span></span><br><span class="line">gulp build</span><br><span class="line">pm2 start app.js</span><br></pre></td></tr></table></figure>
+
+<h1 id="new-admin-目录结构"><a href="#new-admin-目录结构" class="headerlink" title="new admin 目录结构"></a>new admin 目录结构</h1><p>这个工程没什么好说, 基于 <a target="_blank" rel="noopener" href="https://github.com/PanJiaChen/vue-admin-template">vue-admin-template</a></p>
+<ol>
+<li>目录结构, 其他业务线, 只要在 <code>modules</code> 下新增自己的模块就可以了</li>
+</ol>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> build —— 项目构建文件目录</span><br><span class="line"><span class="bullet">  -</span> index.js —— 入口文件</span><br><span class="line"><span class="bullet">-</span> conf —— 项目配置目录</span><br><span class="line"><span class="bullet">-</span> dist —— 项目打包输出目录</span><br><span class="line"><span class="bullet">-</span> docs —— 文档目录</span><br><span class="line"><span class="bullet">-</span> mock —— mock 服务目录</span><br><span class="line"><span class="bullet">-</span> node<span class="emphasis">_modules —— npm 包目录</span></span><br><span class="line"><span class="emphasis">- public —— 公共文件目录</span></span><br><span class="line"><span class="emphasis">- src —— 开发源文件目录</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">  - modules —— 业务模块</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">    - demo —— demo 模块，展示所有如 业务模版、全局组件 等的效果<span class="strong">**_（optional）_**</span></span></span><br><span class="line"><span class="emphasis">      - layouts</span></span><br><span class="line"><span class="emphasis">        - list</span></span><br><span class="line"><span class="emphasis">          - list_</span>1.vue</span><br><span class="line"><span class="bullet">          -</span> list\<span class="emphasis">_[num].vue</span></span><br><span class="line"><span class="emphasis">        - [business_</span>name]</span><br><span class="line"><span class="bullet">      -</span> components</span><br><span class="line"><span class="bullet">        -</span> [component<span class="emphasis">_name]</span></span><br><span class="line"><span class="emphasis">          - index.vue</span></span><br><span class="line"><span class="emphasis">    - [module_</span>name] (Top-level) —— 一级业务模块</span><br><span class="line"></span><br><span class="line"><span class="bullet">      -</span> <span class="strong">**\<span class="emphasis">_**************\*\*\*****************\_</span>\<span class="emphasis">*\*</span></span></span><br><span class="line"><span class="strong">      - **</span><span class="emphasis">_⬇️⬇️⬇️ 开发人员关注 ⬇️⬇️⬇️_</span>**</span><br><span class="line"></span><br><span class="line"><span class="bullet">      -</span> modules <span class="strong">**<span class="emphasis">_(optional)_</span>**</span></span><br><span class="line"><span class="bullet">        -</span> [module<span class="emphasis">_name] (Second-level) —— 二级业务模块</span></span><br><span class="line"><span class="emphasis">          - modules</span></span><br><span class="line"><span class="emphasis">            - [module_</span>name] (More-level) —— 更多级业务模块</span><br><span class="line"><span class="bullet">          -</span> (其余同 Top-level 目录)……</span><br><span class="line"><span class="bullet">      -</span> routes —— 路由</span><br><span class="line"><span class="bullet">        -</span> index.js —— 入口文件</span><br><span class="line"><span class="bullet">      -</span> components —— 组件（处于一级模块目录下时，对于一级模块目录下所有子模块来说，是全局组件目录；处于其它层级模块目录下时，为其所在模块的局部组件目录。）<span class="strong">**<span class="emphasis">_（optional）_</span>**</span></span><br><span class="line"><span class="bullet">        -</span> [component<span class="emphasis">_name] —— 任一组件目录</span></span><br><span class="line"><span class="emphasis">          - index.vue —— 任一组件入口文件</span></span><br><span class="line"><span class="emphasis">          - index.css/scss/...... —— 任一组件样式文件</span></span><br><span class="line"><span class="emphasis">      - templates —— 模板<span class="strong">**_（optional）_**</span></span></span><br><span class="line"><span class="emphasis">        - index.html</span></span><br><span class="line"><span class="emphasis">      - pages —— 业务页面</span></span><br><span class="line"><span class="emphasis">        - [page_</span>name].vue</span><br><span class="line"><span class="bullet">      -</span> styles —— 样式<span class="strong">**<span class="emphasis">_（optional）_</span>**</span></span><br><span class="line"><span class="bullet">        -</span> [page<span class="emphasis">_name].css/scss/...... —— vue 对应样式文件</span></span><br><span class="line"><span class="emphasis">      - images —— 图片<span class="strong">**_（optional）_**</span></span></span><br><span class="line"><span class="emphasis">        - [image_</span>name].jpg/jpeg/png/......</span><br><span class="line"><span class="bullet">      -</span> store —— 状态管理(vuex)<span class="strong">**<span class="emphasis">_（optional）_</span>**</span></span><br><span class="line"><span class="bullet">        -</span> index.js —— 入口文件</span><br><span class="line"><span class="bullet">        -</span> getters.js —— getter 定义文件</span><br><span class="line"><span class="bullet">        -</span> mutation-consts.js —— mutation 方法常量文件</span><br><span class="line"><span class="bullet">      -</span> api —— 接口实例<span class="strong">**<span class="emphasis">_（optional）_</span>**</span></span><br><span class="line"><span class="bullet">        -</span> index.js —— 入口文件</span><br><span class="line"><span class="bullet">        -</span> api<span class="emphasis">_url.js —— 接口路径文件</span></span><br><span class="line"><span class="emphasis">      - utils —— 工具函数<span class="strong">**_（optional）_**</span></span></span><br><span class="line"><span class="emphasis">        - index.js —— 入口文件</span></span><br><span class="line"><span class="emphasis">      - conf —— 模块配置<span class="strong">**_（optional）_**</span></span></span><br><span class="line"><span class="emphasis">        - index.js —— 入口文件</span></span><br><span class="line"><span class="emphasis">      - .eslintignore —— eslint 忽略文件（局部）<span class="strong">**_（optional）_**</span></span></span><br><span class="line"><span class="emphasis">      - .eslintrc.js —— eslint 配置文件（局部）<span class="strong">**_（optional）_**</span></span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">      - <span class="strong">**_⬆️⬆️⬆️ 开发人员关注 ⬆️⬆️⬆️_**</span></span></span><br><span class="line"><span class="emphasis">      - <span class="strong">**\_**</span><span class="strong">****</span><span class="strong">****</span><span class="strong">****</span>\*\*\<span class="strong">****</span><span class="strong">****</span><span class="strong">****</span><span class="strong">****</span>*\_</span>\<span class="emphasis">*\*</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">  -</span> assets —— 全局资源</span><br><span class="line"><span class="bullet">    -</span> styles —— 样式</span><br><span class="line"><span class="bullet">      -</span> [style<span class="emphasis">_name].css/scss/......</span></span><br><span class="line"><span class="emphasis">    - images —— 图片</span></span><br><span class="line"><span class="emphasis">      - [image_</span>name].jpg/jpeg/png/......</span><br><span class="line"><span class="bullet">    -</span> fonts —— 字体</span><br><span class="line"><span class="bullet">      -</span> [font<span class="emphasis">_name].eot/ttf/woff/woff2/svg/......</span></span><br><span class="line"><span class="emphasis">  - components —— 全局组件</span></span><br><span class="line"><span class="emphasis">    - [component_</span>name] —— 任一全局组件目录</span><br><span class="line"><span class="bullet">      -</span> index.vue —— 任一全局组件入口文件</span><br><span class="line"><span class="bullet">      -</span> index.css/scss/...... —— 任一全局组件样式文件</span><br><span class="line"><span class="bullet">    -</span> index.js 入口文件</span><br><span class="line"><span class="bullet">  -</span> conf —— 开发相关配置</span><br><span class="line"><span class="bullet">    -</span> index.js —— 入口文件</span><br><span class="line"><span class="bullet">    -</span> const.js —— 全局常量定义文件</span><br><span class="line"><span class="bullet">    -</span> ……</span><br><span class="line"><span class="bullet">  -</span> icons —— 图标文件目录（svg）</span><br><span class="line"><span class="bullet">  -</span> layouts —— 业务模版</span><br><span class="line"><span class="bullet">    -</span> components —— 组件目录</span><br><span class="line"><span class="bullet">    -</span> [business<span class="emphasis">_name] —— 任一业务模版目录</span></span><br><span class="line"><span class="emphasis">    - index.vue —— 入口文件</span></span><br><span class="line"><span class="emphasis">  - pages ——  默认提供页面</span></span><br><span class="line"><span class="emphasis">    - 404.vue</span></span><br><span class="line"><span class="emphasis">    - root.vue</span></span><br><span class="line"><span class="emphasis">  - router —— 全局路由</span></span><br><span class="line"><span class="emphasis">    - index.js —— 入口文件</span></span><br><span class="line"><span class="emphasis">  - services —— 服务</span></span><br><span class="line"><span class="emphasis">    - api —— 接口服务</span></span><br><span class="line"><span class="emphasis">      - index.js —— 入口文件</span></span><br><span class="line"><span class="emphasis">      - axios.js —— axios 实例封装文件（interceptors 开发等）</span></span><br><span class="line"><span class="emphasis">    - lang —— 多语言</span></span><br><span class="line"><span class="emphasis">      - index.js —— 入口文件</span></span><br><span class="line"><span class="emphasis">      - [lang].js —— 多语言文案文件</span></span><br><span class="line"><span class="emphasis">  - store —— 全局状态管理(vuex)</span></span><br><span class="line"><span class="emphasis">    - modules —— 模块目录</span></span><br><span class="line"><span class="emphasis">    - index.js —— 入口文件</span></span><br><span class="line"><span class="emphasis">    - getters.js —— getter 定义文件</span></span><br><span class="line"><span class="emphasis">    - mutation-consts.js —— mutation 方法常量文件</span></span><br><span class="line"><span class="emphasis">  - styles —— 全局样式目录</span></span><br><span class="line"><span class="emphasis">  - utils —— 工具函数目录</span></span><br><span class="line"><span class="emphasis">    - index.js —— 入口文件</span></span><br><span class="line"><span class="emphasis">    - [util_</span>module<span class="emphasis">_name].js —— 任一工具函数模块入口文件</span></span><br><span class="line"><span class="emphasis">  - App.vue ——  应用入口 vue 文件</span></span><br><span class="line"><span class="emphasis">  - main.js —— 应用入口 js 文件</span></span><br><span class="line"><span class="emphasis">  - permission.js —— 权限控制文件</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">- static —— 静态文件目录 <span class="strong">**_(optional)_**</span></span></span><br><span class="line"><span class="emphasis">- tests —— 项目测试目录</span></span><br><span class="line"><span class="emphasis">- <span class="strong">****</span><span class="strong">****</span>\*\<span class="strong">****</span><span class="strong">****</span>* 我是分割线 <span class="strong">****</span><span class="strong">****</span>\*\<span class="strong">****</span><span class="strong">****</span>*</span></span><br><span class="line"><span class="emphasis">- .commitlintrc.js —— commitlint 配置文件</span></span><br><span class="line"><span class="emphasis">- .editorconfig —— IDE 代码风格配置文件</span></span><br><span class="line"><span class="emphasis">- .env.development —— 环境脚本文件</span></span><br><span class="line"><span class="emphasis">- .env.production —— 环境脚本文件</span></span><br><span class="line"><span class="emphasis">- .env.staging —— 环境脚本文件</span></span><br><span class="line"><span class="emphasis">- .eslintignore —— eslint 忽略文件（全局）</span></span><br><span class="line"><span class="emphasis">- .eslintrc.js —— eslint 配置文件（全局）</span></span><br><span class="line"><span class="emphasis">- .gitignore —— git 忽略文件</span></span><br><span class="line"><span class="emphasis">- .jsdoc.json —— jsdoc 配置文件</span></span><br><span class="line"><span class="emphasis">- .travis.yml —— Travis CI 文件</span></span><br><span class="line"><span class="emphasis">- babel.config.js —— babel 配置文件</span></span><br><span class="line"><span class="emphasis">- jest.config.js —— jest 单元测试配置文件</span></span><br><span class="line"><span class="emphasis">- package.json</span></span><br><span class="line"><span class="emphasis">- postcss.config.js —— postcss 配置文件</span></span><br><span class="line"><span class="emphasis">- README.md</span></span><br><span class="line"><span class="emphasis">- tsconfig.json —— typescript 配置文件</span></span><br><span class="line"><span class="emphasis">- vue.config.js —— vue-cli 配置文件</span></span><br><span class="line"><span class="emphasis">- ……</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>部署, 产线运行目录下的 <code>deploy.sh</code> 即可, <code>deploy.sh</code>包含 <code>checkout/install/build</code>命令 (该项目依赖于 <code>old admin</code> 提供的 <code>node</code> 服务)</li>
+</ol>
+<h1 id="mspa-multi-single-page"><a href="#mspa-multi-single-page" class="headerlink" title="mspa (multi single page)"></a>mspa (multi single page)</h1><p>由于 <code>new admin</code> 也集成了各个业务线的代码, 越来越难于维护</p>
+<p>并且 <code>admin</code> 团队后续将偏向于成为提供基础能力的团队, 业务开发将分散到各个<code>vertical</code>团队 (各个垂直业务团队, 如租车, hotel, airport transfer, ttd 等等)</p>
+<p>于是提供 <code>mspa</code> 的开发模式.</p>
+<ol>
+<li><code>admin</code> 团队提供以下能力:</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">admin-cli  # vue 项目脚手架 - 类 @vue/cli</span><br><span class="line">admin-cli-service #  项目脚手架工具 - 类 @vue/cli-service</span><br><span class="line">admin-ui   # ui 组件库</span><br><span class="line">admin-utils # 常用工具函数库</span><br><span class="line">admin-login # 提供 google 登录功能</span><br><span class="line">admin-permission # 提供 admin 权限验证</span><br><span class="line">admin-layout # 提供统一的布局</span><br><span class="line">....</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>各个业务团队使用 <code>admin-cli</code> 以及相关的库自行搭建项目</li>
+<li>使用 <code>node</code> 编写接口, 在部署时, 上传每个 <code>app</code> 的 <code>router</code>, 集成展示</li>
+<li>由于大家都是独立工程, 有需要可以自行部署至单独域名</li>
+<li>统一托管到<code>aws</code>的<code>cdn</code>上</li>
+</ol>
+<h1 id="low-code"><a href="#low-code" class="headerlink" title="low code"></a>low code</h1><p>由于 <code>admin</code> 开发, 会出现大量的重复工作, 例如表单+表格的页面模式, 在 <code>admin</code> 占比非常大</p>
+<p>于是使用业界方案 <code>sula</code> 或者 <code>baidu/amis</code> , 提供 <code>low code</code> 方案</p>
+<p>该方案仅限于普通的通过配置生成界面, 希望做到更高的可拓展性和可拔插性</p>
+<p>持续中</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E5%9B%9E%E9%A1%BE-admin%E9%A1%B9%E7%9B%AE%E6%A2%B3%E7%90%86/" title="回顾-admin项目梳理" target="_blank" rel="external">https://laputaz.github.io/home/回顾-admin项目梳理/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/%E5%89%8D%E7%AB%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94%20copy/" title="前端包管理工具对比"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/%E5%AE%9E%E7%8E%B0-%E7%BB%84%E4%BB%B6%E5%B0%81%E8%A3%85%E5%92%8C%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6-%E5%BC%B9%E7%AA%97%E5%B0%81%E8%A3%85/" title="实现：组件封装和高阶组件-弹窗"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

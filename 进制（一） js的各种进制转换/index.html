@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    进制（一）：js 中的各种进制转换 | laputa z
+  </title>
+  <meta name="description" content="最近项目里涉及到了进制转换，顺带回忆一下二进制。。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进制（一）：js 中的各种进制转换">
+<meta property="og:url" content="https://laputaz.github.io/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89%20js%E7%9A%84%E5%90%84%E7%A7%8D%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="最近项目里涉及到了进制转换，顺带回忆一下二进制。。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-10T19:49:59.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="基础">
+<meta property="article:tag" content="手写">
+<meta property="article:tag" content="二进制">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89%20js%E7%9A%84%E5%90%84%E7%A7%8D%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-进制（一） js的各种进制转换" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      进制（一）：js 中的各种进制转换
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89%20js%E7%9A%84%E5%90%84%E7%A7%8D%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" class="article-date">
+	  <time datetime="2023-05-10T19:49:59.000Z" itemprop="datePublished">2023-05-10</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/javascript/" rel="tag">javascript</a>, <a class="article-tag-link-link" href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" rel="tag">二进制</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a>, <a class="article-tag-link-link" href="/home/tags/%E6%89%8B%E5%86%99/" rel="tag">手写</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89%20js%E7%9A%84%E5%90%84%E7%A7%8D%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>最近项目里涉及到了进制转换，顺带回忆一下二进制。。</p>
+<span id="more"></span>
+
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><code>javascript</code>中很少会使用到二进制做处理, 但是最近开发时遇到了一个场景 :</p>
+<p><code>admin</code>需要做一个对接 <code>google ads</code> 的工具, 以简化 <code>marketing team</code> 在做广告投放时做的一些重复性操作. 而其中涉及到一个流程: 将图片/zip/视频上传到 <code>amazon aws s3</code> 存储, 后端再上传到 <code>google ads</code> . 其中有一种图片格式是 <code>wbmp</code> , 这种格式浏览器并不支持, 所以需要转换, 其中就涉及到了 js 中的二进制转换。</p>
+<p>计算机中以字节为单位存储和解释信息，规定一个字节由八个二进制位（比特）构成，即 1 个字节等于 8 个比特（1Byte=8bit）</p>
+<h2 id="二进制"><a href="#二进制" class="headerlink" title="二进制"></a>二进制</h2><p>先复习一下二进制, 数字在计算机中使用二进制表示, 有两个注意点:</p>
+<ol>
+<li>有符号位: 最高位不表示数值, 表示符号</li>
+<li>补码表示: 以原码形式表示数值</li>
+</ol>
+<h3 id="原码"><a href="#原码" class="headerlink" title="原码"></a>原码</h3><p>以一个字节, 即 8 个二进制位为例, 第一位为符号位, 剩余为数字位</p>
+<p>用原码, 可表示范围为: 11111111 ~ 00000000 ~ 01111111</p>
+<p>按等比数列可得: - (2^7 - 1) ~ 0 ~ 2^7 - 1</p>
+<p>即: -127 ~ 0 ~ 127</p>
+<p>原码对人的识别友好, 但是在用原码计算时会出现问题:</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00000001</span>(<span class="number">1</span>) + <span class="number">10000001</span>(-<span class="number">1</span>) = <span class="number">10000010</span>(-<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这不是我们想要的</p>
+<h3 id="反码"><a href="#反码" class="headerlink" title="反码"></a>反码</h3><p>反码是将数字位取反获得的, 其中规定:</p>
+<ul>
+<li>正数反码, 为本身</li>
+<li>负数反码, 数字位按位取反</li>
+</ul>
+<p>即 11111111 的反码为 10000000</p>
+<p>如果反码相加的话, 结果似乎是对的:</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-<span class="number">127</span>: 原码: <span class="number">11111111</span>, 反码: <span class="number">10000000</span></span><br><span class="line">+<span class="number">127</span>: 原码: <span class="number">01111111</span>, 反码: <span class="number">01111111</span></span><br><span class="line"></span><br><span class="line">反码相加: -<span class="number">127</span> + <span class="number">127</span> = <span class="number">10000000</span> + <span class="number">01111111</span> = <span class="number">11111111</span></span><br><span class="line"></span><br><span class="line"><span class="number">11111111</span> 转换为原码为: <span class="number">10000000</span> (-<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>虽然结果是对的, 但是存在 -0 的情况, -0 和+0 是相等的, 没有意义</p>
+<h3 id="补码"><a href="#补码" class="headerlink" title="补码"></a>补码</h3><p>还有一种表示形式, 补码</p>
+<ul>
+<li>正数补码, 本身</li>
+<li>负数补码, 反码的基础上 +1</li>
+</ul>
+<p>网络上很多文章提到, 补码是为了解决反码相加得出正负 0 而提出的, 虽然能说得通, 但是</p>
+<blockquote>
+<p>在既不能证实也不能证伪的情况下，只能存疑 — 周孝正</p>
+</blockquote>
+<p>我们不讨论反码补码因为什么出现的, 只说明反码补码解决了什么问题</p>
+<p>补码确实可以解决相加正负 0 的问题</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-<span class="number">127</span>: 原码: <span class="number">11111111</span>, 反码: <span class="number">10000000</span>  补码: <span class="number">10000001</span></span><br><span class="line">+<span class="number">127</span>: 原码: <span class="number">01111111</span>, 反码: <span class="number">01111111</span>  补码: <span class="number">01111111</span></span><br><span class="line"></span><br><span class="line">补码相加: -<span class="number">127</span> + <span class="number">127</span> = <span class="number">10000001</span> + <span class="number">01111111</span> = <span class="number">100000000</span></span><br><span class="line"></span><br><span class="line"><span class="number">100000000</span> 最高位溢出, 剩余<span class="number">8</span>位刚好为<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.notion.so/js-95aa76ab160f47e09dc1b7a38eb3a734">js 中图片转换</a></p>
+<h2 id="怎么用-js-进行进制转换"><a href="#怎么用-js-进行进制转换" class="headerlink" title="怎么用 js 进行进制转换"></a>怎么用 js 进行进制转换</h2><ol>
+<li>表示形式</li>
+</ol>
+<p>各进制数值在 js 中的表示时的前缀</p>
+<ul>
+<li>2 进制: <code>0b</code></li>
+<li>8 进制: <code>0</code></li>
+<li>10 进制: 无前缀</li>
+<li>16 进制: <code>0x</code></li>
+</ul>
+<p>其中要注意的是符号位还是用 <code>+-</code> 表示, 如十进制 <code>-12</code></p>
+<p>表示为 2 进制是 <code>-0b1100</code> ,</p>
+<p>表示为 8 进制是 <code>-014</code> ,</p>
+<p>表示为 16 进制是 <code>-0xc</code> ,</p>
+<ol start="2">
+<li>转换方法</li>
+</ol>
+<p><code>javascript</code> 进制转换的方法主要有两个:</p>
+<ul>
+<li><code>parseInt</code>: 其他进制转 10 进制</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 按2进制解析</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;-0b1100&#x27;</span>, <span class="number">2</span>) <span class="comment">// -12</span></span><br><span class="line"><span class="comment">// 按2进制解析</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;-1100&#x27;</span>, <span class="number">2</span>) <span class="comment">// -12</span></span><br><span class="line"><span class="comment">// 按8进制解析</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;-014&#x27;</span>, <span class="number">8</span>) <span class="comment">// -12</span></span><br><span class="line"><span class="comment">// 按8进制解析</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;-14&#x27;</span>, <span class="number">8</span>) <span class="comment">// -12</span></span><br><span class="line"><span class="comment">// 按16进制解析</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;-0xc&#x27;</span>, <span class="number">16</span>) <span class="comment">// -12</span></span><br><span class="line"><span class="comment">// 按16进制解析</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">&#x27;-c&#x27;</span>, <span class="number">16</span>) <span class="comment">// -12</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>toString</code> : 将数字以任意进制表示</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假定有一个2进制数</span></span><br><span class="line"><span class="keyword">let</span> num = -<span class="number">0b1100</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 以8进制表示</span></span><br><span class="line">num.<span class="title function_">toString</span>(<span class="number">8</span>) <span class="comment">// &quot;-14&quot;</span></span><br><span class="line"><span class="comment">// 以16进制表示</span></span><br><span class="line">num.<span class="title function_">toString</span>(<span class="number">10</span>) <span class="comment">// &quot;-12&quot;</span></span><br><span class="line"><span class="comment">// 以16进制表示</span></span><br><span class="line">num.<span class="title function_">toString</span>(<span class="number">16</span>) <span class="comment">// &quot;-c&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="精度问题"><a href="#精度问题" class="headerlink" title="精度问题"></a>精度问题</h2><p>js 的所有数字，都是使用 64 位双精度浮点型来表示。并且是指数的形式。</p>
+<p>转换成二进制后，就会有除不尽的问题：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> a = <span class="number">0.2</span>;</span><br><span class="line">a.<span class="title function_">toString</span>(<span class="number">2</span>)</span><br><span class="line"><span class="comment">// 0.0001100110011001100110011001100110011001100110011001101</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到 0011 一直在重复，我们不能用有限的空间存储无限长度的数。</p>
+<p>我们可以先转换成字符串，再按位数相加，大数相加也是一个道理。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89%20js%E7%9A%84%E5%90%84%E7%A7%8D%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" title="进制（一）：js 中的各种进制转换" target="_blank" rel="external">https://laputaz.github.io/home/进制（一） js的各种进制转换/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89Blob%E3%80%81File%E5%92%8CArrayBuffer/" title="进制（二）：Blob、File、ArrayBuffer、DataView、TypedArray"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/%E5%AE%9E%E7%8E%B0-AB-Testing%E5%92%8C%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/" title="实现：AB-testing 和组件设计"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

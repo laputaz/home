@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    小程序：赛博朋克 2077 倒计时-以及简单的云开发 | laputa z
+  </title>
+  <meta name="description" content="闲来无事, 做了一个赛博朋克 2077 发售倒计时页面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小程序：赛博朋克 2077 倒计时-以及简单的云开发">
+<meta property="og:url" content="https://laputaz.github.io/home/%E5%B0%8F%E7%A8%8B%E5%BA%8F-cyberpunk-wechat/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="闲来无事, 做了一个赛博朋克 2077 发售倒计时页面">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190714175808240.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190714103516760.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190714103837941.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190714110425829.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190714110308469.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190714111414724.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190714175808240.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190715113018923.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190715113417106.png">
+<meta property="article:published_time" content="2019-07-05T00:49:13.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.887Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="基础">
+<meta property="article:tag" content="手写">
+<meta property="article:tag" content="小程序">
+<meta property="article:tag" content="跨端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190714175808240.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E5%B0%8F%E7%A8%8B%E5%BA%8F-cyberpunk-wechat/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-小程序-cyberpunk-wechat" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      小程序：赛博朋克 2077 倒计时-以及简单的云开发
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/%E5%B0%8F%E7%A8%8B%E5%BA%8F-cyberpunk-wechat/" class="article-date">
+	  <time datetime="2019-07-05T00:49:13.000Z" itemprop="datePublished">2019-07-05</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a>, <a class="article-tag-link-link" href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a>, <a class="article-tag-link-link" href="/home/tags/%E6%89%8B%E5%86%99/" rel="tag">手写</a>, <a class="article-tag-link-link" href="/home/tags/%E8%B7%A8%E7%AB%AF/" rel="tag">跨端</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/%E5%B0%8F%E7%A8%8B%E5%BA%8F-cyberpunk-wechat/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>闲来无事, 做了一个赛博朋克 2077 发售倒计时页面</p>
+<img src="https://img-blog.csdnimg.cn/20190714175808240.png" width=200/>
+
+<span id="more"></span>
+
+<h4 id="AppID"><a href="#AppID" class="headerlink" title="AppID"></a>AppID</h4><p>申请到一个小程序后, 会对应一个 AppID</p>
+<h4 id="基本目录结构"><a href="#基本目录结构" class="headerlink" title="基本目录结构"></a>基本目录结构</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- cloudfunctions 云函数目录</span><br><span class="line">- miniprogram 开发目录</span><br><span class="line">- README.md 描述项目</span><br><span class="line">- project.config.json 项目配置</span><br></pre></td></tr></table></figure>
+
+<h4 id="cloudfunctions"><a href="#cloudfunctions" class="headerlink" title="cloudfunctions"></a>cloudfunctions</h4><p><img src="https://img-blog.csdnimg.cn/20190714103516760.png" alt="cloudfunctions结构"><br>结构如图, 每一个云函数会新建一个目录, index.js 为入口, <code>login</code> / <code>openapi</code> 是自带的, 可以获取 AppID 等</p>
+<h4 id="miniprogram"><a href="#miniprogram" class="headerlink" title="miniprogram"></a>miniprogram</h4><p><img src="https://img-blog.csdnimg.cn/20190714103837941.png" alt="miniprogram"><br>结构如图:<br>images 存放静态图片<br>miniprogram_npm 是 npm 安装的依赖构建 node_module 后生成的库文件目录<br>pages 下编写各个界面<br>style 下存储了一些样式文件<br>app.js / app.json 分别是程序入口 和主界面配置</p>
+<p>以 app.json 为例</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;pages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;pages/imghander/imghander&quot;</span><span class="punctuation">,</span> <span class="string">&quot;pages/base/base&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;window&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;backgroundColor&quot;</span><span class="punctuation">:</span> <span class="string">&quot;#F6F6F6&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;backgroundTextStyle&quot;</span><span class="punctuation">:</span> <span class="string">&quot;light&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;navigationBarBackgroundColor&quot;</span><span class="punctuation">:</span> <span class="string">&quot;#faf003&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;navigationBarTitleText&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cyberpunk 2077&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;navigationBarTextStyle&quot;</span><span class="punctuation">:</span> <span class="string">&quot;white&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;sitemapLocation&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sitemap.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tabBar&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;color&quot;</span><span class="punctuation">:</span> <span class="string">&quot;#000000&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;selectedColor&quot;</span><span class="punctuation">:</span> <span class="string">&quot;#000000&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;list&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;pagePath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pages/imghander/imghander&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2077&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;iconPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;images/film.png&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;selectedIconPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;images/film-actived.png&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;pagePath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;pages/base/base&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Cyberpunk&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;iconPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;images/profile.png&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;selectedIconPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;images/profile-actived.png&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>pages</code>属性 定义界面路径, 相当于路由</p>
+<p><code>tabBar</code>属性定义了底栏相关的属性<br><img src="https://img-blog.csdnimg.cn/20190714110425829.png" alt="在这里插入图片描述"><br><code>window</code>属性定义了标题栏的文字和颜色 , 文字颜色 navigationBarTextStyle 只能是 black 或 white<br><img src="https://img-blog.csdnimg.cn/20190714110308469.png" alt="在这里插入图片描述"></p>
+<h4 id="页面目录-pages"><a href="#页面目录-pages" class="headerlink" title="页面目录 pages"></a>页面目录 pages</h4><p>以 pages 下的 base 为例<br><img src="https://img-blog.csdnimg.cn/20190714111414724.png" alt="在这里插入图片描述"><br>一个页面初始化会包含四个文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">js - &gt; 页面逻辑</span><br><span class="line">json -&gt; 页面配置, 如安装vant库后,  usingComponents 可以引入需要的组件</span><br><span class="line">wxml -&gt; 页面结构</span><br><span class="line">wxss -&gt; 页面样式</span><br></pre></td></tr></table></figure>
+
+<p>下面看一下一个 js 文件的内容</p>
+<h4 id="pages-gt-页面-gt-js"><a href="#pages-gt-页面-gt-js" class="headerlink" title="pages=&gt;页面=&gt;js"></a>pages=&gt;页面=&gt;js</h4><p>以 pages=&gt;base=&gt;base.js 为例, 结构如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pages/base/base.js</span></span><br><span class="line"><span class="keyword">const</span> db = <span class="keyword">new</span> wx.<span class="property">cloud</span>.<span class="title function_">database</span>()</span><br><span class="line"><span class="title class_">Page</span>(&#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 页面的初始数据</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">data</span>: &#123;&#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 生命周期函数--监听页面加载</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">onLoad</span>: <span class="keyword">function</span> (<span class="params">options</span>) &#123;&#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 生命周期函数--监听页面初次渲染完成</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">onReady</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;&#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 生命周期函数--监听页面显示</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">onShow</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;&#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 生命周期函数--监听页面隐藏</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">onHide</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;&#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 生命周期函数--监听页面卸载</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">onUnload</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;&#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 页面相关事件处理函数--监听用户下拉动作</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">onPullDownRefresh</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;&#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 页面上拉触底事件的处理函数</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">onReachBottom</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;&#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 用户点击右上角分享</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">onShareAppMessage</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;&#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>预置了很多生命周期函数</p>
+<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p><img src="https://img-blog.csdnimg.cn/20190714175808240.png" alt="在这里插入图片描述"></p>
+<h4 id="云开发"><a href="#云开发" class="headerlink" title="云开发"></a>云开发</h4><p>云开发环境创建的时候, 一个账号可以提供两个环境, 每个环境可以设置 id</p>
+<ol>
+<li>云数据库<br>json 形式数据库, 每一条数据都是 json 格式的对象 , 与关系型数据库差异如图, 基于 mongoDB<br>关系型数据库更适合表之间有复杂的关联关系, 文档型更适合频繁的读写操作, 效率高一些<br><img src="https://img-blog.csdnimg.cn/20190715113018923.png" alt="在这里插入图片描述"><br>包含以下数据类型<br><img src="https://img-blog.csdnimg.cn/20190715113417106.png" alt="在这里插入图片描述"><br>在小程序端操作会有权限控制, 而云函数操作则有完全的读写控制</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化</span></span><br><span class="line"><span class="keyword">const</span> db = wx.<span class="property">cloud</span>.<span class="title function_">database</span>(&#123; <span class="attr">env</span>: <span class="string">&#x27;dh&#x27;</span> &#125;) <span class="comment">// 传入环境名</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入数据, 可以用毁掉的写法, 也可以用promise写法</span></span><br><span class="line"><span class="comment">// 插入的数据会有 id 主键 和 _openid 标识插入的用户</span></span><br><span class="line">db.<span class="title function_">collection</span>(<span class="string">&#x27;user&#x27;</span>).<span class="title function_">add</span>(&#123;</span><br><span class="line">  <span class="attr">data</span>: &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;dh&#x27;</span>,</span><br><span class="line">    <span class="attr">time</span>: <span class="string">&#x27;2019&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">success</span>: <span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(res)</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">fail</span>: <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(err)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// promise写法</span></span><br><span class="line">db.<span class="title function_">collection</span>(<span class="string">&#x27;user&#x27;</span>)</span><br><span class="line">  .<span class="title function_">add</span>(&#123;</span><br><span class="line">    <span class="attr">data</span>: &#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;dh&#x27;</span>,</span><br><span class="line">      <span class="attr">time</span>: <span class="string">&#x27;2019&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(res)</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(err)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更新数据, doc拿到记录</span></span><br><span class="line">db.<span class="title function_">collection</span>(<span class="string">&#x27;user&#x27;</span>)</span><br><span class="line">  .<span class="title function_">doc</span>(<span class="string">&#x27;as1h35idf4g56ahafhjioasdf&#x27;</span>)</span><br><span class="line">  .<span class="title function_">update</span>(&#123;</span><br><span class="line">    <span class="attr">data</span>: &#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;dh1&#x27;</span>,</span><br><span class="line">      <span class="attr">time</span>: <span class="string">&#x27;2019&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查找</span></span><br><span class="line">db.<span class="title function_">collection</span>(<span class="string">&#x27;user&#x27;</span>).<span class="title function_">where</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;dh1&#x27;</span> &#125;).<span class="title function_">get</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除  多条数据删除, 需要在云函数进行</span></span><br><span class="line">db.<span class="title function_">collection</span>(<span class="string">&#x27;user&#x27;</span>).<span class="title function_">doc</span>(<span class="string">&#x27;as1h35idf4g56ahafhjioasdf&#x27;</span>).<span class="title function_">remove</span>()</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>云函数<br>云函数, 保存在云</p>
+</li>
+<li><p>云存储<br>云存储能力</p>
+</li>
+</ol>
+<ul>
+<li>wx.cloud.uploadFile // 上传</li>
+<li>wx.cloud.downloadFile //下载</li>
+<li>wx.cloud.deleteFile // 删除</li>
+<li>wx.cloud.getTempFileUrl // 临时路径</li>
+<li>….</li>
+<li>….</li>
+</ul>
+<h4 id="举个简单的例子-上传"><a href="#举个简单的例子-上传" class="headerlink" title="举个简单的例子-上传"></a>举个简单的例子-上传</h4><p>用户打开相册选择图片</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wx.<span class="title function_">chooseImage</span>() <span class="comment">// promise 可以拿到文件临时路径</span></span><br></pre></td></tr></table></figure>
+
+<p>上传至云存储</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wx.<span class="property">cloud</span>.<span class="title function_">uploadFile</span>(&#123;</span><br><span class="line">	...</span><br><span class="line">	<span class="attr">filePath</span>: <span class="string">&#x27;&#x27;</span> <span class="comment">// 传入上一步读取的文件临时路径</span></span><br><span class="line">	...</span><br><span class="line">	...</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">fileID</span>)</span><br><span class="line">&#125;)  <span class="comment">// promise 可以拿到文件的 fileID</span></span><br></pre></td></tr></table></figure>
+
+<p>拿到 fileID 存到云数据库, 便于操作(fileID 可以直接用于 image 组件的 src)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db.<span class="title function_">collection</span>(<span class="string">&#x27;image&#x27;</span>).<span class="title function_">add</span>(&#123;<span class="attr">fileID</span>:fileID&#125;) <span class="comment">// 在新建的image表中插入记录</span></span><br><span class="line">&lt;image src=<span class="string">&quot;&#123;fileID&#125;&quot;</span>&gt;&lt;<span class="regexp">/image&gt;  /</span>/可展示</span><br></pre></td></tr></table></figure>
+
+<h4 id="举个简单的例子-下载"><a href="#举个简单的例子-下载" class="headerlink" title="举个简单的例子-下载"></a>举个简单的例子-下载</h4><p>通过 data-xxx 自定义属性</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">data-fileid</span>=<span class="string">&quot;agsyuadi123asda&quot;</span> <span class="attr">bindTap</span>=<span class="string">&quot;download&quot;</span>&gt;</span>下载<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>使得点击的时候通过 event 获取到文件的 fileID, downloadFile 方法拿到 filePath, 保存到本地</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">download</span>(<span class="params">e</span>)&#123;</span><br><span class="line">	wx.<span class="property">cloud</span>.<span class="title function_">downloadFile</span>(&#123;</span><br><span class="line">		<span class="attr">fileID</span>: e.<span class="property">target</span>.<span class="property">dataset</span>.<span class="property">fileid</span></span><br><span class="line">	&#125;).<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> &#123;  <span class="comment">//</span></span><br><span class="line">		wx.<span class="title function_">saveImageToPhotoAlbum</span>(&#123; <span class="comment">//保存</span></span><br><span class="line">			<span class="attr">filePath</span>: res.<span class="property">filePath</span></span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E5%B0%8F%E7%A8%8B%E5%BA%8F-cyberpunk-wechat/" title="小程序：赛博朋克 2077 倒计时-以及简单的云开发" target="_blank" rel="external">https://laputaz.github.io/home/小程序-cyberpunk-wechat/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/js%E5%9F%BA%E7%A1%80-%E7%AE%80%E5%8D%95%E7%9A%84%E6%8B%96%E5%8A%A8%E5%AE%9E%E4%BE%8B/" title="js基础：简单的拖动实例"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/2019-6-22-js%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92%E8%BF%AD%E4%BB%A3%E5%92%8C%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96/" title="js基础：递归，迭代，和尾调用优化"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

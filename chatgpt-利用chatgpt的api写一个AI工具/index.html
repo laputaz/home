@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    ChatGPT - 利用 ChatGPT 的 api 编写 AI 问答界面 | laputa z
+  </title>
+  <meta name="description" content="接入 ChatGPT 快速实现的 MVP 版本的AI问答界面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ChatGPT - 利用 ChatGPT 的 api 编写 AI 问答界面">
+<meta property="og:url" content="https://laputaz.github.io/home/chatgpt-%E5%88%A9%E7%94%A8chatgpt%E7%9A%84api%E5%86%99%E4%B8%80%E4%B8%AAAI%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="接入 ChatGPT 快速实现的 MVP 版本的AI问答界面">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/3231adcf860d4050b709b13300a10f22.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/f765907c54cd4a0e8d358ee8751e0375.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/68b69389ba014f12903a89abbc0ca183.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/b1f75c3b5ca640488aedb3580f68621e.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/8652d1a2f79f4275b6c03549c3c7451b.png">
+<meta property="article:published_time" content="2023-06-18T10:13:05.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="手写">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="ai">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i-blog.csdnimg.cn/direct/3231adcf860d4050b709b13300a10f22.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/chatgpt-%E5%88%A9%E7%94%A8chatgpt%E7%9A%84api%E5%86%99%E4%B8%80%E4%B8%AAAI%E5%B7%A5%E5%85%B7/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-chatgpt-利用chatgpt的api写一个AI工具" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ChatGPT - 利用 ChatGPT 的 api 编写 AI 问答界面
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/chatgpt-%E5%88%A9%E7%94%A8chatgpt%E7%9A%84api%E5%86%99%E4%B8%80%E4%B8%AAAI%E5%B7%A5%E5%85%B7/" class="article-date">
+	  <time datetime="2023-06-18T10:13:05.000Z" itemprop="datePublished">2023-06-18</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/ai/" rel="tag">ai</a>, <a class="article-tag-link-link" href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" rel="tag">人工智能</a>, <a class="article-tag-link-link" href="/home/tags/%E6%89%8B%E5%86%99/" rel="tag">手写</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/chatgpt-%E5%88%A9%E7%94%A8chatgpt%E7%9A%84api%E5%86%99%E4%B8%80%E4%B8%AAAI%E5%B7%A5%E5%85%B7/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>接入 ChatGPT 快速实现的 MVP 版本的AI问答界面</p>
+<span id="more"></span>
+
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近发现 ChatGPT 有提供了一套 api 以及 node 工具，于是就想着能不能利用 ChatGPT 的 api 写一个 AI 工具。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>实现一个最小可行性产品 MVP 版本</p>
+<ul>
+<li>前端界面：简单的对话框即可，用 vue 快速实现</li>
+<li>后台设计：使用官方提供的 node 包以及 api，用 nestjs 快速实现</li>
+</ul>
+<h2 id="前端界面编写"><a href="#前端界面编写" class="headerlink" title="前端界面编写"></a>前端界面编写</h2><ol>
+<li><p>使用 vue-cli 快速生成一个前端项目，命名为 <code>dh-chat-ui</code> 如图：<br><img src="https://i-blog.csdnimg.cn/direct/3231adcf860d4050b709b13300a10f22.png" alt="在这里插入图片描述"></p>
+</li>
+<li><p>简单编写界面，包含标题、输入框、提问按钮、提问问题展示、答案展示，界面元素使用 <code>naive-ui</code>， 预览如下：<br><img src="https://i-blog.csdnimg.cn/direct/f765907c54cd4a0e8d358ee8751e0375.png" alt="在这里插入图片描述"></p>
+</li>
+</ol>
+<p>代码非常简单：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;header&gt;</span><br><span class="line">    &lt;n-gradient-text type=&quot;info&quot; :size=&quot;30&quot;&gt; DH&amp;nbsp;&lt;/n-gradient-text&gt;</span><br><span class="line">    &lt;n-gradient-text type=&quot;danger&quot; :size=&quot;30&quot;&gt; CHAT AI &lt;/n-gradient-text&gt;</span><br><span class="line">  &lt;/header&gt;</span><br><span class="line">  &lt;main&gt;</span><br><span class="line">    &lt;n-input</span><br><span class="line">      v-model:value=&quot;content&quot;</span><br><span class="line">      round</span><br><span class="line">      class=&quot;dh-input&quot;</span><br><span class="line">      type=&quot;textarea&quot;</span><br><span class="line">      size=&quot;large&quot;</span><br><span class="line">      placeholder=&quot;请输入提问&quot;</span><br><span class="line">    &gt;</span><br><span class="line">      &lt;!-- &lt;template #prefix&gt;</span><br><span class="line">        &lt;n-icon :component=&quot;FlashOutline&quot; /&gt;</span><br><span class="line">      &lt;/template&gt; --&gt;</span><br><span class="line">    &lt;/n-input&gt;</span><br><span class="line">    &lt;n-button v-if=&quot;!isLoading&quot; type=&quot;primary&quot; @click=&quot;handleAsk&quot;&gt;提问&lt;/n-button&gt;</span><br><span class="line">    &lt;n-button v-else type=&quot;primary&quot; disabled&gt;请稍候&lt;/n-button&gt;</span><br><span class="line">    &lt;n-divider&gt; 提问 &lt;/n-divider&gt;</span><br><span class="line">    &lt;div class=&quot;answer&quot;&gt;</span><br><span class="line">      &#123;&#123; curAsk &#125;&#125;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;n-divider&gt; 答案 &lt;/n-divider&gt;</span><br><span class="line">    &lt;div class=&quot;answer&quot;&gt;</span><br><span class="line">      &#123;&#123; answer &#125;&#125;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  &lt;/main&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script lang=&quot;ts&quot;&gt;</span><br><span class="line">import &#123; ref &#125; from &#x27;vue&#x27;</span><br><span class="line">import &#123; NButton, NInput, NDivider, NGradientText &#125; from &#x27;naive-ui&#x27;</span><br><span class="line">import &#123; FlashOutline &#125; from &#x27;@vicons/ionicons5&#x27;</span><br><span class="line">import axios from &#x27;axios&#x27;</span><br><span class="line">export default &#123;</span><br><span class="line">  components: &#123; NButton, NInput, NDivider, NGradientText &#125;,</span><br><span class="line">  setup() &#123;</span><br><span class="line">    const content = ref(&#x27;&#x27;)</span><br><span class="line">    const answer = ref(&#x27;-&#x27;)</span><br><span class="line">    const curAsk = ref(&#x27;您还没有提问&#x27;)</span><br><span class="line">    const isLoading = ref(false)</span><br><span class="line">    const handleAsk = async () =&gt; &#123;</span><br><span class="line">      if (!content.value) &#123;</span><br><span class="line">        return</span><br><span class="line">      &#125;</span><br><span class="line">      isLoading.value = true</span><br><span class="line">      curAsk.value = content.value</span><br><span class="line">      content.value = &#x27;&#x27;</span><br><span class="line">      answer.value = &#x27;思考中&#x27;</span><br><span class="line">      try &#123;</span><br><span class="line">        const response = await axios.post(&#x27;http://222.125.89.250:70/ask&#x27;, &#123;</span><br><span class="line">          content: curAsk.value</span><br><span class="line">        &#125;)</span><br><span class="line">        answer.value = response?.data.content || &#x27;-&#x27;</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        isLoading.value = false</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return &#123;</span><br><span class="line">      content,</span><br><span class="line">      answer,</span><br><span class="line">      handleAsk,</span><br><span class="line">      FlashOutline,</span><br><span class="line">      curAsk,</span><br><span class="line">      isLoading</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">.dh-input &#123;</span><br><span class="line">  margin: 10px 0;</span><br><span class="line">&#125;</span><br><span class="line">.dh-answer &#123;</span><br><span class="line">  padding: 0 10px;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="后台设计"><a href="#后台设计" class="headerlink" title="后台设计"></a>后台设计</h2><ol>
+<li><p>首先创建一个简单的 nest 项目，如图：<br><img src="https://i-blog.csdnimg.cn/direct/68b69389ba014f12903a89abbc0ca183.png" alt="在这里插入图片描述"></p>
+</li>
+<li><p>到 openai 官网创建一个 api 密钥、组织 ID，存放到常量文件，模型我选择 gpt-3.5-turbo：<br><img src="https://i-blog.csdnimg.cn/direct/b1f75c3b5ca640488aedb3580f68621e.png" alt="在这里插入图片描述"></p>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 密钥</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">OPENAI_API_KEY</span> = <span class="string">&#x27;sk-mTkhGQJfdTd0zX4iaFrYT3BlbkFJr2kTg1yxxxxxxxxx&#x27;</span>;</span><br><span class="line"><span class="comment">// 组织ID</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">ORGANIZATION_ID</span> = <span class="string">&#x27;org-wBO3nA6YWjAN3Z8Cngxxxxxxxx&#x27;</span>;</span><br><span class="line"><span class="comment">// 默认模型</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">DEFAULT_MODEL</span> = <span class="string">&#x27;gpt-3.5-turbo&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>接着使用 openai 提供的 node 包初始化, 得到一个对象。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Configuration</span>, <span class="title class_">OpenAIApi</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;openai&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="variable constant_">OPENAI_API_KEY</span>, <span class="variable constant_">ORGANIZATION_ID</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./const&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** init openai */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">initOpenai</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> configuration = <span class="keyword">new</span> <span class="title class_">Configuration</span>(&#123;</span><br><span class="line">    <span class="attr">organization</span>: <span class="variable constant_">ORGANIZATION_ID</span>,</span><br><span class="line">    <span class="attr">apiKey</span>: <span class="variable constant_">OPENAI_API_KEY</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">OpenAIApi</span>(configuration);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** openai instance */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> openai = <span class="title function_">initOpenai</span>();</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>编写接口，此处只提供一个 ask 接口用于返回答案：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// controller 层，向外暴露接口</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Controller</span>, <span class="title class_">Body</span>, <span class="title class_">Post</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AppService</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.service&#x27;</span>;</span><br><span class="line"></span><br><span class="line">@<span class="title class_">Controller</span>()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppController</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">private readonly appService: AppService</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  @<span class="title class_">Post</span>(<span class="string">&#x27;/ask&#x27;</span>)</span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">postCompletion</span>(@<span class="title class_">Body</span>(<span class="string">&#x27;content&#x27;</span>) <span class="attr">content</span>: string): <span class="title class_">Promise</span>&lt;string&gt; &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(content);</span><br><span class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">appService</span>.<span class="title function_">createChatCompletion</span>(content);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// service 层，调用 openai 接口</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Injectable</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; openai &#125; <span class="keyword">from</span> <span class="string">&#x27;../ai&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="variable constant_">DEFAULT_MODEL</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;ai/const&#x27;</span>;</span><br><span class="line"></span><br><span class="line">@<span class="title class_">Injectable</span>()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppService</span> &#123;</span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">createChatCompletion</span>(<span class="attr">content</span>: string): <span class="title class_">Promise</span>&lt;any&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> openai.<span class="title function_">createChatCompletion</span>(&#123;</span><br><span class="line">      <span class="attr">model</span>: <span class="variable constant_">DEFAULT_MODEL</span>,</span><br><span class="line">      <span class="attr">messages</span>: [&#123; <span class="attr">role</span>: <span class="string">&#x27;user&#x27;</span>, content &#125;],</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> response.<span class="property">data</span>.<span class="property">choices</span>[<span class="number">0</span>].<span class="property">message</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>跨域怎么解决? 直接 cors 允许即可</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">bootstrap</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> app = <span class="keyword">await</span> <span class="title class_">NestFactory</span>.<span class="title function_">create</span>(<span class="title class_">AppModule</span>);</span><br><span class="line">  <span class="comment">// 允许跨域</span></span><br><span class="line">  app.<span class="title function_">enableCors</span>();</span><br><span class="line">  <span class="keyword">await</span> app.<span class="title function_">listen</span>(<span class="number">3000</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">bootstrap</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h2><p>简单的回答，很 OK<br><img src="https://i-blog.csdnimg.cn/direct/8652d1a2f79f4275b6c03549c3c7451b.png" alt="在这里插入图片描述"></p>
+<p>简单的 MVP 版本</p>
+<p>以上。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/chatgpt-%E5%88%A9%E7%94%A8chatgpt%E7%9A%84api%E5%86%99%E4%B8%80%E4%B8%AAAI%E5%B7%A5%E5%85%B7/" title="ChatGPT - 利用 ChatGPT 的 api 编写 AI 问答界面" target="_blank" rel="external">https://laputaz.github.io/home/chatgpt-利用chatgpt的api写一个AI工具/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/cypress%20%E6%80%BB%E7%BB%93%E3%80%81%E8%B4%A8%E9%87%8F%E5%B7%A6%E7%A7%BB%E6%8C%87%E5%8D%97/" title="回顾：cypress 总结、质量左移指南"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/%E5%9B%9E%E9%A1%BE-sem%E7%9A%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/" title="回顾：Marketing 和 SEM 的相关知识"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

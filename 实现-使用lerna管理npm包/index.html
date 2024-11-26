@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    实现：使用 lerna 管理 npm 包 | laputa z
+  </title>
+  <meta name="description" content="最近 xxx-admin-ui 和 xxx-admin-service 都用到了lerna, 记录一下注意点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现：使用 lerna 管理 npm 包">
+<meta property="og:url" content="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-%E4%BD%BF%E7%94%A8lerna%E7%AE%A1%E7%90%86npm%E5%8C%85/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="最近 xxx-admin-ui 和 xxx-admin-service 都用到了lerna, 记录一下注意点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/AJBMI-LnZmMZTNvMmuShS7Kf.png">
+<meta property="og:image" content="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/hidLbR-PR_GthtQmROKRB6UX.png">
+<meta property="og:image" content="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/XCacQ7S04j1Cxhioo19K8L-U.png">
+<meta property="article:published_time" content="2022-08-10T17:23:56.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="回顾">
+<meta property="article:tag" content="方案设计">
+<meta property="article:tag" content="npm">
+<meta property="article:tag" content="lerna">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/AJBMI-LnZmMZTNvMmuShS7Kf.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-%E4%BD%BF%E7%94%A8lerna%E7%AE%A1%E7%90%86npm%E5%8C%85/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-实现-使用lerna管理npm包" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      实现：使用 lerna 管理 npm 包
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/%E5%AE%9E%E7%8E%B0-%E4%BD%BF%E7%94%A8lerna%E7%AE%A1%E7%90%86npm%E5%8C%85/" class="article-date">
+	  <time datetime="2022-08-10T17:23:56.000Z" itemprop="datePublished">2022-08-10</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/lerna/" rel="tag">lerna</a>, <a class="article-tag-link-link" href="/home/tags/npm/" rel="tag">npm</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9B%9E%E9%A1%BE/" rel="tag">回顾</a>, <a class="article-tag-link-link" href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" rel="tag">方案设计</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/%E5%AE%9E%E7%8E%B0-%E4%BD%BF%E7%94%A8lerna%E7%AE%A1%E7%90%86npm%E5%8C%85/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>最近 <code>xxx-admin-ui</code> 和 <code>xxx-admin-service</code> 都用到了<code>lerna</code>, 记录一下注意点</p>
+<span id="more"></span>
+
+<h2 id="Need"><a href="#Need" class="headerlink" title="Need"></a>Need</h2><p><a target="_blank" rel="noopener" href="https://github.com/lerna/lerna">lerna</a><br><a target="_blank" rel="noopener" href="https://npm.io/">npm</a></p>
+<hr>
+<h2 id="1-初始化工程"><a href="#1-初始化工程" class="headerlink" title="1. 初始化工程"></a>1. 初始化工程</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> temp &amp;&amp; <span class="built_in">cd</span> temp &amp;&amp; lerna init</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/AJBMI-LnZmMZTNvMmuShS7Kf.png" alt="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/AJBMI-LnZmMZTNvMmuShS7Kf.png"></p>
+<hr>
+<h2 id="2-初始化每个包"><a href="#2-初始化每个包" class="headerlink" title="2. 初始化每个包"></a>2. 初始化每个包</h2><ul>
+<li>假设我们有 2 个包, 如 :</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">packages</span><br><span class="line">  - admin-1</span><br><span class="line">  - admin-2</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/hidLbR-PR_GthtQmROKRB6UX.png" alt="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/hidLbR-PR_GthtQmROKRB6UX.png"></p>
+<ul>
+<li>分别进入 <code>admin-1</code> 和 <code>admin-2</code> 初始化:</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> packages/admin-1 &amp;&amp; npm init -y</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> packages/admin-2 &amp;&amp; npm init -y</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当然, 每个包都是完整的工程, 可以自由发挥</li>
+<li>在 <code>admin-1</code> 和 <code>admin-2</code> 的<code>package.json</code>中修改包名和版本</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// admin-1 package.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;@laputaz/admin-1&quot;</span><span class="punctuation">,</span><span class="comment">// 包名</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.0.1&quot;</span><span class="punctuation">,</span>      <span class="comment">// 起始版本号, 我用 0.0.1 开始</span></span><br><span class="line">  ...</span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>@laputaz</strong> 为 scope, 所有相同 scope 的包, 安装后会被放在 scope 目录下</p>
+<ul>
+<li>admin-2 同理</li>
+</ul>
+<hr>
+<h2 id="3-每个包添加内容"><a href="#3-每个包添加内容" class="headerlink" title="3. 每个包添加内容"></a>3. 每个包添加内容</h2><ul>
+<li>为两个包都增加一个 <code>src/index.js</code></li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// admin-1/src/index.js</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;admin-1&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>-</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// admin-2/src/index.js</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;admin-2&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果我们不需要对代码打包压缩等操作, 直接指定入口以及需要发布的内容即可:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in package.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="string">&quot;src/index.js&quot;</span><span class="punctuation">,</span> <span class="comment">// 发布后被引用时的入口</span></span><br><span class="line">  <span class="attr">&quot;files&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="comment">// 需要发布的文件</span></span><br><span class="line">    <span class="string">&quot;src&quot;</span><span class="punctuation">,</span> <span class="comment">// 直接发布src的内容以及 README.md</span></span><br><span class="line">    <span class="string">&quot;README.md&quot;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>也可以用<code>.npmignore</code>指定不需要发布的内容, 区别如下</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.npmignore 该文件指定的内容将不会被发布</span><br><span class="line">package.json =&gt; files 字段, 该字段指定的内容将会被发布, 优先级高于.npmignore</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-修改-lerna-配置"><a href="#4-修改-lerna-配置" class="headerlink" title="4. 修改 lerna 配置"></a>4. 修改 lerna 配置</h2><p>在 <code>lerna.json</code> 中, 增加如下配置:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in lerna.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;packages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;packages/admin-1&quot;</span><span class="punctuation">,</span> <span class="string">&quot;packages/admin-2&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;command&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;bootstrap&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;hoist&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;publish&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;message&quot;</span><span class="punctuation">:</span> <span class="string">&quot;release: publish tag &quot;</span><span class="punctuation">,</span> <span class="comment">// lerna version打tag的时候的commit</span></span><br><span class="line">      <span class="attr">&quot;conventionalCommits&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span> <span class="comment">//</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;independent&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>建议:<ul>
+<li>packages 中我们可以写 <code>packages/*</code> , 但经常会建立一些不用发布的 demo 等代码文件目录, 所以最好手动指定需要发布的包</li>
+<li>command =&gt; bootstrap =&gt; hoist 设置为 true, 可以把所有的 node_modules 的内容提升到顶层, 让每个包里的 node_modules 看起来更干净</li>
+<li>version 改为 independent, 让每个包版本号可以不一样</li>
+<li>command =&gt; publish =&gt; conventionalCommits 设置为 false 把自动生成 changelog 的功能关了, 太鸡肋, 因为生成的 changelog 可读性很差.</li>
+</ul>
+</li>
+</ul>
+<p>如果没有依赖关系,或者代码打包压缩等处理, 可以走直接第 6 步发布了.</p>
+<hr>
+<h2 id="5-处理依赖关系"><a href="#5-处理依赖关系" class="headerlink" title="5. 处理依赖关系"></a>5. 处理依赖关系</h2><p>包之间可能存在依赖关系, 这里演示有依赖关系的情况:</p>
+<ul>
+<li>更新两个包的 <code>src/index.js</code>, <strong><em>假设</em></strong> <code>admin-2</code> <strong><em>依赖</em></strong> <code>admin-1</code></li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// admin-1/src/index.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title function_">say1</span> = (<span class="params"></span>) =&gt; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;I am admin-1&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>&amp;</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// admin-2/src/index.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; say1 &#125; <span class="keyword">from</span> <span class="string">&#x27;@laputaz/admin-1&#x27;</span>;</span><br><span class="line"><span class="title function_">say1</span>();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>更新 <code>admin-2</code> 的 <code>dependencies</code>:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  admin-2 package.json</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;@laputaz/admin-2&quot;</span><span class="punctuation">,</span></span><br><span class="line">  ...</span><br><span class="line">  ...</span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;@laputaz/admin-1&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.0.1&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>本地调试时, 需要为 <code>admin-1</code>建立一个软链接, 运行:</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lerna bootstrap</span><br></pre></td></tr></table></figure>
+
+<p>该命令会在 <code>admin-2</code> 的<code>node_modules</code>下建立指向<code>admin-1</code>的快捷方式:</p>
+<p><img src="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/XCacQ7S04j1Cxhioo19K8L-U.png" alt="https://static.slab.com/prod/uploads/d9aeaycl/posts/images/XCacQ7S04j1Cxhioo19K8L-U.png"></p>
+<p>可以发现 <code>admin-2/node_modules/@laputa/admin-1</code> 的内容就是 <code>admin-1</code> 的内容</p>
+<p>这样不需要先发布<code>admin-1</code> , 也可以在本地正常调试了.</p>
+<h2 id="6-发布"><a href="#6-发布" class="headerlink" title="6. 发布"></a>6. 发布</h2><p>由于权限限制, 我们不能直接运行<code>lerna publish</code> 发布.</p>
+<p>需要分两步操作.</p>
+<p>首先保证代码均已 <code>push</code> 到仓库.</p>
+<ul>
+<li>运行</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lerna version [ patch | minor | major | ... ] <span class="comment"># 还有其他选项, 但主要使用了这三个</span></span><br></pre></td></tr></table></figure>
+
+<p>该命令会自动更新每个包的版本并打 tag 提交到 git 仓库</p>
+<ul>
+<li>slack deploy channel:</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@k fab knpm_lerna_publish:xxxx.git</span><br></pre></td></tr></table></figure>
+
+<p><code>xxxx.git</code>为 git 仓库地址</p>
+<p>然后在 <a target="_blank" rel="noopener" href="https://npm.io/">npm</a> 上就能看到发布的包了</p>
+<hr>
+<h2 id="7-如果要发布打包后的代码"><a href="#7-如果要发布打包后的代码" class="headerlink" title="7. 如果要发布打包后的代码"></a>7. 如果要发布打包后的代码</h2><p>我们经常需要对代码打包压缩等处理, 然后发布处理后的代码</p>
+<p><strong>假设, 我们对</strong> <code>admin-1</code> <strong>打包压缩, 输出文件为</strong> <code>lib/index.common.js</code></p>
+<ol>
+<li>首先在 <code>package.json</code>修改包的入口</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lib/index.common.js&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>然后需要在<code>scripts</code>增加一个钩子:</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">    <span class="attr">&quot;prepublishOnly&quot;</span><span class="punctuation">:</span> <span class="string">&quot;do something here ......&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们在 <code>deploy channel</code>执行发布命令的时候, 会在远端执行 <code>lerna publish</code></p>
+<p>而 <code>lerna publish</code> 中又会执行 <code>npm publish</code></p>
+<p>而 <a target="_blank" rel="noopener" href="https://docs.npmjs.com/misc/scripts">prepublishOnly</a> 这个钩子, 会在<code>npm publish</code> 前执行</p>
+<p><a target="_blank" rel="noopener" href="https://docs.npmjs.com/misc/scripts">prepublishOnly</a> 中就可以写一些譬如: 切换 node 版本/ 执行 <code>npm install &amp;&amp; npm run build</code>等操作</p>
+<hr>
+<h2 id="8-如果需要-changelog"><a href="#8-如果需要-changelog" class="headerlink" title="8. 如果需要 changelog"></a>8. 如果需要 changelog</h2><p><code>conventionalCommits</code>生成的<code>changelog</code>是基于每个<code>commit</code>的, 难看且鸡肋, 所以决定手动生成.</p>
+<p>文件:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> changelog.md   <span class="comment">// 该文件为最终的所有的版本记录</span></span><br><span class="line"><span class="number">2.</span> current.md    <span class="comment">// 当前版本的log</span></span><br></pre></td></tr></table></figure>
+
+<p>每次只修改 <code>current.md</code> 记录当前版本的更改内容</p>
+<p>在<code>pulish</code>之前将 <code>current.md</code> 的内容放到 <code>changelog.md</code>中, 并清空 <code>current.md</code></p>
+<p>在工程根目录的 <code>package.json</code> 中增加</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">    <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cat current.md &gt;&gt;&gt; changelog.md &amp;&amp; git ad .&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>因为执行<code>version</code> 的时候, <code>package</code>中的版本号已经被更新了(即可以拿到最新的版本号), 所以可以在<code>version</code>钩子中操作版本文档的更新, 然后<code>git ad .</code></p>
+<h2 id="9-后话"><a href="#9-后话" class="headerlink" title="9. 后话"></a>9. 后话</h2><p>2024 不得不说，<code>pnpm</code> 自带的 <code>workspace</code> 更好用</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-%E4%BD%BF%E7%94%A8lerna%E7%AE%A1%E7%90%86npm%E5%8C%85/" title="实现：使用 lerna 管理 npm 包" target="_blank" rel="external">https://laputaz.github.io/home/实现-使用lerna管理npm包/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/%E5%AE%9E%E7%8E%B0-AB-Testing%E5%92%8C%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/" title="实现：AB-testing 和组件设计"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/vue-%E4%BC%98%E6%83%A0%E5%88%B8%E7%BB%84%E4%BB%B6%E5%8C%96/" title="vue-优惠券组件化设计"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

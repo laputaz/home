@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    实现：组件封装和高阶组件-弹窗 | laputa z
+  </title>
+  <meta name="description" content="最近看的组件封装和高阶组件的相关概念，做一下简单的总结。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现：组件封装和高阶组件-弹窗">
+<meta property="og:url" content="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-%E7%BB%84%E4%BB%B6%E5%B0%81%E8%A3%85%E5%92%8C%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6-%E5%BC%B9%E7%AA%97%E5%B0%81%E8%A3%85/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="最近看的组件封装和高阶组件的相关概念，做一下简单的总结。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-22T16:59:48.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="回顾">
+<meta property="article:tag" content="方案设计">
+<meta property="article:tag" content="vue">
+<meta property="article:tag" content="高阶组件">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-%E7%BB%84%E4%BB%B6%E5%B0%81%E8%A3%85%E5%92%8C%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6-%E5%BC%B9%E7%AA%97%E5%B0%81%E8%A3%85/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-实现-组件封装和高阶组件-弹窗封装" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      实现：组件封装和高阶组件-弹窗
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/%E5%AE%9E%E7%8E%B0-%E7%BB%84%E4%BB%B6%E5%B0%81%E8%A3%85%E5%92%8C%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6-%E5%BC%B9%E7%AA%97%E5%B0%81%E8%A3%85/" class="article-date">
+	  <time datetime="2021-05-22T16:59:48.000Z" itemprop="datePublished">2021-05-22</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/vue/" rel="tag">vue</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9B%9E%E9%A1%BE/" rel="tag">回顾</a>, <a class="article-tag-link-link" href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" rel="tag">方案设计</a>, <a class="article-tag-link-link" href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" rel="tag">高阶组件</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/%E5%AE%9E%E7%8E%B0-%E7%BB%84%E4%BB%B6%E5%B0%81%E8%A3%85%E5%92%8C%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6-%E5%BC%B9%E7%AA%97%E5%B0%81%E8%A3%85/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>最近看的组件封装和高阶组件的相关概念，做一下简单的总结。</p>
+<span id="more"></span>
+
+<h2 id="高阶组件是什么"><a href="#高阶组件是什么" class="headerlink" title="高阶组件是什么"></a>高阶组件是什么</h2><p>在说高阶组件之前，有一个概念是高阶函数。<br>简单地说，高阶函数也就是传入一个函数，最后返回一个新函数。<br>那么高阶组件，就是函数接收一个组件，返回新的组件，并对组件做一层包装拓展。<br>在 vue 中，vue 单文件会被转换为对象，template 部分会被转换为对象中的 render 函数。<br>所以思路就是对该对象进行一些处理。<br>有点像装饰器模式。</p>
+<h2 id="恶心的弹窗组件"><a href="#恶心的弹窗组件" class="headerlink" title="恶心的弹窗组件"></a>恶心的弹窗组件</h2><p>每次在写 admin 页面的时候，总是会出现这样的代码，以 elementUI 为例</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-dialog</span> <span class="attr">:visible.sync</span>=<span class="string">&quot;visible1&quot;</span> <span class="attr">:title</span>=<span class="string">&quot;title1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">my-com</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">slot</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>Confirm<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-dialog</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-dialog</span> <span class="attr">:visible.sync</span>=<span class="string">&quot;visible2&quot;</span> <span class="attr">:title</span>=<span class="string">&quot;title2&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">my-com</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">slot</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>Confirm<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-dialog</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-dialog</span> <span class="attr">:visible.sync</span>=<span class="string">&quot;visible3&quot;</span> <span class="attr">:title</span>=<span class="string">&quot;title3&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">my-com</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">slot</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>Confirm<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-dialog</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-dialog</span> <span class="attr">:visible.sync</span>=<span class="string">&quot;visible4&quot;</span> <span class="attr">:title</span>=<span class="string">&quot;title4&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">my-com</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">slot</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>Confirm<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-dialog</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 我的组件，展示在弹窗内部</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">import</span> <span class="title class_">MyCom</span> <span class="keyword">from</span> <span class="string">&#x27;my-com&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">data</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 控制显示隐藏</span></span></span><br><span class="line"><span class="language-javascript">        <span class="attr">visible1</span>: <span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">visible2</span>: <span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">visible3</span>: <span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">visible4</span>: <span class="literal">false</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 标题</span></span></span><br><span class="line"><span class="language-javascript">        title1： <span class="string">&#x27;title1&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">        title2： <span class="string">&#x27;title2&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">        title3： <span class="string">&#x27;title3&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">        title4： <span class="string">&#x27;title4&#x27;</span></span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样写非常重复，并且在状态很多的时候，管理起来会很恶心。</p>
+<p>visible，title 这一类变量，其实属于弹窗自身的内部属性，如果在代码的其他地方没有使用，那么最好是隐藏在弹窗组件中，没必要暴露出来。</p>
+<p>我们希望只关心弹窗内部的组件部分（my-com），而不是每次都做一些繁复的无用的代码拷贝。</p>
+<h2 id="组件封装"><a href="#组件封装" class="headerlink" title="组件封装"></a>组件封装</h2><p>常见的做法，是将弹窗再封装一层，将 my-com 作为插槽的内容。如:</p>
+<ul>
+<li>my-dialog.vue</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-dialog</span> <span class="attr">:visible.sync</span>=<span class="string">&quot;visible&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">slot</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>Confirm<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-dialog</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 我的组件，展示在弹窗内部</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">import</span> <span class="title class_">MyCom</span> <span class="keyword">from</span> <span class="string">&#x27;my-com&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">props</span>: [<span class="string">&#x27;visible&#x27;</span>],</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">data</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">visible</span>: <span class="literal">true</span>,</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">methods</span>: [</span></span><br><span class="line"><span class="language-javascript">      <span class="title function_">open</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="literal">true</span></span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    ],</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">my-dialog</span> <span class="attr">ref</span>=<span class="string">&quot;dialog&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">my-com</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">my-dialog</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">import</span> <span class="title class_">MyCom</span> <span class="keyword">from</span> <span class="string">&#x27;my-com&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">components</span>: &#123; <span class="title class_">MyCom</span> &#125;</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这时有一个问题，el-dialog 被我们包含在组件内部了，如果要为其添加一些属性怎么办，例如前面的 title。</p>
+<p>一种方法是增加 props</p>
+<ul>
+<li>my-dialog.vue</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 增加 title --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-dialog</span> <span class="attr">:visible.sync</span>=<span class="string">&quot;visible&quot;</span> <span class="attr">:title</span>=<span class="string">&quot;title&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">slot</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>Confirm<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-dialog</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 增加 title</span></span></span><br><span class="line"><span class="language-javascript">    <span class="attr">props</span>: [<span class="string">&#x27;visible&#x27;</span>, <span class="string">&#x27;title&#x27;</span>],</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>缺点是灵活性较差，每新增一个属性就需要改一次组件、增加一个 prop。</p>
+<p>更好的办法是使用 $attrs、$props、$listener 等。其中：</p>
+<ul>
+<li>$attrs 包含了 dom 上所有属性</li>
+<li>$props 包含了已经在 props 上声明的属性</li>
+<li>$listeners 包含了所有事件属性</li>
+</ul>
+<p>my-dialog.vue</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 增加 title --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-dialog</span> <span class="attr">:visible.sync</span>=<span class="string">&quot;visible&quot;</span> <span class="attr">v-bind</span>=<span class="string">&quot;$attrs&quot;</span> <span class="attr">v-on</span>=<span class="string">&quot;$listeners&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">slot</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>Confirm<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-dialog</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 增加 title</span></span></span><br><span class="line"><span class="language-javascript">    <span class="attr">props</span>: [<span class="string">&#x27;visible&#x27;</span>],</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果不想把从父组件传递的参数或事件全都传递给原组件，需要做部分筛选，可以使用计算属性 computed：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 增加 title --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-dialog</span> <span class="attr">:visible.sync</span>=<span class="string">&quot;visible&quot;</span> <span class="attr">v-bind</span>=<span class="string">&quot;dialogAttr&quot;</span> <span class="attr">v-on</span>=<span class="string">&quot;dialogListeners&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">slot</span>=<span class="string">&quot;footer&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>Confirm<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-dialog</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">// 增加 title</span></span></span><br><span class="line"><span class="language-javascript">    <span class="attr">props</span>: [<span class="string">&#x27;visible&#x27;</span>],</span></span><br><span class="line"><span class="language-javascript">    <span class="attr">computed</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="title function_">dialogProps</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 只取 title 绑定到 el-dialog</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> &#123; title &#125; = <span class="variable language_">this</span>.<span class="property">$attrs</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">          title,</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">      <span class="title function_">dialogListeners</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 只取 close 事件绑定到 el-dialog</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">const</span> &#123; close &#125; = <span class="variable language_">this</span>.<span class="property">$listeners</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">          close,</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">      &#125;,</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>但还有一种使用场景，我们希望使用起来更加简洁，类似于 elementUI 的 this.$confirm。<br>如果没有 elementUI, 或者项目中已经有一个实现好的弹窗了，这种情况怎么基于现有组件，实现类似于 this.$confirm 的调用呢。</p>
+<h2 id="基于现有弹窗实现-this-dialog"><a href="#基于现有弹窗实现-this-dialog" class="headerlink" title="基于现有弹窗实现 this.$dialog"></a>基于现有弹窗实现 this.$dialog</h2><p>这种实现形式称为 HOC 高阶组件。<br>假设我们已经有一个弹窗组件（用 elementUI 的 el-dialog 为例）。</p>
+<ol>
+<li>首先，引入弹窗组件。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ? !多个实例需要销毁</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Button</span> <span class="keyword">as</span> <span class="title class_">ElButton</span>, <span class="title class_">Dialog</span> <span class="keyword">as</span> <span class="title class_">ElDialog</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;element-ui&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>定义弹窗的几种状态，确定，关闭，和取消。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实例</span></span><br><span class="line"><span class="keyword">let</span> instance</span><br><span class="line"><span class="keyword">let</span> promise</span><br><span class="line"><span class="comment">// 每种操作对应的结果</span></span><br><span class="line"><span class="keyword">const</span> statusMap = &#123;</span><br><span class="line">  <span class="attr">confirm</span>: <span class="string">&#x27;resolve&#x27;</span>,</span><br><span class="line">  <span class="attr">close</span>: <span class="string">&#x27;reject&#x27;</span>,</span><br><span class="line">  <span class="attr">cancel</span>: <span class="string">&#x27;reject&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><p>定义一个方法，这个方法接收两个参数：</p>
+<ul>
+<li>一是弹窗组件</li>
+<li>二是额外配置项</li>
+</ul>
+</li>
+</ol>
+<p>该方法接收弹窗组件，并在其基础上，包裹了一层，添加了新的方法，如 open,cancel 等等。</p>
+<p>实现：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 接受一个组件和配置</span></span><br><span class="line"><span class="keyword">const</span> hoc = <span class="keyword">function</span> (<span class="params">com, options</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;MyDialog&#x27;</span>,</span><br><span class="line">    <span class="comment">// 声明子组件</span></span><br><span class="line">    <span class="attr">components</span>: &#123; com &#125;,</span><br><span class="line">    <span class="comment">// 显示隐藏</span></span><br><span class="line">    <span class="title function_">data</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="attr">visible</span>: <span class="literal">false</span>, <span class="attr">loading</span>: <span class="literal">false</span> &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">methods</span>: &#123;</span><br><span class="line">      <span class="comment">// 打开 ref</span></span><br><span class="line">      <span class="title function_">open</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="literal">true</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="comment">// 关闭 ref</span></span><br><span class="line">      <span class="title function_">close</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="literal">false</span></span><br><span class="line">        promise &amp;&amp; promise.<span class="title function_">reject</span>()</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="comment">// handler 类 confirm</span></span><br><span class="line">      <span class="title function_">handler</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> (promise = &#123; resolve, reject &#125;))</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="comment">// 处理 确认 or 取消</span></span><br><span class="line">      <span class="title function_">_action</span>(<span class="params">type, beforeAction</span>) &#123;</span><br><span class="line">        <span class="comment">// type === &#x27;confirm&#x27; &amp;&amp; (this.loading = true)</span></span><br><span class="line">        <span class="keyword">const</span> <span class="title function_">done</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">          <span class="variable language_">this</span>.<span class="title function_">_hide</span>(type)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果有 before-close | before-confirm, 先执行, 并且必须在方法中调用 done</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> beforeAction === <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">          <span class="title function_">beforeAction</span>(done)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="title function_">done</span>()</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="comment">// 关闭弹窗</span></span><br><span class="line">      <span class="title function_">_hide</span>(<span class="params">type</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">visible</span> = <span class="literal">false</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">loading</span> = <span class="literal">false</span></span><br><span class="line">        <span class="keyword">if</span> (promise) &#123;</span><br><span class="line">          promise[statusMap[type]](<span class="variable language_">this</span>.<span class="property">$refs</span>.<span class="property">child</span>)</span><br><span class="line">          <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 触发事件</span></span><br><span class="line">        <span class="variable language_">this</span>.$emit(type)</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 渲染函数</span></span><br><span class="line">    <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>由于我们没办法在 js 中写 template 标签，这个时候 render 函数就派上用场了。（也可以用 JSX）</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 接受一个组件和配置</span></span><br><span class="line"><span class="keyword">const</span> hoc = <span class="keyword">function</span> (<span class="params">com, options</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;MyDialog&#x27;</span>,</span><br><span class="line">    <span class="comment">// 声明子组件</span></span><br><span class="line">    <span class="attr">components</span>: &#123; com &#125;,</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 渲染函数</span></span><br><span class="line">    <span class="title function_">render</span>(<span class="params">h</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> _this = <span class="variable language_">this</span></span><br><span class="line">      <span class="comment">// props</span></span><br><span class="line">      <span class="keyword">const</span> args = &#123;</span><br><span class="line">        <span class="attr">props</span>: &#123;</span><br><span class="line">          ...(options || &#123;&#125;),</span><br><span class="line">          ...<span class="variable language_">this</span>.<span class="property">$attrs</span>,</span><br><span class="line">          <span class="attr">visible</span>: <span class="variable language_">this</span>.<span class="property">visible</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">on</span>: &#123;</span><br><span class="line">          ...<span class="variable language_">this</span>.<span class="property">$listeners</span>,</span><br><span class="line">          <span class="string">&#x27;update:visible&#x27;</span>: <span class="function">(<span class="params">val</span>) =&gt;</span> (_this.<span class="property">visible</span> = val), <span class="comment">// visible.sync</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">scopedSlots</span>: <span class="variable language_">this</span>.<span class="property">$scopedSlots</span>,</span><br><span class="line">        <span class="attr">ref</span>: <span class="string">&#x27;dialog&#x27;</span>,</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// footer</span></span><br><span class="line">      <span class="keyword">const</span> footer = <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>, &#123; <span class="attr">slot</span>: <span class="string">&#x27;footer&#x27;</span> &#125;, [</span><br><span class="line">        <span class="title function_">h</span>(</span><br><span class="line">          <span class="title class_">ElButton</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">on</span>: &#123;</span><br><span class="line">              <span class="attr">click</span>: <span class="function">() =&gt;</span> _this.<span class="title function_">_action</span>(<span class="string">&#x27;cancel&#x27;</span>, args.<span class="property">props</span>[<span class="string">&#x27;before-cancel&#x27;</span>]),</span><br><span class="line">            &#125;,</span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="string">&#x27;Cancel&#x27;</span></span><br><span class="line">        ),</span><br><span class="line">        <span class="title function_">h</span>(</span><br><span class="line">          <span class="title class_">ElButton</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">props</span>: &#123;</span><br><span class="line">              <span class="attr">type</span>: <span class="string">&#x27;primary&#x27;</span>,</span><br><span class="line">              <span class="attr">loading</span>: _this.<span class="property">loading</span>,</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">on</span>: &#123;</span><br><span class="line">              <span class="attr">click</span>: <span class="function">() =&gt;</span></span><br><span class="line">                _this.<span class="title function_">_action</span>(<span class="string">&#x27;confirm&#x27;</span>, args.<span class="property">props</span>[<span class="string">&#x27;before-confirm&#x27;</span>]),</span><br><span class="line">            &#125;,</span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="string">&#x27;Confirm&#x27;</span></span><br><span class="line">        ),</span><br><span class="line">      ])</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">h</span>(<span class="title class_">ElDialog</span>, args, [</span><br><span class="line">        <span class="title function_">h</span>(com, &#123;</span><br><span class="line">          <span class="attr">props</span>: options?.<span class="property">props</span>,</span><br><span class="line">          <span class="attr">ref</span>: <span class="string">&#x27;child&#x27;</span>,</span><br><span class="line">        &#125;),</span><br><span class="line">        footer,</span><br><span class="line">      ])</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>挂载方法，将生成的弹窗挂载到指定的位置，如果没有指定位置，将插入到 body 中。</li>
+</ol>
+<p>其中 Vue.extend 方法，会接受一个组件，并返回该组件的构造器。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用于挂载</span></span><br><span class="line"><span class="keyword">const</span> dialogService = <span class="keyword">function</span> (<span class="params">com, options</span>) &#123;</span><br><span class="line">  <span class="comment">// 如果传入了 props</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title class_">DialogConstructor</span> = <span class="title class_">Vue</span>.<span class="title function_">extend</span>(hoc.<span class="title function_">call</span>(<span class="variable language_">this</span>, com, options))</span><br><span class="line">  <span class="comment">// 新实例</span></span><br><span class="line">  instance = <span class="keyword">new</span> <span class="title class_">DialogConstructor</span>()</span><br><span class="line">  <span class="comment">// 选择挂载的目标 =&gt; dom or body</span></span><br><span class="line">  <span class="keyword">let</span> target = <span class="variable language_">document</span>.<span class="property">body</span></span><br><span class="line">  <span class="comment">// 如果是选择器</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> options.<span class="property">el</span> === <span class="string">&#x27;string&#x27;</span>) &#123;</span><br><span class="line">    target = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(options.<span class="property">el</span>) || target</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 如果是 dom</span></span><br><span class="line">  <span class="keyword">if</span> (options.<span class="property">el</span> <span class="keyword">instanceof</span> <span class="title class_">HTMLElement</span>) &#123;</span><br><span class="line">    target = options.<span class="property">el</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 挂载</span></span><br><span class="line">  instance.$mount()</span><br><span class="line">  target.<span class="title function_">appendChild</span>(instance.<span class="property">$el</span>)</span><br><span class="line">  instance.<span class="property">visible</span> = <span class="literal">true</span></span><br><span class="line">  <span class="keyword">return</span> instance</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>这里提供两种输出， 一是 MyDialog 组件实例， 二是 $dialog 方法。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// dialog 服务</span></span><br><span class="line"><span class="keyword">const</span> $dialog = <span class="keyword">function</span> (<span class="params">component, options = &#123;&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> dialogService.<span class="title function_">call</span>(<span class="variable language_">this</span>, component, options)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// confirm 方法</span></span><br><span class="line">$dialog.<span class="property">confirm</span> = <span class="keyword">function</span> (<span class="params">component, options = &#123;&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> $dialog(component, options).<span class="title function_">handler</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// components</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">MyDialog</span> = <span class="title function_">hoc</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ? export what</span></span><br><span class="line"><span class="comment"> * 1. 直接可用的 component</span></span><br><span class="line"><span class="comment"> * 2. 生成 component 的函数</span></span><br><span class="line"><span class="comment"> * 3. $dialog</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> &#123; $dialog, <span class="title class_">MyDialog</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>最后，提供一个 install 方法，方便用 Vue.use() 安装到全局 Vue 的原型上。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//! 使用方式: $dialog 使用需要挂载到 Vue 实例, 以获取 this</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="comment">// for register</span></span><br><span class="line">  <span class="title function_">install</span>(<span class="params">Vue</span>) &#123;</span><br><span class="line">    <span class="title class_">Vue</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">$dialog</span> = $dialog</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，就可以直接调用 this.$dialog，而不需要在模板中写新元素了。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-%E7%BB%84%E4%BB%B6%E5%B0%81%E8%A3%85%E5%92%8C%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6-%E5%BC%B9%E7%AA%97%E5%B0%81%E8%A3%85/" title="实现：组件封装和高阶组件-弹窗" target="_blank" rel="external">https://laputaz.github.io/home/实现-组件封装和高阶组件-弹窗封装/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/%E5%9B%9E%E9%A1%BE-admin%E9%A1%B9%E7%9B%AE%E6%A2%B3%E7%90%86/" title="回顾-admin项目梳理"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0-%E4%BF%84%E8%AF%AD%E5%AD%97%E6%AF%8D%E5%92%8C%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" title="俄语笔记(一)：俄语字母和基础语法"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

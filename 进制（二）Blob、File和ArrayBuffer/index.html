@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    进制（二）：Blob、File、ArrayBuffer、DataView、TypedArray | laputa z
+  </title>
+  <meta name="description" content="js 的进制转换第二篇，Blob、File、ArrayBuffer、DataView、TypedArray。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进制（二）：Blob、File、ArrayBuffer、DataView、TypedArray">
+<meta property="og:url" content="https://laputaz.github.io/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89Blob%E3%80%81File%E5%92%8CArrayBuffer/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="js 的进制转换第二篇，Blob、File、ArrayBuffer、DataView、TypedArray。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/389747176961449db0289307a104e8fc.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/a0708a61825b49ec84ded67b4ee2d1d8.png">
+<meta property="article:published_time" content="2023-05-16T13:11:53.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="基础">
+<meta property="article:tag" content="手写">
+<meta property="article:tag" content="二进制">
+<meta property="article:tag" content="进制">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/389747176961449db0289307a104e8fc.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89Blob%E3%80%81File%E5%92%8CArrayBuffer/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-进制（二）Blob、File和ArrayBuffer" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      进制（二）：Blob、File、ArrayBuffer、DataView、TypedArray
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89Blob%E3%80%81File%E5%92%8CArrayBuffer/" class="article-date">
+	  <time datetime="2023-05-16T13:11:53.000Z" itemprop="datePublished">2023-05-16</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/javascript/" rel="tag">javascript</a>, <a class="article-tag-link-link" href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" rel="tag">二进制</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a>, <a class="article-tag-link-link" href="/home/tags/%E6%89%8B%E5%86%99/" rel="tag">手写</a>, <a class="article-tag-link-link" href="/home/tags/%E8%BF%9B%E5%88%B6/" rel="tag">进制</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89Blob%E3%80%81File%E5%92%8CArrayBuffer/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>js 的进制转换第二篇，Blob、File、ArrayBuffer、DataView、TypedArray。</p>
+<span id="more"></span>
+
+<p>上回说到，[js 中各个进制是怎么转换的](/home/进制（一） js的各种进制转换/)，接下来看看，二进制在 js 中的实际使用和如何操作。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>实际开发的过程中，调用后端接口下载文件一般有两种方式 (以 axios 为例)：</p>
+<ul>
+<li><p>一是后端存储文件，生成文件地址，前端拿到地址后打开，如</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 返回的 url 为文件地址 http://xxx.xxx.xlsx</span></span><br><span class="line">axios.<span class="title function_">post</span>(<span class="string">`<span class="subst">$&#123;BASE_URL&#125;</span>/api`</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// open</span></span><br><span class="line">  <span class="variable language_">window</span>.<span class="title function_">open</span>(res.<span class="property">url</span>)</span><br><span class="line">  <span class="comment">// location.href</span></span><br><span class="line">  location.<span class="property">href</span> = res.<span class="property">url</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>二是以二进制流的形式返回，此时响应头设置的 content-type 为 application/octet-stream：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">downloadFile</span> = (<span class="params">file, fileName = <span class="string">&#x27;filename.xlsx&#x27;</span></span>) =&gt; &#123;</span><br><span class="line">  <span class="comment">// 如果 response type 为 blob</span></span><br><span class="line">  <span class="keyword">let</span> blob = file</span><br><span class="line">  <span class="comment">// 如果 response type 为 arraybuffer，转换为 Blob</span></span><br><span class="line">  <span class="keyword">if</span> (file <span class="keyword">instanceof</span> <span class="title class_">ArrayBuffer</span>) &#123;</span><br><span class="line">    blob = <span class="keyword">new</span> <span class="title class_">Blob</span>([file])</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 创建URL对象</span></span><br><span class="line">  <span class="keyword">const</span> url = <span class="variable constant_">URL</span>.<span class="title function_">createObjectURL</span>(blob)</span><br><span class="line">  <span class="keyword">const</span> el = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">  el.<span class="property">href</span> = url</span><br><span class="line">  el.<span class="property">download</span> = fileName</span><br><span class="line">  el.<span class="title function_">click</span>()</span><br><span class="line">  <span class="comment">// 释放URL对象</span></span><br><span class="line">  <span class="variable constant_">URL</span>.<span class="title function_">revokeObjectURL</span>(url)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 返回二进制流</span></span><br><span class="line">axios</span><br><span class="line">  .<span class="title function_">post</span>(<span class="string">`<span class="subst">$&#123;BASE_URL&#125;</span>/api`</span>, &#123;</span><br><span class="line">    <span class="attr">responseType</span>: <span class="string">&#x27;blob&#x27;</span>, <span class="comment">// 或者 arraybuffer</span></span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">downloadFile</span>(res)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>这两种方式是很常用的</p>
+<p>那什么是 Blob 和 ArrayBuffer 呢，与很少见到的 DataView、TypedArray，或者 常见的 File 有什么关系呢</p>
+<h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><p>理了一下之间的关系，大致如下。</p>
+<img src="https://img-blog.csdnimg.cn/389747176961449db0289307a104e8fc.png" width=500/>
+
+<ul>
+<li>Blob、File、ArrayBuffer 可以归为一类，它们都是数据或者说缓冲区；</li>
+<li>FileReader 算是一种工具，用来读取数据；</li>
+<li>DataView、TypedArray 是一种视图，视图对象本身并不存储任何东西。它是一副“眼镜”，透过它来解释存储在 ArrayBuffer 中的字节。</li>
+</ul>
+<h2 id="Blob"><a href="#Blob" class="headerlink" title="Blob"></a>Blob</h2><p>Blob (binary large object,二进制大文件对象)。表示一个不可变、原始数据的类文件对象。<br>只可以 slice 拆分，不能进行细粒度的操作，细粒度的操作需要转换成 ArrayBuffer。</p>
+<p>创建：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> blobObj = <span class="keyword">new</span> <span class="title class_">Blob</span>(array, options)</span><br><span class="line"><span class="comment">// array：一堆数据构成的数组</span></span><br><span class="line"><span class="comment">//options：设置一些属性，主要是type属性</span></span><br></pre></td></tr></table></figure>
+
+<p>属性:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">size</span>:数据的字节大小（只读）</span><br><span class="line"><span class="attr">type</span>:数据的<span class="variable constant_">MIME</span>类型，例如<span class="string">&#x27;image/png&#x27;</span>（只读）</span><br></pre></td></tr></table></figure>
+
+<p>操作方法:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//start:分割起始点</span></span><br><span class="line"><span class="comment">//end: 分割终点</span></span><br><span class="line"><span class="title class_">Blob</span>.<span class="title function_">slice</span>(start, end)</span><br></pre></td></tr></table></figure>
+
+<h2 id="File"><a href="#File" class="headerlink" title="File"></a>File</h2><p>File 就是文件，继承自 Blob，也是二进制对象。（可以用在任意的 Blob 类型的 context 中。比如说，FileReader 就能处理 Blob 和 File）。<br>有自己特有的属性和方法，<input type="file"> 可以看到。</p>
+<p>创建，类似于 Blob:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// array：一堆数据构成的数组</span></span><br><span class="line"><span class="comment">// name: 文件名</span></span><br><span class="line"><span class="comment">// options：设置一些属性，type属性、lastModified</span></span><br><span class="line"><span class="keyword">let</span> file = <span class="keyword">new</span> <span class="title class_">File</span>(array, name, options)</span><br></pre></td></tr></table></figure>
+
+<p>常见属性:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name：文件名</span><br><span class="line">size：文件大小</span><br><span class="line">lastModified ：最后修改时间（时间戳）</span><br><span class="line"><span class="attr">lastModifiedDate</span>: 最后修改时间<span class="title class_">Data</span>对象</span><br><span class="line">type：<span class="variable constant_">MIME</span>类型</span><br></pre></td></tr></table></figure>
+
+<p>File 继承于 Blob，所以也拥有 slice 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">File</span>([<span class="number">1</span>], <span class="string">&#x27;a.js&#x27;</span>).<span class="title function_">slice</span>()</span><br></pre></td></tr></table></figure>
+
+<h2 id="ArrayBuffer"><a href="#ArrayBuffer" class="headerlink" title="ArrayBuffer"></a>ArrayBuffer</h2><p>ArrayBuffer 是内存上一段二进制数据，我们可以借助工具 TypeArray、DataView 对它进行读写。</p>
+<p>创建：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> buffer = <span class="keyword">new</span> <span class="title class_">ArrayBuffer</span>(<span class="number">16</span>) <span class="comment">// 创建一个长度为 16 字节的 buffer</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(buffer.<span class="property">byteLength</span>) <span class="comment">// 16</span></span><br></pre></td></tr></table></figure>
+
+<p>区别：</p>
+<ul>
+<li>ArrayBuffer 是底层二进制数据，可以视图 TypeArray、DataView 进行读写。</li>
+<li>而 Blob 是对底层二进制数据的封装，js 获取到的是一个整体，能够读取他的大小，类型，但是不能看到细节。</li>
+<li>Blob 作为一个整体文件，更适合用于传输；而只有需要关注细节（比如要修改某一段数据时），才需要用到 ArrayBuffer。</li>
+</ul>
+<p>ArrayBuffer 转 Blob</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 new Blob 即可把 ArrayBuffer 的二进制数据进行封装</span></span><br><span class="line"><span class="keyword">const</span> arraybuffer = <span class="keyword">new</span> <span class="title class_">ArrayBuffer</span>(<span class="number">16</span>)</span><br><span class="line"><span class="keyword">const</span> blob = <span class="keyword">new</span> <span class="title class_">Blob</span>([arraybuffer])</span><br><span class="line"><span class="comment">// Blob &#123;size: 16, type: &#x27;&#x27;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Blob 转 ArrayBuffer</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ArrayBuffer() 可以将 blob 转换成 ArrayBuffer</span></span><br><span class="line"><span class="keyword">const</span> blob = <span class="keyword">new</span> <span class="title class_">Blob</span>([<span class="number">1</span>])</span><br><span class="line"><span class="keyword">const</span> arraybuffer = <span class="keyword">await</span> blob.<span class="title class_">ArrayBuffer</span>()</span><br></pre></td></tr></table></figure>
+
+<h2 id="FileReader"><a href="#FileReader" class="headerlink" title="FileReader"></a>FileReader</h2><p>FileReader<br>通过 fileReader 可以将 Blob、File 读取为不同的格式，常见：</p>
+<ol>
+<li>将图片文件转换为 base64</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FileReader.readAsDataURL(blob 将二进制数据读取并编码为 Base64 格式</span></span><br><span class="line"><span class="keyword">var</span> file = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;input[type=file]&#x27;</span>).<span class="property">files</span>[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">var</span> reader = <span class="keyword">new</span> <span class="title class_">FileReader</span>()</span><br><span class="line"></span><br><span class="line">reader.<span class="property">onload</span> = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// base64</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(e.<span class="property">result</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 转换成 base64</span></span><br><span class="line">reader.<span class="title function_">readAsDataURL</span>(file)</span><br><span class="line"><span class="comment">// 也可以转换为 arraybuffer -----------------</span></span><br><span class="line">reader.<span class="title function_">readAsArrayBuffer</span>(file)</span><br></pre></td></tr></table></figure>
+
+<!--  -->
+
+<h2 id="TypedArray"><a href="#TypedArray" class="headerlink" title="TypedArray"></a>TypedArray</h2><p>TypedArray 没有直接的构造函数，常见的对他的实现有:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 下面代码是语法格式，不能直接运行，</span></span><br><span class="line"><span class="comment">// TypedArray 关键字需要替换为底部列出的构造函数。</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">TypedArray</span>(); <span class="comment">// ES2017中新增</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">TypedArray</span>(length);</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">TypedArray</span>(typedArray);</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">TypedArray</span>(object);</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">TypedArray</span>(buffer [, byteOffset [, length]]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// TypedArray 指的是以下的其中之一：</span></span><br><span class="line"><span class="title class_">Int8Array</span>();</span><br><span class="line"><span class="title class_">Uint8Array</span>();</span><br><span class="line"><span class="title class_">Uint8ClampedArray</span>();</span><br><span class="line"><span class="title class_">Int16Array</span>();</span><br><span class="line"><span class="title class_">Uint16Array</span>();</span><br><span class="line"><span class="title class_">Int32Array</span>();</span><br><span class="line"><span class="title class_">Uint32Array</span>();</span><br><span class="line"><span class="title class_">Float32Array</span>();</span><br><span class="line"><span class="title class_">Float64Array</span>();</span><br></pre></td></tr></table></figure>
+
+<p>Uint8Array —— 将 ArrayBuffer 中的每个字节视为 0 到 255 之间的单个数字(00000000 ~ 11111111)，称为 “8 位无符号整数”。<br>Uint16Array —— 将每 2 个字节视为一个 0 到 65535 之间的整数，称为 “16 位无符号整数”。<br>Uint32Array —— 将每 4 个字节视为一个 0 到 4294967295 之间的整数，称为 “32 位无符号整数”。<br>Float64Array —— 将每 8 个字节视为一个 5.0x10-324 到 1.8x10308 之间的浮点数。</p>
+<img src="https://img-blog.csdnimg.cn/a0708a61825b49ec84ded67b4ee2d1d8.png" width=500/>
+
+<p>因此，一个 16 字节 ArrayBuffer 中的二进制数据可以解释为：</p>
+<ul>
+<li>16 个“小数字”</li>
+<li>8 个更大的数字（每个数字 2 个字节）</li>
+<li>4 个更大的数字（每个数字 4 个字节）</li>
+<li>2 个高精度的浮点数（每个数字 8 个字节）。</li>
+</ul>
+<p>实例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = <span class="keyword">new</span> <span class="title class_">Uint8Array</span>([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line"><span class="title function_">alert</span>(arr.<span class="property">length</span>) <span class="comment">// 4，创建了相同长度的二进制数组</span></span><br><span class="line"><span class="title function_">alert</span>(arr[<span class="number">1</span>]) <span class="comment">// 1，用给定值填充了 4 个字节（无符号 8 位整数）</span></span><br></pre></td></tr></table></figure>
+
+<p>TypedArray 具有常规的 Array 方法，可以遍历（iterate），map，slice，find 和 reduce 等。<br>但没有 splice —— 无法“删除”一个值，因为类型化数组是缓冲区（buffer）上的视图，并且缓冲区（buffer）是固定的、连续的内存区域。我们所能做的就是分配一个零值。<br>也没有 concat 方法。</p>
+<h2 id="以上"><a href="#以上" class="headerlink" title="以上"></a>以上</h2><p>下一篇：运用 <a href="/home/%E8%BF%9B%E5%88%B6-%E5%88%A9%E7%94%A8%E4%BA%8C%E8%BF%9B%E5%88%B6%E8%A7%A3%E7%A0%81wbmp%E5%B9%B6%E8%BD%AC%E6%8D%A2%E4%B8%BApng%E5%9B%BE%E7%89%87/">进制（四）：利用二进制解码 wbmp 并转换为 png 图片</a></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89Blob%E3%80%81File%E5%92%8CArrayBuffer/" title="进制（二）：Blob、File、ArrayBuffer、DataView、TypedArray" target="_blank" rel="external">https://laputaz.github.io/home/进制（二）Blob、File和ArrayBuffer/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%B8%89%EF%BC%89hex%E5%92%8Crgb%E8%89%B2%E5%80%BC%E5%92%8C%E8%BD%AC%E6%8D%A2/" title="进制（三）：hex/rgb/hsl 色值, 实现转换工具"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89%20js%E7%9A%84%E5%90%84%E7%A7%8D%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" title="进制（一）：js 中的各种进制转换"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

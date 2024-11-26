@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    vue-高阶组件 | laputa z
+  </title>
+  <meta name="description" content="As being evident from the discussion above, implementing HoCs in Vue isn&#39;t as trivial as in React because Vue&#39;s API and functionality is broader and more edge cases have to be taken care of. 灵">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue-高阶组件">
+<meta property="og:url" content="https://laputaz.github.io/home/vue-%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="As being evident from the discussion above, implementing HoCs in Vue isn&#39;t as trivial as in React because Vue&#39;s API and functionality is broader and more edge cases have to be taken care of. 灵">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-06T15:31:57.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.887Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="基础">
+<meta property="article:tag" content="手写">
+<meta property="article:tag" content="vue">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/vue-%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-vue-高阶组件" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      vue-高阶组件
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/vue-%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" class="article-date">
+	  <time datetime="2020-05-06T15:31:57.000Z" itemprop="datePublished">2020-05-06</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/javascript/" rel="tag">javascript</a>, <a class="article-tag-link-link" href="/home/tags/vue/" rel="tag">vue</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a>, <a class="article-tag-link-link" href="/home/tags/%E6%89%8B%E5%86%99/" rel="tag">手写</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/vue-%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>As being evident from the <a target="_blank" rel="noopener" href="https://github.com/vuejs/vue/issues/6201#issuecomment-349008555">discussion above</a>, implementing HoCs in Vue isn&#39;t as trivial as in React because Vue&#39;s API and functionality is broader and more edge cases have to be taken care of.</p>
+<h1 id="灵感来源"><a href="#灵感来源" class="headerlink" title="灵感来源"></a>灵感来源</h1><p>开发 admin-ui 组件</p>
+<p><a target="_blank" rel="noopener" href="https://knpm.klk.io/-/web/detail/@klk/admin-ui">https://knpm.klk.io/-/web/detail/@klk/admin-ui</a></p>
+<p>本文也会以封装 element 组件为例</p>
+<h1 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h1><p>封装一个成熟的组件，并达成以下几点</p>
+<ul>
+<li>传递给 HOC 的参数能正常传递给原组件</li>
+<li>传递给 HOC 的事件能正常绑定到原组件</li>
+<li>给 HOC 传递的 slot 能正常传递给原组件</li>
+<li>HOC 内部能获取到从父组件传递的参数、事件、slot，并针对 HOC 的目标开发自定义功能</li>
+</ul>
+<h1 id="开发方式"><a href="#开发方式" class="headerlink" title="开发方式"></a>开发方式</h1><h2 id="v-bind-quot-attrs-quot-v-on-quot-listeners-quot"><a href="#v-bind-quot-attrs-quot-v-on-quot-listeners-quot" class="headerlink" title="v-bind=&quot;$attrs&quot;, v-on=&quot;$listeners&quot;"></a>v-bind=&quot;$attrs&quot;, v-on=&quot;$listeners&quot;</h2><ul>
+<li>通过对原组件 v-bind=&quot;$attrs&quot;, v-on=&quot;$listeners&quot; 将从父组件传递的参数和事件原样传递给原组件：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- parent.vue --&gt;</span><br><span class="line">&lt;my-hoc</span><br><span class="line">  :data=&quot;tableData&quot;</span><br><span class="line">  :border=&quot;true&quot;</span><br><span class="line">  @select=&quot;handleSelect&quot;</span><br><span class="line">  @select-all=&quot;handleSelectAll&quot;</span><br><span class="line">/&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- myHoc.vue --&gt;</span><br><span class="line">&lt;el-table</span><br><span class="line">  v-bind=&quot;$attrs&quot;</span><br><span class="line">  v-on=&quot;$listeners&quot;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>从 parent.vue 传递的参数 data, border 和事件 select, select-all 会原样传递给 el-table</p>
+<ul>
+<li>如果不想把从父组件传递的参数或事件全都传递给原组件，需要做部分筛选，可以使用计算属性 computed：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- myHoc.vue --&gt;</span><br><span class="line">&lt;el-table</span><br><span class="line">  v-bind=&quot;tableProps&quot;</span><br><span class="line">  v-on=&quot;tableListeners&quot;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">export default &#123;</span><br><span class="line">  computed: &#123;</span><br><span class="line">    tableProps() &#123;</span><br><span class="line">      const &#123;</span><br><span class="line">        data</span><br><span class="line">      &#125; = this.$attrs</span><br><span class="line">      return &#123;</span><br><span class="line">        data</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    tableListeners() &#123;</span><br><span class="line">      const &#123;</span><br><span class="line">        select</span><br><span class="line">      &#125; = this.$listeners</span><br><span class="line">      return &#123;</span><br><span class="line">        select</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果同时对原组件传递 $attrs 和与 $attrs 的某个 key 重名的参数，HOC 传递的参数优先级高于父组件：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- parent.vue --&gt;</span><br><span class="line">&lt;my-hoc</span><br><span class="line">  :data=&quot;tableData&quot;</span><br><span class="line">/&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- myHoc.vue --&gt;</span><br><span class="line">&lt;el-table</span><br><span class="line">  v-bind=&quot;$attrs&quot;</span><br><span class="line">  :data=&quot;myData&quot;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>el-table 会取从 HOC 传递的 myData</p>
+<ul>
+<li>如果同时对原组件传递 $listeners 和与 $listeners 的某个 key 重名的事件，原组件触发事件时，这两个函数都会调用，HOC 传递的事件函数执行顺序优先级高于父组件传递的事件函数：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- parent.vue --&gt;</span><br><span class="line">&lt;my-hoc</span><br><span class="line">  :select=&quot;handleSelect&quot;</span><br><span class="line">/&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- myHoc.vue --&gt;</span><br><span class="line">&lt;el-table</span><br><span class="line">  v-on=&quot;$listeners&quot;</span><br><span class="line">  @select=&quot;myHandleSelect&quot;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当 el-table 触发 select 事件时，先触发函数 myHandleSelect，后触发函数 handleSelect</p>
+<ul>
+<li>将从父组件传递的 slot 传递给原组件：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- parent.vue --&gt;</span><br><span class="line">&lt;my-hoc&gt;</span><br><span class="line">  &lt;template #mySlot&gt;</span><br><span class="line">    &lt;h1&gt;el-table Slot Append&lt;/h1&gt;</span><br><span class="line">  &lt;/template&gt;</span><br><span class="line">&lt;/my-hoc&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- myHoc.vue --&gt;</span><br><span class="line">&lt;el-table&gt;</span><br><span class="line">  &lt;template #append&gt;</span><br><span class="line">    &lt;slot name=&quot;mySlot&quot; /&gt;</span><br><span class="line">  &lt;/template&gt;</span><br><span class="line">&lt;/el-table&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这里会将从父组件传递的名为 mySlot 的 slot 传递给 el-table 的 append slot，mySlot 的命名可自定义</p>
+<ul>
+<li><p>如果需要在 HOC 组件内以 this.xxxProp 的方式调用从父组件传递的参数，则需要在 HOC 内定义对应的 prop，否则只能以 this.$attrs.xxxProp 的方式调用。在 HOC 内定义了 prop 后，指定参数会从 HOC 的 $attrs 中转移到 $props，此时需要注意给 el-table 手动传参。</p>
+</li>
+<li><p>根据 HOC 需要灵活设置 HOC 组件参数 <a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/api/#inheritAttrs">inheritAttrs</a></p>
+</li>
+</ul>
+<h2 id="此方式的优劣"><a href="#此方式的优劣" class="headerlink" title="此方式的优劣"></a>此方式的优劣</h2><p><strong>优点</strong></p>
+<ul>
+<li>代码风格较简洁</li>
+<li>易于理解，便于维护</li>
+<li>Vue 官方推荐的写 HOC 时原样传递参数和事件的方式，容错率较高</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>参数在 $attrs 和 $props 之间的切换可能会很频繁</li>
+<li>事件修饰符无法传递，需要以其它方式替代</li>
+<li>需要按照原组件的 slot 定义，逐个在 HOC 模版内如数定义一遍，slot 数量多时会引出较多代码量</li>
+</ul>
+<p><strong>相关资料</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/api/#vm-attrs">https://cn.vuejs.org/v2/api/#vm-attrs</a></li>
+<li><a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/api/#vm-listeners">https://cn.vuejs.org/v2/api/#vm-listeners</a></li>
+<li><a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/api/#inheritAttrs">https://cn.vuejs.org/v2/api/#inheritAttrs</a></li>
+<li><a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/components-props.html#%E7%A6%81%E7%94%A8-Attribute-%E7%BB%A7%E6%89%BF">禁用 Attribute 继承</a></li>
+<li><a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/render-function.html#%E5%90%91%E5%AD%90%E5%85%83%E7%B4%A0%E6%88%96%E5%AD%90%E7%BB%84%E4%BB%B6%E4%BC%A0%E9%80%92-attribute-%E5%92%8C%E4%BA%8B%E4%BB%B6">向子元素或子组件传递 attribute 和事件</a></li>
+<li><a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/components-custom-events.html#%E5%B0%86%E5%8E%9F%E7%94%9F%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A%E5%88%B0%E7%BB%84%E4%BB%B6">将原生事件绑定到组件</a></li>
+</ul>
+<h2 id="-1"><a href="#-1" class="headerlink" title=""></a></h2><h2 id="渲染函数-h-createElement"><a href="#渲染函数-h-createElement" class="headerlink" title="渲染函数 h() / createElement()"></a>渲染函数 h() / createElement()</h2><ul>
+<li>Vue 组件的选项之一，使用方式入口 <a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/render-function.html#createElement-%E5%8F%82%E6%95%B0">h()</a>，使用前墙裂建议先熟悉一下 <a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/render-function.html#%E5%9F%BA%E7%A1%80">基础</a></li>
+<li>适合场景：需要 JavaScript 的完全编程的能力</li>
+<li>关于渲染函数的介绍和使用，vue 官方文档已经介绍的比较全面，这里再介绍一些关于插槽的使用，也是我开发时花了比较多时间去理解的</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  // Vue 官方文档关于插槽相关属性的介绍：</span><br><span class="line">  // 作用域插槽的格式为</span><br><span class="line">  // &#123; name: props =&gt; VNode | Array&lt;VNode&gt; &#125;</span><br><span class="line">  scopedSlots: &#123;</span><br><span class="line">    default: props =&gt; createElement(&#x27;span&#x27;, props.text)</span><br><span class="line">  &#125;,</span><br><span class="line">  // 如果组件是其它组件的子组件，需为插槽指定名称</span><br><span class="line">  slot: &#x27;name-of-slot&#x27;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>属性 slot:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;h1 v-slot:myslot&gt;我是 mySlot&lt;/h1&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>用 h() 对这个组件渲染，有多种方式，这里介绍使用到属性 slot 的方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">h(</span><br><span class="line">  &#x27;div&#x27;,</span><br><span class="line">  [</span><br><span class="line">    h(</span><br><span class="line">      &#x27;h1&#x27;,</span><br><span class="line">      &#123;</span><br><span class="line">        slot: &#x27;myslot&#x27;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#x27;我是 myslot&#x27;</span><br><span class="line">    )</span><br><span class="line">  ]</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>思路：定义当前组件时，告诉这个组件它是它的父组件里面插槽名为 slot 对应值的内容</p>
+<p><strong>属性 scopedSlots:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;h1 v-slot:myslot1&gt;我是 myslot1&lt;/h1&gt;</span><br><span class="line">  &lt;template v-slot:myslot2&gt;</span><br><span class="line">    &lt;h2&gt;我是 myslot2 的 h2&lt;/h2&gt;</span><br><span class="line">    &lt;h3&gt;我是 myslot2 的 h3&lt;/h3&gt;</span><br><span class="line">  &lt;/template&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>用 h() 对这个组件渲染，有多种方式，这里介绍使用到属性 scopedSlots 的方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">h(</span><br><span class="line">  &#x27;div&#x27;,</span><br><span class="line">  &#123;</span><br><span class="line">    scopedSlots: &#123;</span><br><span class="line">      myslot1: (props) =&gt; h(&#x27;h1&#x27;, &#x27;我是 myslot1&#x27;),</span><br><span class="line">      myslot2: (props) =&gt; [</span><br><span class="line">        h(&#x27;h2&#x27;, &#x27;我是 myslot2 的 h2&#x27;)</span><br><span class="line">        h(&#x27;h3&#x27;, &#x27;我是 myslot2 的 h3&#x27;)</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>思路：定义当前组件时，告诉这个组件它的各个 scopedSlots key 对应的内容分别要渲染什么</p>
+<p>总结：可以理解为一个是被动，一个是主动</p>
+<ul>
+<li>插槽命名 <strong>不要</strong> 用驼峰式命名，有 bug</li>
+</ul>
+<h2 id="此方式的优劣-1"><a href="#此方式的优劣-1" class="headerlink" title="此方式的优劣"></a>此方式的优劣</h2><p><strong>优点</strong></p>
+<ul>
+<li>还是那句话，发挥了 Javascript 的编程能力，编程自由度高</li>
+<li>相比上一种方式，在插槽方面的处理，要优秀的很多，因为可以用编程的方式批量处理，同样，其它属性的赋值也可批量处理</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>代码较冗长，不方便维护，开发成本较高</li>
+<li>要替代模版中的 <a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/render-function.html#v-model">v-model</a> 指令，代价很大，因为不同表单组件的方式可能不一样，容易写出 bug，有点类似于开发 react 的受控组件和非受控组件的感觉</li>
+<li>类似于 v-model ，部分<a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/render-function.html#%E4%BA%8B%E4%BB%B6-amp-%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6">事件修饰符</a>也需要手动实现，也有部分是 vue 有<a target="_blank" rel="noopener" href="https://vuejs.org/v2/guide/render-function.html#Event-amp-Key-Modifiers">提供捷径的</a></li>
+</ul>
+<p><strong>相关资料</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/guide/render-function.html">渲染函数 &amp; JSX</a></li>
+</ul>
+<h2 id="JSX-To-Be-Completed……"><a href="#JSX-To-Be-Completed……" class="headerlink" title="JSX ( To Be Completed…… )"></a>JSX ( To Be Completed…… )</h2>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/vue-%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" title="vue-高阶组件" target="_blank" rel="external">https://laputaz.github.io/home/vue-高阶组件/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/css%E9%97%AE%E9%A2%98-ios%E7%AB%AFinput%E6%97%A0%E6%B3%95%E8%87%AA%E5%8A%A8%E8%81%9A%E7%84%A6%E8%A7%A3%E5%86%B3/" title="css问题：safari 下 input 无法自动聚焦解决"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/js-%E5%8D%83%E5%88%86%E4%BD%8D%E9%80%97%E5%8F%B7%E5%88%86%E9%9A%94/" title="js-千分位逗号分隔"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

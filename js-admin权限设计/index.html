@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    js-admin权限设计 | laputa z
+  </title>
+  <meta name="description" content="admin 的权限设计方案">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js-admin权限设计">
+<meta property="og:url" content="https://laputaz.github.io/home/js-admin%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="admin 的权限设计方案">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static.slab.com/prod/uploads/posts/images/KsfuDQw-m7M2tN8nEw9qUt4y.png">
+<meta property="og:image" content="https://static.slab.com/prod/uploads/posts/images/TBz3tQoidXG98M-mw0DFMZum.png">
+<meta property="og:image" content="https://static.slab.com/prod/uploads/posts/images/qc_iaCp7FBY6eAWcagAgfvYL.png">
+<meta property="article:published_time" content="2021-10-04T15:48:14.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="回顾">
+<meta property="article:tag" content="方案设计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static.slab.com/prod/uploads/posts/images/KsfuDQw-m7M2tN8nEw9qUt4y.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/js-admin%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-js-admin权限设计" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js-admin权限设计
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/js-admin%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1/" class="article-date">
+	  <time datetime="2021-10-04T15:48:14.000Z" itemprop="datePublished">2021-10-04</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/javascript/" rel="tag">javascript</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9B%9E%E9%A1%BE/" rel="tag">回顾</a>, <a class="article-tag-link-link" href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" rel="tag">方案设计</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/js-admin%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>admin 的权限设计方案</p>
+<span id="more"></span>
+
+<h1 id="当前权限系统设计（RBAC）"><a href="#当前权限系统设计（RBAC）" class="headerlink" title="当前权限系统设计（RBAC）"></a><strong>当前权限系统设计（RBAC）</strong></h1><p>Admin 系统采用了一套 Role Based Access Control（RBAC）设计方案，其中 Access 是代码中实际进行权限判断的信息，Role 是为了便捷的分配一组权限而设置的。</p>
+<p><img src="https://static.slab.com/prod/uploads/posts/images/KsfuDQw-m7M2tN8nEw9qUt4y.png"></p>
+<h2 id="当前问题："><a href="#当前问题：" class="headerlink" title="当前问题："></a>当前问题：</h2><h3 id="权限定义"><a href="#权限定义" class="headerlink" title="权限定义"></a>权限定义</h3><ul>
+<li>权限用于控制页面和功能的交互，但粒度标准不一致，且权限之间关系没有考虑在内</li>
+</ul>
+<h3 id="角色分配"><a href="#角色分配" class="headerlink" title="角色分配"></a>角色分配</h3><ul>
+<li>角色描述不清晰，难以被理解</li>
+</ul>
+<h3 id="申请"><a href="#申请" class="headerlink" title="申请"></a>申请</h3><ul>
+<li>申请流程不标准</li>
+<li>申请人不清楚该申请的角色</li>
+<li>申请人申请的角色缺少审批&amp;管控</li>
+<li>只有 Camila 可以进行账户管理，工作量大</li>
+</ul>
+<h3 id="新功能权限-角色创建"><a href="#新功能权限-角色创建" class="headerlink" title="新功能权限/角色创建"></a>新功能权限/角色创建</h3><ul>
+<li>权限和角色定义模糊，创建的思路不统一</li>
+<li>新功能权限的创建比较随意，没有规范流程</li>
+<li>权限和角色的创建人(开发)和使用人(需求方)分割，导致创建后难以分配和管理</li>
+</ul>
+<h3 id="权限系统理解"><a href="#权限系统理解" class="headerlink" title="权限系统理解"></a>权限系统理解</h3><ul>
+<li>admin 权限系统没有在公司内形成一致的理解，权限/角色概念不清晰</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li>新用户/离职权限管理</li>
+</ul>
+<p>ref: <a target="_blank" rel="noopener" href="https://docs.google.com/spreadsheets/d/1U2WDfE0lErRsw4Tq7dtJguAF5jhx9meuID0WG3RrgJQ/edit#gid=837650046">需求列表</a></p>
+<h2 id="主要改动"><a href="#主要改动" class="headerlink" title="主要改动"></a>主要改动</h2><ul>
+<li>规范权限/角色概念， 添加 <code>用户组</code> 概念， 添加 <code>权限管理人 角色</code></li>
+<li>规范申请权限，人事变动，上线新功能的权限管理流程</li>
+<li>整理现有权限/角色，规范 开发/用户/PM/管理人 责任划分</li>
+<li>建立 <code>权限管理人</code> 白名单</li>
+<li>完善 admin 权限管理功能， 添加几个新的功能页面</li>
+</ul>
+<h2 id="未来期望场景"><a href="#未来期望场景" class="headerlink" title="未来期望场景"></a>未来期望场景</h2><h3 id="权限申请流程："><a href="#权限申请流程：" class="headerlink" title="权限申请流程："></a>权限申请流程：</h3><p>除了 Camila 之外建立代理机制，可以让每个模块/业务团队单独分配角色</p>
+<p>在新的申请流程里面， 申请人只需要找到对应权限管理人申请既可</p>
+<h3 id="添加新权限-角色流程："><a href="#添加新权限-角色流程：" class="headerlink" title="添加新权限/角色流程："></a>添加新权限/角色流程：</h3><ul>
+<li>由 PM 在设计需求的时候同时设计，然后同步给需求方以及开发， 开发按照 PM 设计的需求开发对应的权限</li>
+<li>需求上线时，新角色分配给权限管理员，然后由权限管理员分配角色给用户组或用于</li>
+</ul>
+<h2 id="新责任划分"><a href="#新责任划分" class="headerlink" title="新责任划分"></a>新责任划分</h2><ul>
+<li><strong>权限代理人</strong>： 拥有<del>团队</del>的权限，拥有一些权限可以自己分配，可以拥有用户组的管理能力，负责在团队有新的人员/权限的时候进行分配，权限管理人的权限变动可以其他管理人或者 PM</li>
+<li><strong>PM</strong>：对应业务部分相关权限的负责人，上线新需求的时候按标准设计新的角色和权限并给到对应业务组和开发，对已有权限进行维护和整理。</li>
+<li><strong>admin 开发</strong>： 开发负责角色的对应权限的开发，以及在角色制定的时候进行 review</li>
+<li><strong>业务团队/用户</strong>： 业务团队在人事变动和业务改动的情况下寻求权限管理人去管理对应权限</li>
+<li>用户组管理人： 用户组管理人可以管理用户组，这个角色可能是权限管理员，也可以是管理员分配</li>
+</ul>
+<h1 id="权限相关设计方案"><a href="#权限相关设计方案" class="headerlink" title="权限相关设计方案"></a><strong>权限相关设计方案</strong></h1><h2 id="权限（Access）"><a href="#权限（Access）" class="headerlink" title="权限（Access）"></a><strong>权限（Access）</strong></h2><ul>
+<li>权限的作用</li>
+</ul>
+<p><strong>权限是代码中实质的管控目标。</strong>用户在 Admin 页面中是否有查看和操作权限，完全由权限来控制。但是对于用户而言权限是透明的，通常用户知道自己拥有什么角色，不必知道自己有什么权限。</p>
+<ul>
+<li>创建职责</li>
+</ul>
+<p>对于新开发的功能或模块，PM 提交权限设计，Admin 团队评审。</p>
+<ul>
+<li>设计标准</li>
+</ul>
+<p><strong>通常页面访问和页面内需要做访问控制的最小粒度功能</strong>，可以被设计为一个权限。例如一个页面中含有一张表格，可以对表格中的记录进行增删改查，则对应的潜在权限为：页面访问权限（控制展示页面入口）、表格查看权限、表格中记录的操作权限：删除、添加、修改。如果需要针对表格中的内容进行进一步的限制，用户根据自己的权限只能访问符合特定条件的记录，例如只能访问特定国家地区的记录，则这一类权限控制不在这一部分，我们将另辟章节讨论。</p>
+<pre><code>1. 权限类型：Admin系统权限是前端权限，既按前端使用思维设计
+1. 命名规范
+    1. 采取类似目录层级形式的命名方式，属于同一模块、同一页面的权限，阅读名字可知
+    1. 通过名称能看出去权限的大致类型（页面、操作、内容等），用词多用xxx_page, manage, view, cancel, delete 等。
+1. 权限分类：页面（目录）访问权限 和 页面内权限（例如功能权限）&amp;amp; 内容权限
+1. 权限关系：页面内权限继承页面访问权限，例如页面中某个功能提交权限自动继承页面访问权限
+1. 权限粒度
+    - 权限不跨页面
+    - 设计时页面访问和页面内操作尽量分开，避免权限过大需要拆分
+</code></pre>
+<p>订单模块的权限示例：</p>
+<table>
+<thead>
+<tr>
+<th>权限名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>booking/booking_tasks_page</td>
+<td>booking 模块 booking tasks 页面的访问权限</td>
+</tr>
+<tr>
+<td>booking/booking_tasks_page/manage</td>
+<td>booking 模块 booking tasks 页面内 tasks 管理权限</td>
+</tr>
+<tr>
+<td>booking/order_summary_page/fraud_recovery/manage</td>
+<td>booking 模块 order summary 页面里 fraud 恢复的管理权限</td>
+</tr>
+</tbody></table>
+<ul>
+<li>审计和维护</li>
+</ul>
+<p>维护职责：Admin 系统开发人员</p>
+<p>权限相对变动少，需要定期评估的有：</p>
+<pre><code>1. 定期报告检查和清理未使用权限
+1. 收集反馈拆分过大权限、或添加缺失的权限控制
+1. 根据内审团队提供的权限关系表，审核是有账号同时有用有冲突的两个权限（有些权限因为业务原则，不能被同一账户同时拥有）
+</code></pre>
+<h2 id="角色（Role）"><a href="#角色（Role）" class="headerlink" title="角色（Role）"></a><strong>角色（Role）</strong></h2><ol>
+<li>角色的作用</li>
+</ol>
+<p><em>角色</em>是向账户分配权限的最小单位，角色是一组<em>权限</em>的集合。我们不直接向账户分配权限，而是向其分配角色。通常权限多且散碎，角色一组相关权限整理到一起，需求方只需理解到角色的含义。</p>
+<ol>
+<li>创建职责</li>
+</ol>
+<p>PM 根据产品交互流程/操作流创建角色，Admin 系统开发人员 review</p>
+<ol>
+<li>设计标准</li>
+</ol>
+<blockquote>
+<p>在我们设计中，角色与用例（Use Case）直接相关，包含一个用例中所有步骤涉及的一组权限。</p>
+</blockquote>
+<pre><code>1. 角色类型：是功能角色，而不是用户职位。例如角色是财务对账单审核者，而不是财务总监
+1. 命名规范
+    - 与Access的目录式名称不同，权限名称字符串中词语用下划线&amp;#39;_&amp;#39;连接
+    - 能看出所属模块（模块命名空间）
+    - 避免使用用户职位名称（如LOC PM），应该用系统角色名称（LOC Request Manager)
+    - 名称中建议使用manager/editor/viewer/operator等尾缀
+1. 角色粒度
+    - 角色不跨模块
+    - 角色是按照用例的交互流程来设定，完成一个用例中所有操作需要的权限可以设为一个角色（完备性）
+    - 多数情况下用例的设置比较自然且显而易见，但也有写情况下，用例可大可小，是否进一步拆分用例原则为，如果理论上一个用例中有部分操作与整体操作需要进行不同的权限控制，则应该拆分用例，并设置不同角色。例如，有些数据表的相关用例只有两个，即view和manage。但有些业务场景需要对manage部分进行进一步拆分，例如需要拆出一个create用例仅仅负责插入记录，然后manage进行所有的管理操作。
+</code></pre>
+<p>订单模块的角色示例：</p>
+<table>
+<thead>
+<tr>
+<th>角色名称</th>
+<th>对应权限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>booking_booking_tasks_viewer</td>
+<td>booking/booking_tasks_page</td>
+</tr>
+<tr>
+<td>booking_booking_tasks_manager</td>
+<td>booking/booking_tasks_page booking/booking_tasks_page/manage</td>
+</tr>
+<tr>
+<td>booking_fraud_recovery_viewer</td>
+<td>booking/order_summary_page booking/order_summary_page/fraud_recovery/view</td>
+</tr>
+<tr>
+<td>booking_fraud_recovery_manager</td>
+<td>booking/order_summary_page booking/order_summary_page/fraud_recovery/view booking/order_summary_page/fraud_recovery/manage</td>
+</tr>
+</tbody></table>
+<ol>
+<li>审计和维护<ol>
+<li>维护职责：相关模块的 PM</li>
+<li>角色作为权限和用户中间一层抽象，变化会比较多，尤其是考虑到设计的标准本身很难严格细致：<ul>
+<li>定期报告检查和清理未使用角色</li>
+<li>定期检查过大过小角色，看是否有拆分和合并的可能</li>
+<li>定级检查角色查看是否其中含有互相冲突的权限（有些权限因为业务原则，不能被同一账户同时拥有）</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h1 id="账户相关设计方案"><a href="#账户相关设计方案" class="headerlink" title="账户相关设计方案"></a><strong>账户相关设计方案</strong></h1><h2 id="账户（User-Account）"><a href="#账户（User-Account）" class="headerlink" title="账户（User Account）"></a><strong>账户（User Account）</strong></h2><ol>
+<li>账户的作用</li>
+<li>用来登录 Admin 系统，最终所有角色分配的对象，以及权限管控对象。</li>
+<li>创建职责</li>
+<li>klk 员工：员工自行创建。使用 klk 账户初次登录 Admin 系统，会自动创建 Admin 系统账户。</li>
+<li>非 klk 员工：Camila 和账户所有者。Camila 加白名单，账户所有者初次登录 Admin 系统创建账户。</li>
+<li>设计标准</li>
+<li>难点是能否约束尽可能多的账户都有所属部门信息。对于有所属部门信息的账户，就可以由部门的权限管理员对其进行部分权限管理（分配用户组）。</li>
+<li>审计和维护</li>
+<li>账户的审计和维护主要是指关闭账户操作。</li>
+<li>维护职责：Camila 和各部门权限管理人员</li>
+<li>主要工作内容：<ol>
+<li>按部门定期出报告或者有页面可以查询到 部门内账户情况，审查是否所有账户需要关闭</li>
+<li>关闭时需要清除所有的权限</li>
+<li>非 LOOK 员工账户关闭时需要移出白名单</li>
+<li>？关闭账户操作最终由各部门权限管理员执行，还是 Camila 执行？</li>
+</ol>
+</li>
+</ol>
+<h2 id="用户组（User-Group"><a href="#用户组（User-Group" class="headerlink" title="用户组（User Group)"></a><strong>用户组（User Group)</strong></h2><ol>
+<li>用户组的作用<ol>
+<li>按岗位职责，定义一组常用的角色，便捷的分配给账户</li>
+<li>部门权限管理员有权限将部门内用户，加入到部门里的所拥有的用户组</li>
+</ol>
+</li>
+<li>创建职责</li>
+</ol>
+<p>各部门权限管理员，根据团队内岗位和职责定义用户组。</p>
+<ol>
+<li>设计标准<ol>
+<li>用户组类型：是用户职位，而不是系统角色。例如职位是翻译项目经理，而不是翻译请求管理者</li>
+<li>命名规范：尽量使用职位进行命名</li>
+<li>用户组关系：用户组属于部门（部门信息不完善的过渡期内，用户组属于部门权限管理员），部门有层级关系，上级部门拥有下属部门的所有用户组；以职位常用为标准，将一组角色分配给用户组，这些角色可以跨功能模块。</li>
+<li>用户组粒度：用户组不能跨部门，例如两个部门都需要项目经理，但是需要两个不同用户组</li>
+</ol>
+</li>
+<li>审计和维护</li>
+<li>维护职责：各部门权限管理人员</li>
+<li>维护内容分为三块：<ol>
+<li>定期报告，将不再需要相关权限的用户，移除相应用户组</li>
+<li>定期报告，检查是否需要拆分、合并、新建、删除用户组</li>
+<li>定期报告，检查是否需要调整用户组的角色，调整用户组角色时可能也要相应调整对应用户的角色。例如某个角色并非用户组通用，只有少数用户需要，从中移除后需要为少数用户单独加上这些角色</li>
+</ol>
+</li>
+</ol>
+<h2 id="部门（Department-Division"><a href="#部门（Department-Division" class="headerlink" title="部门（Department/Division)"></a><strong>部门（Department/Division)</strong></h2><ol>
+<li>部门的作用<ol>
+<li>约束部门权限管理员能管理的用户组，所有的用户组都归属于某个部门</li>
+<li>约束用户组可被分配给的用户，所有用户（或有特例）都有部门信息，所有部门都有权限管理员，后者可为前者分配用户组</li>
+</ol>
+</li>
+<li>创建职责</li>
+<li>从 workday 中传入，从 workday 的部门层级中挑选某一级或者某几级作为 Admin 权限系统的部门。<ol>
+<li>初期通过 RaaS，每日更新</li>
+<li>后期通过 API 实时获取</li>
+</ol>
+</li>
+<li>设计标准<ol>
+<li>部门类型：用户从 HR 角度的部门信息，部门权限管理员类似于 BLM</li>
+<li>部门关系：<ul>
+<li>部门有指定的权限管理员（可多值）</li>
+<li>用户组属于部门</li>
+<li>用户属于部门，部门有层级关系</li>
+<li>部门有权限管理员有权分配本部门的用户组给本部门的用户</li>
+<li>通过审批流程，Camila 有权限分配任意用户组给任意用户</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>审计和维护</li>
+<li>维护职责：各部门权限管理人员</li>
+<li>有了部门之后可以做一些相关审计：<ol>
+<li>本部门用户拥有的非本部门用户组报告</li>
+<li>非本部门用户拥有的本部门用户组报告</li>
+</ol>
+</li>
+</ol>
+<h1 id="分阶段计划"><a href="#分阶段计划" class="headerlink" title="分阶段计划"></a><strong>分阶段计划</strong></h1><h2 id="Step-1-项目开展的前提——整理现有权限和角色（订单模块）"><a href="#Step-1-项目开展的前提——整理现有权限和角色（订单模块）" class="headerlink" title="Step 1 - 项目开展的前提——整理现有权限和角色（订单模块）"></a><strong>Step 1 - 项目开展的前提——整理现有权限和角色（订单模块）</strong></h2><p>在这一步，制定权限和角色的设计标准，按这个标准清理现有权限和角色，并加上合理的描述。</p>
+<p>主要变化有：</p>
+<ol>
+<li>订单模块将会使用新的权限&amp;角色定义</li>
+<li>有了一套新的标准 ，后续 PM 和 Admin 系统开发都要按规范设计角色和权限</li>
+<li>有一套 <a target="_blank" rel="noopener" href="https://docs.google.com/spreadsheets/d/13lh60kdw6tC1ohuzQiviHfpo0h62jKWhEKORSxY81jE/edit#gid=1944471733">guideline</a> , 以后权限申请请求都有统一的格式，Camila 也知道判断哪些人有权提交申请表。更重要的是有了部门权限管理员这个角色，后面很多事情可以由这个角色完成。</li>
+<li>初步整理<a target="_blank" rel="noopener" href="https://docs.google.com/spreadsheets/d/13lh60kdw6tC1ohuzQiviHfpo0h62jKWhEKORSxY81jE/edit#gid=1969536233">权限管理人名单</a></li>
+</ol>
+<h2 id="Step-2-增加模块"><a href="#Step-2-增加模块" class="headerlink" title="Step 2 - 增加模块"></a>Step 2 - 增加模块</h2><p>这一步逐渐完成 admin 系统已有权限角色的整理&amp;迁移</p>
+<h2 id="Step3-新增用户组"><a href="#Step3-新增用户组" class="headerlink" title="Step3 - 新增用户组"></a><strong>Step3 - 新增用户组</strong></h2><p>部门权限管理员基于部门内的职位/职责来整理出用户组，用户组包含职位/职责的常用的一组角色。</p>
+<p>部门权限管理员可以替组内成员申向 Camila 请加入属于本部门的用户组。</p>
+<p>新建用户组页面, 各部门权限管理员有查看权限, Camila 有管理权限。</p>
+<p><img src="https://static.slab.com/prod/uploads/posts/images/TBz3tQoidXG98M-mw0DFMZum.png"></p>
+<p>主要变化有：</p>
+<p>这样部门权限管理员就可以根据员工的职位/职责申请一个或者多个用户组，如果用户组覆盖不到的角色再单独申请。虽然还是要经过 Camila，但是有了用户组，可以更高效的给用户申请权限。</p>
+<h2 id="Step4-自助在线分配用户组"><a href="#Step4-自助在线分配用户组" class="headerlink" title="Step4 - 自助在线分配用户组"></a><strong>Step4 - 自助在线分配用户组</strong></h2><p>部门权限管理员可以自助将用户加入/移除自己所拥有的用户组。同时为员工申请权限也可以通过页面提交，审批也在页面中进行。</p>
+<p>主要变化有：</p>
+<p>大部分的权限开通请求到不了 Camila 这边，部门权限管理员通过将用户加入/移出其管理的用户组就可以实现。</p>
+<h2 id="Step5-在线提交权限申请、和用户组变更申请"><a href="#Step5-在线提交权限申请、和用户组变更申请" class="headerlink" title="Step5 - 在线提交权限申请、和用户组变更申请"></a><strong>Step5 - 在线提交权限申请、和用户组变更申请</strong></h2><p>之前虽然部门权限管理员可以为员工提交权限申请，但是申请是通过申请表发送。审批也是 Camila 线下进行，然后手动在 Admin 系统中操作。</p>
+<p>另外<strong>Step3 - 新增用户组</strong>中，如果部门权限管理员需要修改用户组（增删用户组、增删用户组中角色），都需要通过线下申请流程。</p>
+<p>这一阶段支持两种申请通过线上提交和审核，审核后自动生效。</p>
+<p>主要变化：</p>
+<p>除非特殊情况，Camila 不再收到线下的申请。大部分工作转为线上。</p>
+<h2 id="Step6-强化部门概念，建立部门实体"><a href="#Step6-强化部门概念，建立部门实体" class="headerlink" title="Step6 - 强化部门概念，建立部门实体"></a><strong>Step6 - 强化部门概念，建立部门实体</strong></h2><p>截至目前，部门只是账户的一个可选属性。根据设计，用户归属于部门、用户组归属于部门，权限管理员对部门行使管理权限而不是用户组。</p>
+<p>一个缺点是，无法根据部门进行控制，例如一个部门权限管理员，可以将其拥有的用户组分配给其他部门的人，或者可以为非本部门员工提交申请。</p>
+<p>这里通过联通 Workday，引入员工部门信息，并将用户组纳入部门。</p>
+<p><img src="https://static.slab.com/prod/uploads/posts/images/qc_iaCp7FBY6eAWcagAgfvYL.png"></p>
+<p>主要变化：</p>
+<p>角色申请和用户组内成员管理更可控，所有跨部门的申请都需要经过 Camila。</p>
+<p>Camila 可以更高效的在线审核申请。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/js-admin%E6%9D%83%E9%99%90%E8%AE%BE%E8%AE%A1/" title="js-admin权限设计" target="_blank" rel="external">https://laputaz.github.io/home/js-admin权限设计/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/%E5%AE%9E%E7%8E%B0-%E7%99%BE%E5%BA%A6lowcode%E6%A1%86%E6%9E%B6amis%E6%A1%86%E6%9E%B6%E5%B0%81%E8%A3%85/" title="实现：百度 lowcode 框架 amis 框架封装"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/%E5%89%8D%E7%AB%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%AF%B9%E6%AF%94%20copy/" title="前端包管理工具对比"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

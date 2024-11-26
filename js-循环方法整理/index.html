@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    js基础：循环方法整理 | laputa z
+  </title>
+  <meta name="description" content="遍历数组有很多方法, 最简单的便是 for 循环, 另外还有 forEach、map、filter、some、every、reduce 等 ;每种方法面向的场景是不一样的, 先讲一下使用, 性能嘛, 最后再看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js基础：循环方法整理">
+<meta property="og:url" content="https://laputaz.github.io/home/js-%E5%BE%AA%E7%8E%AF%E6%96%B9%E6%B3%95%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="遍历数组有很多方法, 最简单的便是 for 循环, 另外还有 forEach、map、filter、some、every、reduce 等 ;每种方法面向的场景是不一样的, 先讲一下使用, 性能嘛, 最后再看">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-04T12:32:13.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.887Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="基础">
+<meta property="article:tag" content="手写">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/js-%E5%BE%AA%E7%8E%AF%E6%96%B9%E6%B3%95%E6%95%B4%E7%90%86/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-js-循环方法整理" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js基础：循环方法整理
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/js-%E5%BE%AA%E7%8E%AF%E6%96%B9%E6%B3%95%E6%95%B4%E7%90%86/" class="article-date">
+	  <time datetime="2020-09-04T12:32:13.000Z" itemprop="datePublished">2020-09-04</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/javascript/" rel="tag">javascript</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a>, <a class="article-tag-link-link" href="/home/tags/%E6%89%8B%E5%86%99/" rel="tag">手写</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/js-%E5%BE%AA%E7%8E%AF%E6%96%B9%E6%B3%95%E6%95%B4%E7%90%86/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>遍历数组有很多方法, 最简单的便是 for 循环, 另外还有 forEach、map、filter、some、every、reduce 等 ;<br>每种方法面向的场景是不一样的, 先讲一下使用, 性能嘛, 最后再看</p>
+<span id="more"></span>
+
+<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><p>for 循环是最基础的一种循环方式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一般把长度先缓存, 避免重复获取, 无需多言</span></span><br><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"><span class="keyword">const</span> len = arr.<span class="property">length</span></span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">  <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>for</code>循环可以通过<code>break</code>、<code>return</code> 等语句提前终止<br><code>for</code>并没有块级作用域<br>当遇到<code>return</code>语句时 , 包含此<code>for</code>循环的方法会终止</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">gg</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line">  <span class="keyword">const</span> len = arr.<span class="property">length</span></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arr[i])</span><br><span class="line">    <span class="keyword">if</span> (i === <span class="number">3</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;last&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// return 后 &#x27;last&#x27; 不打印</span></span><br><span class="line"><span class="title function_">gg</span>() <span class="comment">// 1 2 3 4</span></span><br></pre></td></tr></table></figure>
+
+<p>字符串同样有 length 属性, 所以可以遍历字符串</p>
+<h3 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a>forEach</h3><p>一般用于对数组每一项进行修改, 没有返回值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arr.<span class="title function_">forEach</span>(<span class="function">(<span class="params">_</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// do something</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>由于<code>break</code>, <code>continue</code>只能在循环中使用, 而 forEach 回调<code>function</code>是函数<br>很明显<code>不可以</code>通过<code>break</code>, <code>continue</code>等中断循环<br>但是<code>可以</code>通过<code>return</code>结束本次循环</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">;[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>].<span class="title function_">forEach</span>(<span class="function">(<span class="params">_</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (_ === <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(_)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 1 2 4 5</span></span><br><span class="line"><span class="comment">// 可以看到3 没有被打印, 循环仍会继续, 所以 4 5 被打印了</span></span><br></pre></td></tr></table></figure>
+
+<p>如果要我<code>非要终止循环</code>呢, 也不是不行, 不过我暂时只能想到抛异常的方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  ;[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>].<span class="title function_">forEach</span>(<span class="function">(<span class="params">_</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (_ === <span class="number">3</span>) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;end&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(_)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(e)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1 2</span></span><br><span class="line"><span class="comment">// throw new Error(&#x27;end&#x27;) 是一种方法</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Set</code>, <code>Map</code>原型中包含<code>forEach</code>方法, 所以可以用于遍历<code>Set</code>, <code>Map</code>, 并不需要 <code>Array.forEach.call / apply</code> 的方式去做</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Set</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">forEach</span> <span class="comment">// ƒ forEach() &#123; [native code] &#125;</span></span><br><span class="line"><span class="title class_">Map</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">forEach</span> <span class="comment">// ƒ forEach() &#123; [native code] &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>那么 Set 和 Map 调用 forEach 打印的 index, value 都是什么呢</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">Set</span>([<span class="string">&#x27;one&#x27;</span>, <span class="string">&#x27;two&#x27;</span>, <span class="string">&#x27;three&#x27;</span>, <span class="title class_">NaN</span>, <span class="title class_">NaN</span>]).<span class="title function_">forEach</span>(<span class="function">(<span class="params">value, index, set</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(index)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(value)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//one</span></span><br><span class="line"><span class="comment">//one</span></span><br><span class="line"><span class="comment">//two</span></span><br><span class="line"><span class="comment">//two</span></span><br><span class="line"><span class="comment">//three</span></span><br><span class="line"><span class="comment">//three</span></span><br><span class="line"><span class="comment">//NaN</span></span><br><span class="line"><span class="comment">//NaN</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以看到, Set.forEach打印的index, value都是元素本身</span></span><br><span class="line"><span class="comment">// 题外话, 另一个有趣现象是, 我在new Set()传入了两个NaN, 由于Set不允许重复元素, 所以最后只会存在一个NaN值</span></span><br><span class="line"><span class="comment">// 但是, 不是说 NaN !== NaN 吗?  我认为, Set内部做了处理, 具体如何处理爹也不大明白</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//--------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//再看Map</span></span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Map</span>([</span><br><span class="line">  [<span class="string">&#x27;key1&#x27;</span>, <span class="string">&#x27;value1&#x27;</span>],</span><br><span class="line">  [<span class="string">&#x27;key2&#x27;</span>, <span class="string">&#x27;value2&#x27;</span>],</span><br><span class="line">]).<span class="title function_">forEach</span>(<span class="function">(<span class="params">value, index, map</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(index)</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(value)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//key1</span></span><br><span class="line"><span class="comment">//value1</span></span><br><span class="line"><span class="comment">//key2</span></span><br><span class="line"><span class="comment">//value2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//可以看到, index为元素的键, value为元素的值</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><p>一般是对每个元素进行一些处理, 并返回新的数组</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">arr.<span class="title function_">map</span>(<span class="function">(<span class="params">el, index</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// do something with el</span></span><br><span class="line">  <span class="keyword">return</span> el</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>Set</code>, <code>Map</code>没有该方法</p>
+<p>常见用法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="string">&#x27;46548&#x27;</span>, <span class="attr">name</span>: <span class="string">&#x27;faker&#x27;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="string">&#x27;46549&#x27;</span>, <span class="attr">name</span>: <span class="string">&#x27;faker2&#x27;</span> &#125;,</span><br><span class="line">]</span><br><span class="line"><span class="keyword">const</span> idList = arr.<span class="title function_">map</span>(<span class="function">(<span class="params">el</span>) =&gt;</span> el.<span class="property">id</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(idList)</span><br><span class="line"><span class="comment">// [&#x27;46548&#x27;, &#x27;46549&#x27;]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="filter-find"><a href="#filter-find" class="headerlink" title="filter / find"></a>filter / find</h3><p>filter 用来查找符合条件的元素集合<br>find 找到第一个符合条件的元素并返回, 找到后不再往下遍历</p>
+<h3 id="every-some"><a href="#every-some" class="headerlink" title="every / some"></a>every / some</h3><p>这两个方法更多地用在测试数组的个性<br><code>every</code> 测试数组内的所有元素是否都能通过某个指定函数的测试, 最终返回布尔值, 只要有一个元素不通过则终止循环并返回 false</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">10</span>, <span class="number">30</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">6</span>]</span><br><span class="line"><span class="keyword">let</span> bool = arr.<span class="title function_">every</span>(<span class="function">(<span class="params">el</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> el % <span class="number">2</span> === <span class="number">0</span></span><br><span class="line">&#125;)</span><br><span class="line">bool <span class="comment">// true</span></span><br><span class="line"><span class="comment">// 每个元素除以2余数都为0吗, 很明显, 是的</span></span><br></pre></td></tr></table></figure>
+
+<p><code>some</code>测试是否至少有一个元素通过由提供的函数实现的测试, 最终返回布尔值, 只要有一个元素通过则终止循环并返回 true</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">7</span>, <span class="number">11</span>, <span class="number">6</span>]</span><br><span class="line"><span class="keyword">let</span> bool = arr.<span class="title function_">some</span>(<span class="function">(<span class="params">el</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> el % <span class="number">2</span> === <span class="number">0</span></span><br><span class="line">&#125;)</span><br><span class="line">bool <span class="comment">// true</span></span><br><span class="line"><span class="comment">// 至少有一个元素除以2余数为0吗, 很明显, 是的</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="for-in"><a href="#for-in" class="headerlink" title="for in"></a>for in</h3><p>for in 循环可以遍历字符串、对象、数组，不能遍历 Set/Map, 并且只能拿到可枚举的(enumerable)属性<br>需要注意的是, <code>in</code> 可以拿到原型上的属性</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">  [<span class="title class_">Symbol</span>(<span class="string">&#x27;one&#x27;</span>)]: <span class="number">22</span>,</span><br><span class="line">  <span class="attr">one</span>: <span class="number">11</span>,</span><br><span class="line">  <span class="attr">two</span>: <span class="number">22</span>,</span><br><span class="line">&#125;</span><br><span class="line">obj.<span class="property">__proto__</span>.<span class="property">name</span> = <span class="string">&#x27;haha&#x27;</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> v <span class="keyword">in</span> obj) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(v)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// one, two, name</span></span><br><span class="line"><span class="comment">// 这里用symbol作为键时, 该属性是不可枚举的, 所以for in取不到</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 把one属性改为不可枚举</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(obj, <span class="string">&#x27;one&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">enumerable</span>: <span class="literal">false</span>,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 这个时候就取不到one了</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> v <span class="keyword">in</span> obj) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(v)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// two, name</span></span><br></pre></td></tr></table></figure>
+
+<p>还有, 如果给数组加上属性, 也会被迭代出来</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">arr.<span class="property">name</span> = <span class="string">&#x27;haha&#x27;</span></span><br><span class="line"><span class="comment">// name属性也会被遍历出来</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> v <span class="keyword">in</span> arr) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(v)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 0,1,2,name</span></span><br></pre></td></tr></table></figure>
+
+<p>因为迭代的顺序是依赖于执行环境的，所以数组遍历不一定按次序访问元素。因此当迭代访问顺序很重要的数组时，最好用整数索引去进行 for 循环</p>
+<h3 id="for-of"><a href="#for-of" class="headerlink" title="for of"></a>for of</h3><p>遍历 Array 可以采用下标循环，遍历 Map 和 Set 就无法使用下标。<br>为了统一集合类型，ES6 标准引入了新的 iterable 类型，Array、Map 和 Set 都部署了 Symbol.iterable 迭代器<br>for of 循环不仅支持数组、大多数伪数组对象，也支持字符串遍历，此外还支持 Map 和 Set 对象遍历</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> iterable = <span class="keyword">new</span> <span class="title class_">Map</span>([[<span class="string">&quot;a&quot;</span>, <span class="number">1</span>], [<span class="string">&quot;b&quot;</span>, <span class="number">2</span>], [<span class="string">&quot;c&quot;</span>, <span class="number">3</span>]]);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> [key, value] <span class="keyword">of</span> iterable) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(key);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// a</span></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// b</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>区别<br>for…in 语句以原始插入顺序迭代对象的可枚举属性, 拿到的是键<br>for…of 语句遍历可迭代对象定义要迭代的数据, 拿到的是值</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/js-%E5%BE%AA%E7%8E%AF%E6%96%B9%E6%B3%95%E6%95%B4%E7%90%86/" title="js基础：循环方法整理" target="_blank" rel="external">https://laputaz.github.io/home/js-循环方法整理/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/js-try-catch%E4%BB%A3%E7%A0%81%E6%8F%90%E5%8F%96/" title="js-try-catch代码提取"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/vue-set%E6%96%B9%E6%B3%95/" title="vue-set方法"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

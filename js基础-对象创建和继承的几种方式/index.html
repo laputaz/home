@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    js基础：对象创建和继承的几种方式 | laputa z
+  </title>
+  <meta name="description" content="最近看网上各种文章, 头异常的大。 刚好看完红宝书，于是整理了一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js基础：对象创建和继承的几种方式">
+<meta property="og:url" content="https://laputaz.github.io/home/js%E5%9F%BA%E7%A1%80-%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E5%92%8C%E7%BB%A7%E6%89%BF%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="最近看网上各种文章, 头异常的大。 刚好看完红宝书，于是整理了一下。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-04-06T12:34:07.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.887Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="基础">
+<meta property="article:tag" content="手写">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/js%E5%9F%BA%E7%A1%80-%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E5%92%8C%E7%BB%A7%E6%89%BF%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-js基础-对象创建和继承的几种方式" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      js基础：对象创建和继承的几种方式
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/js%E5%9F%BA%E7%A1%80-%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E5%92%8C%E7%BB%A7%E6%89%BF%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/" class="article-date">
+	  <time datetime="2018-04-06T12:34:07.000Z" itemprop="datePublished">2018-04-06</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/javascript/" rel="tag">javascript</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a>, <a class="article-tag-link-link" href="/home/tags/%E6%89%8B%E5%86%99/" rel="tag">手写</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/js%E5%9F%BA%E7%A1%80-%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E5%92%8C%E7%BB%A7%E6%89%BF%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>最近看网上各种文章, 头异常的大。 刚好看完红宝书，于是整理了一下。</p>
+<span id="more"></span>
+
+<h4 id="1-工厂模式"><a href="#1-工厂模式" class="headerlink" title="1. 工厂模式"></a>1. 工厂模式</h4><p>单纯地创建对象, 使用 Object 构造函数, 或者字面量表示都 ok, 但是, 会产生大量重复代码, 每次都要写 new Object() 等等,<br>工厂模式可以解决这个问题</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">createPerson</span>(<span class="params">name, job</span>) &#123;</span><br><span class="line">  <span class="comment">// 创建一个Object</span></span><br><span class="line">  <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="title class_">Object</span>()</span><br><span class="line">  o.<span class="property">name</span> = name</span><br><span class="line">  o.<span class="property">job</span> = job</span><br><span class="line">  <span class="comment">// 口吐芬芳</span></span><br><span class="line">  o.<span class="property">sayFword</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&#x27;Funny&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> o</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 创建实例</span></span><br><span class="line"><span class="keyword">var</span> person1 = <span class="title function_">createPerson</span>(<span class="string">&#x27;Tony Stark&#x27;</span>, <span class="string">&#x27;Iron Man&#x27;</span>)</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="title function_">createPerson</span>(<span class="string">&#x27;进喜 王&#x27;</span>, <span class="string">&#x27;铁人&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>工厂模式解决了创建多个相似对象的问题, 但是没有解决对象识别问题, 所有实例类型均为 object.<br>为了解决这个问题, 群众想出了构造函数模式</p>
+<h4 id="2-构造函数模式"><a href="#2-构造函数模式" class="headerlink" title="2. 构造函数模式"></a>2. 构造函数模式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name, job</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">job</span> = job</span><br><span class="line">  <span class="comment">// 口吐芬芳</span></span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">sayFword</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="string">&#x27;Funny&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 创建实例</span></span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;Tony Stark&#x27;</span>, <span class="string">&#x27;Iron Man&#x27;</span>)</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;王进喜&#x27;</span>, <span class="string">&#x27;铁人&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这里, Person 取代了 createPerson 函数, 而且, 有几个不同:</p>
+<ul>
+<li>没有显式创建对象</li>
+<li>直接将属性, 方法赋给了 this</li>
+<li>没有显式 return</li>
+<li>函数名以大写字母开头</li>
+</ul>
+<p>这个时候, 就可以识别对象类型了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">person1.<span class="property">constructor</span> === <span class="title class_">Person</span> <span class="comment">//true</span></span><br><span class="line">person2.<span class="property">constructor</span> === <span class="title class_">Person</span> <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">person1 <span class="keyword">instanceof</span> <span class="title class_">Person</span> <span class="comment">//true</span></span><br><span class="line">person2 <span class="keyword">instanceof</span> <span class="title class_">Person</span> <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>如果不用 new 会有什么后果 ?<br>后果是, this 指向全局对象, 浏览器中, 传入的属性和方法都挂到 window 对象了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person3 = <span class="title class_">Person</span>(<span class="string">&#x27;王进喜&#x27;</span>, <span class="string">&#x27;铁人&#x27;</span>)</span><br><span class="line"><span class="variable language_">window</span>.<span class="property">name</span> <span class="comment">//&#x27;王进喜&#x27;</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="property">job</span> <span class="comment">//&#x27;铁人&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以用 call 或 apply, 将 this 指向实例, 但这样标识不了类型, 构造函数模式便失去了意义</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person4 = <span class="keyword">new</span> <span class="title class_">Object</span>()</span><br><span class="line"><span class="title class_">Person</span>.<span class="title function_">call</span>(person4, <span class="string">&#x27;王进喜&#x27;</span>, <span class="string">&#x27;铁人&#x27;</span>)</span><br><span class="line">person4.<span class="property">name</span> <span class="comment">//&#x27;王进喜&#x27;</span></span><br><span class="line">person4 <span class="keyword">instanceof</span> <span class="title class_">Person</span> <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>当然, 除非手动将<strong>proto</strong>指向 Person.prototype, 这是后话</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">person4.<span class="property">__proto__</span> = <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span></span><br><span class="line">person4 <span class="keyword">instanceof</span> <span class="title class_">Person</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>构造函数模式有一个问题 —— 每个方法都要在每个实例上创建一遍, 也就是说, 不同函数的同名方法实际上是不相等的</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// person1下的sayFword 和 person2下的sayFword 是两个不同的方法</span></span><br><span class="line">person1.<span class="property">sayFword</span> === person2.<span class="property">sayFword</span> <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>而我们想要让某一些方法成为该类型的所有实例共用的, 而不是每创建一个实例就去创建一个同样的方法/属性<br>于是, 群众又想出了下一个模式, 原型模式</p>
+<h4 id="3-原型模式"><a href="#3-原型模式" class="headerlink" title="3. 原型模式"></a>3. 原型模式</h4><p>原型模式的思想是, 给构造函数 (实际上只要是函数) 赋予一个 prototype 属性 , 这个属性的值是一个指针, 指向一个对象, 而这个对象包含其所有实例共享的属性和方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">name</span> = <span class="string">&#x27;Tony Stark&#x27;</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">job</span> = <span class="string">&#x27;Iron Man&#x27;</span></span><br><span class="line"><span class="comment">// 口吐芬芳</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayFword</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">alert</span>(<span class="string">&#x27;Funny&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 创建实例</span></span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br><span class="line">person1.<span class="property">sayName</span> === person2.<span class="property">sayName</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>默认情况下 prototype 会自动获得 constructor 属性, 该属性指向构造函数本身</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">constructor</span> === <span class="title class_">Person</span> <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>如果实例中定义了跟 prototype 重名的属性, 会怎么样呢</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person3 = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br><span class="line">person3.<span class="property">name</span> = <span class="string">&#x27;灭霸&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person3.<span class="property">name</span>) <span class="comment">//&#x27;灭霸&#x27;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">name</span>) <span class="comment">// &#x27;Tony Stark&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>很明显, 原型上的同名属性并不会受到影响<br>我们可以用 delete 操作符删除对实例的属性, 从而重新访问原型中的属性</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> person3.<span class="property">name</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person3.<span class="property">name</span>) <span class="comment">// &#x27;Tony Stark&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是, 使用 in 操作符, 即使属性是在原型上, 也会返回 true (for in 亦是如此)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;job&#x27;</span> <span class="keyword">in</span> person3 <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>单纯的原型模式, 也是有缺点的, 例如</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span> = &#123;</span><br><span class="line">  <span class="attr">friends</span>: [<span class="number">1</span>, <span class="number">2</span>],</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 创建实例</span></span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br><span class="line">person1.<span class="property">friends</span>.<span class="title function_">push</span>(<span class="number">3</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person2.<span class="property">friends</span>) <span class="comment">// 1,2,3</span></span><br></pre></td></tr></table></figure>
+
+<p>如果共享的属性为引用类型, 修改实例该属性时, 会影响到原型上的该属性, 从而影响到其他实例<br>这个问题可以用 组合构造函数和原型模式 来解决</p>
+<h4 id="4-组合构造函数和原型模式"><a href="#4-组合构造函数和原型模式" class="headerlink" title="4. 组合构造函数和原型模式"></a>4. 组合构造函数和原型模式</h4><p>构造函数模式用于定义实例的属性, 而原型模式用于定义方法和共享属性 , 集两家之所长</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name, job, friends</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">job</span> = job</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">friends</span> = friends</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 口吐芬芳</span></span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayFword</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">alert</span>(<span class="string">&#x27;Funny&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 创建实例</span></span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;Tony Stark&#x27;</span>, <span class="string">&#x27;Iron Man&#x27;</span>, [<span class="number">1</span>, <span class="number">2</span>])</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;王进喜&#x27;</span>, <span class="string">&#x27;铁人&#x27;</span>, [<span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">person1.<span class="property">sayFword</span> === person2.<span class="property">sayFword</span> <span class="comment">// true</span></span><br><span class="line">person1.<span class="property">friends</span>.<span class="title function_">push</span>(<span class="number">3</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person2.<span class="property">friends</span>) <span class="comment">// 3, 4</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-动态原型模式"><a href="#5-动态原型模式" class="headerlink" title="5. 动态原型模式"></a>5. 动态原型模式</h4><p>这种模式多了一层判断</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="variable language_">this</span>.<span class="property">sayFword</span> != <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">    <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayFword</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">      <span class="title function_">alert</span>(<span class="variable language_">this</span>.<span class="property">name</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么, 这样做的优点在哪呢 ?</p>
+<p>想想看, 如果没有 if 的话，每 new 一次，都会重新定义一个新的函数，然后挂到 Person.prototype.sayFword 属性上, 这就造成没必要的时间和空间浪费 。加上 if 后，只在 new 第一个实例时才会定义 sayFword 方法，之后就不会了 。<br>并且 ————<br><code>if语句检查的可以是初始化之后应该存在的任何属性或方法 —— 不必用一大堆if语句检查每个属性和每个方法，只要检查其中一个即可。</code><br>———— 什么意思呢 ？<br>是这样的：假设除了 sayFword 方法外，还定义了其他方法，比如 sayHi、sayBye 等等。此时只需要把它们都放到对 sayFword 判断的 if 块里面就可以了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="variable language_">this</span>.<span class="property">sayFword</span> != <span class="string">&quot;function&quot;</span>) &#123;</span><br><span class="line">    <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayFword</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;...&#125;;</span><br><span class="line">    <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayHi</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;...&#125;;</span><br><span class="line">    <span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayBye</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;...&#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，要么它们全都还没有定义(new 第一个实例时)，要么已经全都定义了(new 其他实例后)，即<strong>它们的存在性是一致的</strong>，用同一个判断就可以了，而不需要分别对它们进行判断。</p>
+<h4 id="6-寄生构造函数模式"><a href="#6-寄生构造函数模式" class="headerlink" title="6. 寄生构造函数模式"></a>6. 寄生构造函数模式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SpecialArray</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> values = <span class="keyword">new</span> <span class="title class_">Array</span>()</span><br><span class="line">  <span class="comment">// 结构 arguments 拼接数组 ,在es6中不用这样写, 直接 value.push(...arguments)</span></span><br><span class="line">  values.<span class="property">push</span>.<span class="title function_">apply</span>(values, <span class="variable language_">arguments</span>)</span><br><span class="line">  <span class="comment">// 此方法 将数组用|分隔拼接成字符串返回</span></span><br><span class="line">  values.<span class="property">toPipedString</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="title function_">join</span>(<span class="string">&#x27;|&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> values</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然它写的和工厂模式一样，但是创建时用了 new，因此使得实现的过程不一样（但是实现过程不重要)<br>作用嘛, 比如创建具有额外方法的已有类型（如数组，Date 类型等，但是又想不污染原有的类型 ;<br>例如上面如果直接在 Array 中定义新的方法，会污染其它的数组对象, 于是创建了一个 SpecialArray 类型, 它包含了 Array 的所有方法, 又有自己的方法 toPipedString ;</p>
+<h4 id="7-稳妥构造函数模式"><a href="#7-稳妥构造函数模式" class="headerlink" title="7. 稳妥构造函数模式"></a>7. 稳妥构造函数模式</h4><p>稳妥对象指没有公共属性，而且其他方法也不引用 this 的对象。稳妥对象最适合在一些安全的环境中（这些环境中会禁止使用 this 和 new），或者防止数据被其他应用程序改动时使用 .</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Persion</span>(<span class="params">name, age, job</span>) &#123;</span><br><span class="line">  <span class="comment">// 创建要返回的对象</span></span><br><span class="line">  <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="title class_">Object</span>()</span><br><span class="line">  <span class="comment">// 添加方法</span></span><br><span class="line">  o.<span class="property">sayName</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(name)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> o</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p1 = <span class="title class_">Persion</span>(<span class="string">&#x27;bill&#x27;</span>, <span class="number">23</span>, <span class="string">&#x27;FE&#x27;</span>)</span><br><span class="line">p1.<span class="title function_">sayName</span>() <span class="comment">// bill;</span></span><br></pre></td></tr></table></figure>
+
+<p>除了了调用 sayName()外，没有别的方式可以访问其他数据成员。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/js%E5%9F%BA%E7%A1%80-%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E5%92%8C%E7%BB%A7%E6%89%BF%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/" title="js基础：对象创建和继承的几种方式" target="_blank" rel="external">https://laputaz.github.io/home/js基础-对象创建和继承的几种方式/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/js%E5%9F%BA%E7%A1%80-new%E5%AF%B9%E8%B1%A1%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/" title="js基础：new 对象发生了什么"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>

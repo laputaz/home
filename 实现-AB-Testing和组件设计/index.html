@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8" />
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"
+  />
+  <meta name="renderer" content="webkit" />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#9f8113"
+    media="(prefers-color-scheme: dark)"
+  />
+  <meta name="theme-color" content="#9f8113" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="format-detection" content="telephone=no,email=no,adress=no" />
+  <!-- Color theme for statusbar -->
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+   
+  <title>
+    实现：AB-testing 和组件设计 | laputa z
+  </title>
+  <meta name="description" content="自从到了 marketing 团队，接触了大量 AB Testing 的需求。这里做一下简单总结。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现：AB-testing 和组件设计">
+<meta property="og:url" content="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-AB-Testing%E5%92%8C%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="River">
+<meta property="og:description" content="自从到了 marketing 团队，接触了大量 AB Testing 的需求。这里做一下简单总结。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/1f0292f033564570a2e22da40c44fe04.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/12cc51097037462da2a3a078d8800394.png">
+<meta property="article:published_time" content="2022-08-22T16:59:10.000Z">
+<meta property="article:modified_time" content="2024-11-26T03:47:07.891Z">
+<meta property="article:author" content="River">
+<meta property="article:tag" content="回顾">
+<meta property="article:tag" content="方案设计">
+<meta property="article:tag" content="vue">
+<meta property="article:tag" content="高阶组件">
+<meta property="article:tag" content="AB Testing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/1f0292f033564570a2e22da40c44fe04.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-AB-Testing%E5%92%8C%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/index.html" />
+  
+  <link
+    rel="alternate"
+    href="/atom.xml"
+    title="River"
+    type="application/atom+xml"
+  />
+   
+  <link rel="icon" href="images/logo.svg" type="image/x-icon" />
+   
+<link rel="stylesheet" href="/home/css/style.css">
+   
+  <link
+    href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css"
+    rel="stylesheet"
+  />
+   
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+  </style>
+  <style>
+    body header {
+      font-family: Ubuntu, 'PingHei', 'PingFang SC', Helvetica Neue, 'Work Sans',
+        'Hiragino Sans GB', 'Microsoft YaHei', SimSun, sans-serif !important;
+    }
+  </style>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+       
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img
+            class="img-circle img-rotate"
+            src="/home/images/logo.svg"
+            width="200"
+            height="200"
+          />
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Laputa Z</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">
+          
+        </h3>
+        <small id="location" class="hidden-xs hidden-sm"
+          ><i class="icon icon-map-marker"></i>
+          <a href=""
+            >桦林</a
+          ></small
+        >
+      </div>
+       <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button
+        class="navbar-toggle collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#main-navbar"
+        aria-controls="main-navbar"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav
+      id="main-navbar"
+      class="collapse navbar-collapse"
+      itemscope
+      itemtype="http://schema.org/SiteNavigationElement"
+      role="navigation"
+    >
+      <ul
+        class="
+          nav
+          navbar-nav
+          main-nav
+          menu-highlight
+        "
+      >
+         
+        <li class="menu-item menu-item-home">
+          <a href="/home/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-archives">
+          <a href="/home/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-tags">
+          <a href="/home/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+         
+        <li class="menu-item menu-item-about">
+          <a href="/home/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Slogan</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>向前看，别回头</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/home/tags/AB-Testing/" style="font-size: 13px;">AB Testing</a> <a href="/home/tags/ai/" style="font-size: 13px;">ai</a> <a href="/home/tags/css/" style="font-size: 13.44px;">css</a> <a href="/home/tags/hook/" style="font-size: 13px;">hook</a> <a href="/home/tags/javascript/" style="font-size: 13.78px;">javascript</a> <a href="/home/tags/lerna/" style="font-size: 13px;">lerna</a> <a href="/home/tags/npm/" style="font-size: 13.11px;">npm</a> <a href="/home/tags/sem/" style="font-size: 13px;">sem</a> <a href="/home/tags/shell/" style="font-size: 13px;">shell</a> <a href="/home/tags/vue/" style="font-size: 13.56px;">vue</a> <a href="/home/tags/webpack/" style="font-size: 13px;">webpack</a> <a href="/home/tags/websocket/" style="font-size: 13px;">websocket</a> <a href="/home/tags/yarn/" style="font-size: 13px;">yarn</a> <a href="/home/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" style="font-size: 13.33px;">二进制</a> <a href="/home/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 13px;">人工智能</a> <a href="/home/tags/%E4%BF%84%E8%AF%AD%E7%AC%94%E8%AE%B0/" style="font-size: 13.22px;">俄语笔记</a> <a href="/home/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 13.11px;">包管理</a> <a href="/home/tags/%E5%9B%9E%E9%A1%BE/" style="font-size: 13.67px;">回顾</a> <a href="/home/tags/%E5%9F%BA%E7%A1%80/" style="font-size: 14px;">基础</a> <a href="/home/tags/%E5%AE%9E%E7%8E%B0/" style="font-size: 13.11px;">实现</a> <a href="/home/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/home/tags/%E6%89%8B%E5%86%99/" style="font-size: 13.89px;">手写</a> <a href="/home/tags/%E6%8E%92%E5%BA%8F/" style="font-size: 13px;">排序</a> <a href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" style="font-size: 13.67px;">方案设计</a> <a href="/home/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" style="font-size: 13.22px;">浏览器</a> <a href="/home/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/home/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 13px;">网络安全</a> <a href="/home/tags/%E8%B7%A8%E7%AB%AF/" style="font-size: 13px;">跨端</a> <a href="/home/tags/%E8%B8%A9%E5%9D%91/" style="font-size: 13.11px;">踩坑</a> <a href="/home/tags/%E8%BF%9B%E5%88%B6/" style="font-size: 13px;">进制</a> <a href="/home/tags/%E9%97%AE%E9%A2%98/" style="font-size: 13.11px;">问题</a> <a href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" style="font-size: 13.22px;">高阶组件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2023/">2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2022/">2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2021/">2021</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2020/">2020</a><span class="archive-list-count">20</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2019/">2019</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/home/archives/2018/">2018</a><span class="archive-list-count">14</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-实现-AB-Testing和组件设计" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      实现：AB-testing 和组件设计
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/home/%E5%AE%9E%E7%8E%B0-AB-Testing%E5%92%8C%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/" class="article-date">
+	  <time datetime="2022-08-22T16:59:10.000Z" itemprop="datePublished">2022-08-22</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/home/tags/AB-Testing/" rel="tag">AB Testing</a>, <a class="article-tag-link-link" href="/home/tags/vue/" rel="tag">vue</a>, <a class="article-tag-link-link" href="/home/tags/%E5%9B%9E%E9%A1%BE/" rel="tag">回顾</a>, <a class="article-tag-link-link" href="/home/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/" rel="tag">方案设计</a>, <a class="article-tag-link-link" href="/home/tags/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/" rel="tag">高阶组件</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/home/%E5%AE%9E%E7%8E%B0-AB-Testing%E5%92%8C%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>自从到了 marketing 团队，接触了大量 AB Testing 的需求。这里做一下简单总结。</p>
+<span id="more"></span>
+
+<h2 id="什么是-AB-Testing"><a href="#什么是-AB-Testing" class="headerlink" title="什么是 AB Testing"></a>什么是 AB Testing</h2><p>产品经理、设计师在设计需求的实现时，可能会有多条路径或者说多个方案来达成一个业务目标。</p>
+<p>在经过评审之后，一般会权衡利弊，得出一个平衡了用户体验、业务目标和开发成本的最终方案。</p>
+<p>但也可能存在一种情况：方案 A、B、C 各有优劣，没办法通过主观判断和讨论得出几个方案谁更优、收益更好。</p>
+<p>有一个方法是，同时上线 A、B、C，并将用户流量平均分配到这三者，在固定时间周期后通过埋点等数据来分析哪一个方案效果更好（收益，访问量，订单转化率，下载量等等指标），最后选择出最优方案。</p>
+<p>这就是 AB Testing。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>marketing 团队大部分 AB 实验都是与 C 端展示相关的，例如文案的调整，模块的设计样式或相对位置等。</p>
+<p>例如一个驱使用户下载 App 的 banner:</p>
+<p><img src="https://img-blog.csdnimg.cn/1f0292f033564570a2e22da40c44fe04.png" width=300 /><br/></p>
+<p>针对这一个简单的 banner，实验的情况就有多种多样：</p>
+<ul>
+<li><p>例如，在 HK 地区，展示不同的文案，统计最后 app 在 HK 的下载量，分析出哪一个文案更具吸引力</p>
+<ol>
+<li>“下载新用户享有 95 折扣”</li>
+<li>“下载后赠送 $5 折扣券”</li>
+</ol>
+</li>
+<li><p>例如，修改 banner 的样式，对比不同 banner 带来的下载量，最后更新最优设计</p>
+<ol>
+<li>样式 A：按钮蓝色，不带边距</li>
+<li>样式 B: 按钮橙色，圆角，带阴影</li>
+</ol>
+</li>
+<li><p>…</p>
+</li>
+<li><p>…</p>
+</li>
+</ul>
+<p>实验的种类非常多，一般由产品经理来构思。并且需要确定：</p>
+<ul>
+<li>实验的人群，地区</li>
+<li>实验的平台 web / mweb</li>
+<li>实验的划分</li>
+<li>划分后每个实验组流量的分配量</li>
+<li>埋点，曝光 or 行为</li>
+<li>…</li>
+<li>…</li>
+</ul>
+<h2 id="关键点和注意事项"><a href="#关键点和注意事项" class="headerlink" title="关键点和注意事项"></a>关键点和注意事项</h2><p>关键点：</p>
+<ol>
+<li><p>流量划分<br>每一个访问的用户，都会有一个设备 ID。通过设备 ID，将用户等量划分，并生成一个 cookie 值，记录用户命中的实验和分组。前端根据命中的实验展示不一样的效果。</p>
+</li>
+<li><p>实验目标<br>实验只面向某个地区的群体，或者某类设备的群体。</p>
+</li>
+<li><p>数据采集<br>当实验组、控制组被命中时，根据需要上报曝光或者行为事件。作为最后统计的依据。</p>
+</li>
+</ol>
+<hr>
+<p>需要注意的事项：</p>
+<ol>
+<li><p>确保实验的变量唯一</p>
+</li>
+<li><p>试验周期不宜过长，一般控制在 2 到 3 周，最好不要超过一个月</p>
+</li>
+<li><p>分析实验结果时，排除其他因素在实验中的影响。</p>
+</li>
+</ol>
+<h2 id="前端实现"><a href="#前端实现" class="headerlink" title="前端实现"></a>前端实现</h2><h3 id="前提：获取实验命中情况"><a href="#前提：获取实验命中情况" class="headerlink" title="前提：获取实验命中情况"></a>前提：获取实验命中情况</h3><p>流量划分和用户命中由后端计算。前端需要在 node 层请求 api 获取当前用户命中的分组情况（放在客户端请求可能会造成页面闪动和数据误报）， 如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/home&#x27;</span>, <span class="keyword">async</span> <span class="keyword">function</span> (<span class="params">ctx</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> pageData = &#123;&#125;</span><br><span class="line">  <span class="comment">// node</span></span><br><span class="line">  <span class="keyword">let</span> experiments = <span class="keyword">await</span> fetch.<span class="title function_">get</span>(<span class="string">&#x27;/experiments/group&#x27;</span>)</span><br><span class="line">  pageData.<span class="property">experiments</span> = experiments</span><br><span class="line">  <span class="comment">//   experiments: &#123;</span></span><br><span class="line">  <span class="comment">//     // 实验 1</span></span><br><span class="line">  <span class="comment">//     experiment1: &#123;</span></span><br><span class="line">  <span class="comment">//       id: xxx,</span></span><br><span class="line">  <span class="comment">//       hitGroup: &#x27;group1&#x27;</span></span><br><span class="line">  <span class="comment">//     &#125;,</span></span><br><span class="line">  <span class="comment">//     // 实验 2</span></span><br><span class="line">  <span class="comment">//     experiment2: &#123;</span></span><br><span class="line">  <span class="comment">//       id: xxx,</span></span><br><span class="line">  <span class="comment">//       hitGroup: &#x27;ctrl&#x27;</span></span><br><span class="line">  <span class="comment">//     &#125;</span></span><br><span class="line">  <span class="comment">//   &#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// process other data</span></span><br><span class="line">  <span class="comment">// 渲染页面</span></span><br><span class="line">  ctx.<span class="title function_">render</span>(<span class="string">&#x27;home.html&#x27;</span>, pageData)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这段代码表示，用户命中了实验 1 的 group1 分组，命中了实验 2 的 ctrl 控制组。</p>
+<p>首页 home.html 中 js 拿到实验命中情况，渲染出对应的样式。</p>
+<h3 id="旧有的实现"><a href="#旧有的实现" class="headerlink" title="旧有的实现"></a>旧有的实现</h3><p>在旧的项目中，前端的技术栈是 渲染模板 handlebars + koa，后续引入了 Vue 的开发模式。</p>
+<p>实验的实现方式没有做统一，公共代码只提供获取分组的方式，获取之后做什么完全由开发自己控制，如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ABTestTool</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../ABTestingTool&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">abtestExperiment1</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title class_">ABTestTool</span>(&#123; <span class="attr">notation</span>: <span class="string">&#x27;experiment1&#x27;</span> &#125;, <span class="function">(<span class="params">exp</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 命中实验 group1</span></span><br><span class="line">    <span class="keyword">if</span> (exp[<span class="string">&#x27;experiment1&#x27;</span>] === <span class="string">&#x27;group1&#x27;</span>) &#123;</span><br><span class="line">      <span class="comment">// doSomething</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 命中实验 group2</span></span><br><span class="line">    <span class="keyword">if</span> (exp[<span class="string">&#x27;experiment1&#x27;</span>] === <span class="string">&#x27;group2&#x27;</span>) &#123;</span><br><span class="line">      <span class="comment">// doSomething</span></span><br><span class="line">      <span class="comment">// 往往是直接修改样式</span></span><br><span class="line">      $(<span class="string">&#x27;body&#x27;</span>).<span class="title function_">append</span>(<span class="string">`&lt;style&gt;.theme_activities &#123; display: flex;&#125;&lt;/style&gt;`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 命中实验 group3</span></span><br><span class="line">    <span class="keyword">if</span> (exp[<span class="string">&#x27;experiment1&#x27;</span>] === <span class="string">&#x27;group3&#x27;</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; abtestExperiment1 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>亦或者使用了 Vue 的页面的写法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ABTestTool</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;../ABTestingTool&#x27;</span></span><br><span class="line"><span class="keyword">import</span> hitComponent1 <span class="keyword">from</span> <span class="string">&#x27;com1.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> hitComponent2 <span class="keyword">from</span> <span class="string">&#x27;com2.vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> hitComponent = &#123;&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">abtestExperiment1</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title class_">ABTestTool</span>(&#123; <span class="attr">notation</span>: <span class="string">&#x27;experiment1&#x27;</span> &#125;, <span class="function">(<span class="params">exp</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 命中实验 group1</span></span><br><span class="line">    <span class="keyword">if</span> (exp[<span class="string">&#x27;experiment1&#x27;</span>] === <span class="string">&#x27;group1&#x27;</span>) &#123;</span><br><span class="line">      <span class="comment">// doSomething</span></span><br><span class="line">      hitComponent = hitComponent1</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 命中实验 group2</span></span><br><span class="line">    <span class="keyword">if</span> (exp[<span class="string">&#x27;experiment1&#x27;</span>] === <span class="string">&#x27;group2&#x27;</span>) &#123;</span><br><span class="line">      <span class="comment">// doSomething</span></span><br><span class="line">      hitComponent = hitComponent2</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">abtestExperiment1</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拿到结果的 Vue 组件</span></span><br><span class="line"><span class="keyword">export</span> &#123; hitComponent &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这些实现形式不统一，往往比较杂乱。实验完成后，剔除实验代码也没有统一的办法。</p>
+<h3 id="新的实现"><a href="#新的实现" class="headerlink" title="新的实现"></a>新的实现</h3><p>handlebars + koa 旧项目的代码将逐渐被 nuxt 替代。强行统一实现的话投入产出比太低。</p>
+<p>所以这里只考虑 nuxt 上的实现，旧项目的逻辑保持不变，逐步淘汰。</p>
+<ol>
+<li>定制规范。因为实验代码原则是临时性质的，为了便于维护和代码整洁，代码的编写需要遵循统一的规范：</li>
+</ol>
+<ul>
+<li>通过需求单号标识实验代码、静态文件资源、多语言标记，并且合理添加带有单号标记的注释以便代码删除或回退</li>
+<li>实验代码尽量集中，最大限度的减少对主业务逻辑的侵染，理想情况下，实验代码应该是易移除，可插拔，位置集中，标识明晰的</li>
+<li>原则上不需要实验开发人员关注到数据上报发送，对于需求依赖的埋点，需要开发集中体现在实验代码中，并且事件命名带有实验标识，以在数据分析时，区别正常业务发的埋点。</li>
+<li>…</li>
+<li>…</li>
+</ul>
+<ol start="2">
+<li>思路</li>
+</ol>
+<p>这里使用了高阶函数的思路，入参为一个配置，AB 函数内部计算命中哪一个实验，最后生成一个 Vue 组件。</p>
+<img src="https://img-blog.csdnimg.cn/12cc51097037462da2a3a078d8800394.png" width=600/>
+
+<p>代码模拟：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">business-component</span> /&gt;</span> ...</span><br><span class="line">  <span class="comment">&lt;!-- 1. 作为实验组件穿插在业务组件之间 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">abtest-xxxx</span>&gt;</span><span class="tag">&lt;/<span class="name">abtest-xxxx</span>&gt;</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="comment">&lt;!-- 2. 没有匹配到实验的业务组件会作为默认slot渲染 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">abtest-xxxx</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">business-component</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">abtest-xxxx</span>&gt;</span></span><br><span class="line">  ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 基础函数</span></span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">import</span> <span class="variable constant_">AB</span>, &#123; <span class="title class_">IABTestingConfigs</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;~/components/common/ab-testing/index.ts&#x27;</span></span></span><br><span class="line"><span class="language-javascript">  <span class="comment">// 声明组件</span></span></span><br><span class="line"><span class="language-javascript">  @<span class="title class_">Component</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="attr">components</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 这里使用了高阶函数的思路，入参为一个配置，AB函数内部计算命中哪一个实验</span></span></span><br><span class="line"><span class="language-javascript">        <span class="attr">abtestXXXX</span>: <span class="title function_">AB</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="comment">// 实验名</span></span></span><br><span class="line"><span class="language-javascript">          <span class="attr">experimentName</span>: <span class="string">&#x27;Chat_Btn_Design_AB_1_Mweb&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">          <span class="comment">// 分组名和对应的组件，这里使用动态引入，拆分为单文件按需加载</span></span></span><br><span class="line"><span class="language-javascript">          <span class="attr">groupComponents</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="string">&#x27;实验组1名称&#x27;</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;~/experiments/abtestXXXX/variant1.vue&#x27;</span>),</span></span><br><span class="line"><span class="language-javascript">                <span class="string">&#x27;实验组2名称&#x27;</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;~/experiments/abtestXXXX/variant2.vue&#x27;</span>) &#125;,</span></span><br><span class="line"><span class="language-javascript">                <span class="comment">// 判断是否需要公共逻辑自动发送埋点数据</span></span></span><br><span class="line"><span class="language-javascript">                <span class="attr">autoDataSend</span>: <span class="literal">true</span></span></span><br><span class="line"><span class="language-javascript">        &#125; <span class="keyword">as</span> <span class="title class_">IABTestingConfigs</span>)</span></span><br><span class="line"><span class="language-javascript">  &#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在 <code>~/experiments/abtestXXXX/variant1.vue</code> 实验代码中，需要说明实验的细节，开始结束时间，需求单，如</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: xxxx</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2020/7/21 8:51 下午</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 首页 banner 验证不同文案的影响</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Orion</span>: https: xxxxx/xxxx/xxx</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@PM</span>: 产品负责人</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Backend</span>: no</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>AB 函数的实现。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// config 就是上面的分组和组件的映射关系</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> (<span class="params">config</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; experimentName, groupComponents &#125; = config</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 组件，这里用 class 写法</span></span><br><span class="line">  <span class="keyword">class</span> <span class="title class_">AB</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Vue</span> &#123;</span><br><span class="line">    <span class="comment">// 命中的实验</span></span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">hitExperiment</span>() &#123;</span><br><span class="line">      <span class="comment">// 从 store 拿到 命中的实验</span></span><br><span class="line">      <span class="keyword">const</span> hitExp = store.<span class="property">state</span>.<span class="property">itExperiment</span></span><br><span class="line">      <span class="comment">// 从 store 拿到 命中的分组</span></span><br><span class="line">      <span class="keyword">const</span> hitExpGroupName = hitExp.<span class="property">group</span>.<span class="property">name</span></span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">          <span class="comment">// 返回一些必要的信息</span></span><br><span class="line">          <span class="attr">id</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">          <span class="attr">component</span>: groupComponents</span><br><span class="line">          <span class="attr">groupName</span>: hitExp.<span class="property">group</span>.<span class="property">name</span>,</span><br><span class="line">          <span class="comment">// ...</span></span><br><span class="line">          <span class="comment">// ...</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// mouted后发送埋点</span></span><br><span class="line">    <span class="title function_">mounted</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="comment">// 发送埋点数据</span></span><br><span class="line">      autoDataSend &amp;&amp; <span class="variable language_">this</span>.<span class="title function_">customTrack</span>()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 埋点数据</span></span><br><span class="line">    <span class="title function_">customTrack</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">hitExperiment</span>) &#123;</span><br><span class="line">        <span class="comment">// 发送 mixpanel 埋点</span></span><br><span class="line">        <span class="comment">// ....</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">sendTracking</span>()</span><br><span class="line">        <span class="comment">// .....</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 渲染组件</span></span><br><span class="line">    <span class="title function_">render</span>(<span class="params">h: any</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">hitExperiment</span>) &#123;</span><br><span class="line">        <span class="comment">// 根据命中的实验拿到组件</span></span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">h</span>(<span class="variable language_">this</span>.<span class="property">hitExperiment</span>.<span class="property">component</span>, &#123;</span><br><span class="line">          <span class="attr">props</span>: &#123;</span><br><span class="line">            <span class="attr">hitExperimentName</span>: experimentName,</span><br><span class="line">            <span class="attr">hitGroupName</span>: <span class="variable language_">this</span>.<span class="property">hitExperiment</span>.<span class="property">groupName</span>,</span><br><span class="line">            <span class="attr">hitExperimentId</span>: <span class="variable language_">this</span>.<span class="property">hitExperiment</span>.<span class="property">id</span>,</span><br><span class="line">            <span class="attr">hitGroupId</span>: <span class="variable language_">this</span>.<span class="property">hitExperiment</span>.<span class="property">groupId</span>,</span><br><span class="line">            <span class="attr">customTrack</span>: <span class="variable language_">this</span>.<span class="property">customTrack</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="attr">attrs</span>: <span class="variable language_">this</span>.<span class="property">$attrs</span>,</span><br><span class="line">          <span class="attr">on</span>: &#123;</span><br><span class="line">            ...<span class="variable language_">this</span>.<span class="property">$listeners</span>, <span class="comment">// 处理事件</span></span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 没有命中实验，返回 slot 的内容</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">$slots</span>.<span class="property">default</span> ? <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>, <span class="variable language_">this</span>.<span class="property">$slots</span>.<span class="property">default</span>) : <span class="literal">null</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable constant_">AB</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用高阶组件，可以返回实际，命中的分组对应的组件，展示在页面中。</p>
+<h2 id="以上"><a href="#以上" class="headerlink" title="以上"></a>以上</h2>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    <!-- 
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://laputaz.github.io/home/%E5%AE%9E%E7%8E%B0-AB-Testing%E5%92%8C%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1/" title="实现：AB-testing 和组件设计" target="_blank" rel="external">https://laputaz.github.io/home/实现-AB-Testing和组件设计/</a>
+    </li>
+     -->
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用
+      <a
+        href="http://creativecommons.org/licenses/by/4.0/deed.zh"
+        target="_blank"
+        rel="external"
+        >CC BY 4.0 CN协议</a
+      >
+      许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+ 
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a
+          href=""
+          target="_blank"
+          class="img-burn thumb-sm visible-lg"
+        >
+          <img
+            src="/home/images/logo.svg"
+            class="img-rounded w-full"
+            alt=""
+          />
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading">
+          <a href="" target="_blank"
+            ><span class="text-dark">Laputa Z</span
+            ><small class="ml-1x"></small></a
+          >
+        </h3>
+        <div>Жизнь, как качели - то вверх, то вниз.</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/home/%E8%BF%9B%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89%20js%E7%9A%84%E5%90%84%E7%A7%8D%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/" title="进制（一）：js 中的各种进制转换"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/home/%E5%AE%9E%E7%8E%B0-%E4%BD%BF%E7%94%A8lerna%E7%AE%A1%E7%90%86npm%E5%8C%85/" title="实现：使用 lerna 管理 npm 包"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <!-- <div class="copyright">
+    	
+        &copy; 2024 River
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div> -->
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/home/js/plugin.min.js"></script>
+
+
+<script src="/home/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/home/',
+        CONTENT_URL: '/home/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/home/js/insight.js"></script>
+
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:laputaz.github.io/home ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+
+
+   
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>
